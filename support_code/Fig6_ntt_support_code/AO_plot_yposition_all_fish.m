@@ -1,0 +1,250 @@
+function combined_ypos = AO_plot_yposition_all_fish(all_fish, duration, group, name, folder_path_save, figures_subfolder, single_ploting)
+stim_times = all_fish{group(1), 1}.timeStampStim(find(~contains(all_fish{group(1), 1}.stimInfo, "VIB_0")));
+y_position_all_fish_upper = nan([2, size(all_fish,1), length(stim_times)]); % 2 for before and after
+y_position_all_fish_lower = nan([2, size(all_fish,1), length(stim_times)]); % 2 for before and after
+
+numExp = size(all_fish,1)/6;
+for i=1:numExp
+lowerRow (i*3-(3-1):i*3) = [4 5 6]+6*(i-1); % make an array for the lower row of ROIs 
+end
+t = all_fish{group(1), 1}.t;
+%            x = all_fish{fish,1}.x;
+y = all_fish{group(1), 1}.y;
+len_y_trace = size(-y(t>floor(stim_times(end))-duration & t<floor(stim_times(end))+duration),1)-50;  % double check why you floor it
+collected_yposition_upper = nan([len_y_trace, size(all_fish,1), length(stim_times)]);
+collected_yposition_lower = nan([len_y_trace, size(all_fish,1), length(stim_times)]); 
+
+for stim = 1: length(stim_times)
+   
+   for fish = 1:size(all_fish,1)
+       if ismember(fish,group)
+           
+%            disp(fish)
+%            disp(stim)
+           if ismember(fish,lowerRow)
+               curr_stim_times = all_fish{fish, 1}.timeStampStim(find(~contains(all_fish{fish, 1}.stimInfo, "VIB_0")));
+               curr_stim_ons = curr_stim_times(stim); 
+               t = all_fish{fish,1}.t;
+    %            x = all_fish{fish,1}.x;
+               y = all_fish{fish,1}.y;
+
+               % the 140 we have to "push the ypoition up " because of the arrangement of the arenas          
+               y_position_all_fish_lower(1,fish,stim) = nanmean(-y(t>floor(curr_stim_ons)-duration & t<floor(curr_stim_ons)));%+140; %before
+               y_position_all_fish_lower(2,fish,stim) = nanmean(-y(t>floor(curr_stim_ons) & t<=floor(curr_stim_ons)+duration));%+140; % after
+               temp_y = -y(t>floor(curr_stim_ons)-duration & t<floor(curr_stim_ons)+duration); 
+               collected_yposition_lower(:, fish, stim) = temp_y(1:len_y_trace)+168;
+           else
+               curr_stim_times = all_fish{fish, 1}.timeStampStim(find(~contains(all_fish{fish, 1}.stimInfo, "VIB_0")));
+               curr_stim_ons = curr_stim_times(stim);
+               t = all_fish{fish,1}.t;
+    %            x = all_fish{fish,1}.x;
+               y = all_fish{fish,1}.y;
+
+               y_position_all_fish_upper(1,fish,stim) = nanmean(-y(t>floor(curr_stim_ons)-duration & t<floor(curr_stim_ons))); %before
+               y_position_all_fish_upper(2,fish,stim) = nanmean(-y(t>floor(curr_stim_ons) & t<=floor(curr_stim_ons)+duration)); % after
+%                collected_yposition_upper(:, fish, stim) = -y(t>floor(curr_stim_ons)-duration & t<floor(curr_stim_ons)+duration);
+               temp_y = -y(t>floor(curr_stim_ons)-duration & t<floor(curr_stim_ons)+duration); 
+               collected_yposition_upper(:, fish, stim) = temp_y(1:len_y_trace)+26;
+           end
+       end
+   end
+end
+
+% now plotting 
+cmap1 = [0.85, 0.85, 0.85; 0.5430 0 0; 0, 0.4470, 0.7410;   0.133, 0.128, 0.177; ];
+
+% here all the plotting starts
+figure('units','centimeters','Position',[2 2 24 14])
+subplot(2,1,1)
+for stim = 1: length(stim_times)
+    
+    scatter(ones(size(y_position_all_fish_upper,2),1)*0.25+stim, y_position_all_fish_upper(1,:,stim), 'filled', 'MarkerEdgeColor', cmap1(2,:), 'MarkerFaceColor', cmap1(2,:)); 
+    hold on
+    scatter(ones(size(y_position_all_fish_upper,2),1)*0.75+stim, y_position_all_fish_upper(2,:,stim), 'filled', 'MarkerEdgeColor', cmap1(3,:),  'MarkerFaceColor', cmap1(3,:));
+    % 
+    b = bar([0.25+stim 0.75+stim],[nanmean(y_position_all_fish_upper(1,:,stim),2), nanmean(y_position_all_fish_upper(2,:,stim),2)],'stacked')  %,  'FaceColor','flat');
+    b.FaceColor = cmap1(1,:);
+    b.FaceAlpha = 0.2;
+    for fish = 1:size(y_position_all_fish_upper,2)
+        plot([0.25+stim 0.75+stim],[y_position_all_fish_upper(1,fish,stim), y_position_all_fish_upper(2,fish,stim)], 'Color', cmap1(1,:))
+    end
+    
+    SEM_before = nanstd(y_position_all_fish_upper(1,:,stim),0,2)/sqrt(size(all_fish,1)- size(lowerRow,2));
+    SEM_after = nanstd(y_position_all_fish_upper(2,:,stim),0,2)/sqrt(size(all_fish,1)- size(lowerRow,2));
+    
+    er = errorbar([0.25+stim 0.75+stim],[nanmean(y_position_all_fish_upper(1,:,stim),2), nanmean(y_position_all_fish_upper(2,:,stim),2)],[SEM_before, SEM_after]);    
+    er.Color = [0 0 0];                            
+%     er.LineStyle = 'none'; 
+
+end
+% ylim([0 15]);
+xticks([1:length(stim_times)]+ 0.5)
+xlim([1 length(stim_times)+2])
+ylim([-140 0])
+labels = all_fish{1, 1}.stimInfo(find(~contains(all_fish{1, 1}.stimInfo, "VIB_0")));%unique(all_fish{1, 1}.stimInfo);
+xticklabels(labels)
+ylabel('Y Position');
+
+title(['Change in ypos for different stimulus Upper ', int2str(duration), ' s ', name])
+
+subplot(2,1,2)
+for stim = 1: length(stim_times)
+    
+    scatter(ones(size(y_position_all_fish_lower,2),1)*0.25+stim, y_position_all_fish_lower(1,:,stim), 'filled', 'MarkerEdgeColor', cmap1(2,:), 'MarkerFaceColor', cmap1(2,:)); 
+    hold on
+    scatter(ones(size(y_position_all_fish_lower,2),1)*0.75+stim, y_position_all_fish_lower(2,:,stim), 'filled', 'MarkerEdgeColor', cmap1(3,:),  'MarkerFaceColor', cmap1(3,:));
+    % 
+    b = bar([0.25+stim 0.75+stim],[nanmean(y_position_all_fish_lower(1,:,stim),2), nanmean(y_position_all_fish_lower(2,:,stim),2)],'stacked')  %,  'FaceColor','flat');
+    b.FaceColor = cmap1(1,:);
+    b.FaceAlpha = 0.2;
+    for fish = 1:size(y_position_all_fish_lower,2)
+        plot([0.25+stim 0.75+stim],[y_position_all_fish_lower(1,fish,stim), y_position_all_fish_lower(2,fish,stim)], 'Color', cmap1(1,:))
+    end
+    
+    SEM_before = nanstd(y_position_all_fish_lower(1,:,stim),0,2)/sqrt(size(lowerRow,2));
+    SEM_after = nanstd(y_position_all_fish_lower(2,:,stim),0,2)/sqrt(size(lowerRow,2));
+    
+    er = errorbar([0.25+stim 0.75+stim],[nanmean(y_position_all_fish_lower(1,:,stim),2), nanmean(y_position_all_fish_lower(2,:,stim),2)],[SEM_before, SEM_after]);    
+    er.Color = [0 0 0];                            
+%     er.LineStyle = 'none'; 
+
+end
+% ylim([0 15]);
+xticks([1:length(stim_times)]+ 0.5)
+xlim([1 length(stim_times)+2])
+ylim([-280 -140])
+% labels = unique(all_fish{1, 1}.stimInfo);
+xticklabels(labels)
+ylabel('Y Position');
+
+title(['Change in ypos for different stimulus Lower ', int2str(duration), ' s ', name])
+saveas(gcf, fullfile(folder_path_save, figures_subfolder, name,  ['Change_y_pos.png'])); 
+close; 
+
+stim_types = unique(all_fish{1, 1}.stimInfo); 
+stim_types = stim_types(2:end); % we are taking out the VIB 0 one 
+stim_types_indice = all_fish{1, 1}.stimInfo(find(~contains(all_fish{1, 1}.stimInfo, "VIB_0"))); % this is now the stimuli times for the specific stimulus 
+
+
+% figure('units','centimeters','Position',[2 2 18 24])
+figure('units','centimeters','Position',[2 2 20 8])
+x_values = 1:len_y_trace; 
+type_labels = unique(labels);
+for stim = 1:length(stim_types)
+    current_stim_ind = find(stim_types_indice == stim_types(stim)); 
+%     subplot(round(length(stim_types)/2),2,stim)
+    subplot(1,length(stim_types),stim)
+    H=shadedErrorBar(x_values, squeeze(nanmean(nanmean(collected_yposition_upper(:,:,current_stim_ind),3),2)),squeeze(nanstd(nanmean(collected_yposition_upper(:,:,current_stim_ind),3),0,2)/sqrt(size(group,1)- size(lowerRow,2))), 'lineProps','k');
+%     current_stim_index = find(all_fish{1,1}.t >= stim_times(stim))
+    hold on
+    xline(len_y_trace/2, 'Color', 'r' )
+    for fish = 1:size(collected_yposition_upper(:,:,stim),2)
+        plot(nanmean(collected_yposition_upper(:,fish,current_stim_ind),3))
+    end
+    hold off
+    ylim([-140 0])
+    title([name, ' Upper ', type_labels(stim)])
+end
+saveas(gcf, fullfile(folder_path_save, figures_subfolder, name,  ['Avg_over_stim_fish_yposition_UPPER.png'])); 
+close; 
+
+% figure('units','centimeters','Position',[2 2 18 24])
+figure('units','centimeters','Position',[2 2 20 8])
+x_values = 1:len_y_trace; 
+for stim = 1:length(stim_types)
+    current_stim_ind = find(stim_types_indice == stim_types(stim)); 
+%     subplot(round(length(stim_types)/2),2,stim)
+    subplot(1,length(stim_types),stim)
+    H=shadedErrorBar(x_values, squeeze(nanmean(nanmean(collected_yposition_lower(:,:,current_stim_ind),3),2)),squeeze(nanstd(nanmean(collected_yposition_lower(:,:,current_stim_ind),3),0,2)/sqrt(size(lowerRow,2))), 'lineProps','k');
+
+%     H=shadedErrorBar(x_values, squeeze(nanmean(collected_yposition_lower(:,:,stim),2)),squeeze(nanstd(collected_yposition_lower(:,:,stim),0,2)/sqrt(size(lowerRow,2))), 'lineProps','k');
+%     current_stim_index = find(all_fish{1,1}.t >= stim_times(stim))
+    hold on
+    xline(len_y_trace/2, 'Color', 'r' )
+    for fish = 1:size(collected_yposition_lower(:,:,stim),2)
+        plot(nanmean(collected_yposition_lower(:,fish,current_stim_ind),3))
+    end
+    hold off
+    ylim([-140 0])% ylim([-280 -140])
+    title([name,' Lower ', type_labels(stim)])
+
+end
+saveas(gcf, fullfile(folder_path_save, figures_subfolder, name, ['Avg_over_stim_fish_yposition_LOWER.png'])); 
+close; 
+
+
+combined_ypos = collected_yposition_upper; 
+combined_ypos(:,lowerRow,:) = collected_yposition_lower(:,lowerRow,:);
+
+figure('units','centimeters','Position',[2 2 20 8])
+x_values = 1:len_y_trace; 
+for stim = 1:length(stim_types)
+    current_stim_ind = find(stim_types_indice == stim_types(stim)); 
+%     subplot(round(length(stim_types)/2),2,stim)
+    subplot(1,length(stim_types),stim)
+    H=shadedErrorBar(x_values, squeeze(nanmean(nanmean(combined_ypos(:,:,current_stim_ind),3),2)),squeeze(nanstd(nanmean(combined_ypos(:,:,current_stim_ind),3),0,2)/sqrt(size(group,1))), 'lineProps','k');
+
+%     H=shadedErrorBar(x_values, squeeze(nanmean(collected_yposition_lower(:,:,stim),2)),squeeze(nanstd(collected_yposition_lower(:,:,stim),0,2)/sqrt(size(lowerRow,2))), 'lineProps','k');
+%     current_stim_index = find(all_fish{1,1}.t >= stim_times(stim))
+    hold on
+    xline(len_y_trace/2, 'Color', 'r' )
+%     for fish = 1:size(combined_ypos(:,:,stim),2)
+%         plot(nanmean(combined_ypos(:,fish,current_stim_ind),3))
+%     end
+    hold off
+    ylim([-120 0])% ylim([-280 -140])
+    title([name,' All ', type_labels(stim)])
+
+end
+saveas(gcf, fullfile(folder_path_save, figures_subfolder, name, ['Avg_over_stim_fish_yposition_ALL.png'])); 
+saveas(gcf, fullfile(folder_path_save, figures_subfolder, name, ['Avg_over_stim_fish_yposition_ALL.svg'])); 
+close; 
+
+
+if single_ploting
+    for fish = 1:size(all_fish,1)
+        if ismember(fish,group)
+            % now plotting the average position for each fish individually but
+            % averaged over each stimulus 
+            % figure('units','centimeters','Position',[2 2 18 24])
+            figure('units','centimeters','Position',[2 2 20 8])
+            x_values = 1:len_y_trace; 
+            for stim = 1:length(stim_types) % looping over the types 
+                current_stim_ind = find(stim_types_indice == stim_types(stim)); 
+            %     subplot(round(length(stim_types)/2),2,stim)
+                subplot(1,length(stim_types),stim)
+                if ismember(fish,lowerRow)
+                    H=shadedErrorBar(x_values, squeeze(nanmean(collected_yposition_lower(:,fish,current_stim_ind),3)),squeeze(nanstd(collected_yposition_lower(:,fish,current_stim_ind),0,3)/sqrt(length(current_stim_ind))), 'lineProps','k');
+
+                %     H=shadedErrorBar(x_values, squeeze(nanmean(collected_yposition_lower(:,:,stim),2)),squeeze(nanstd(collected_yposition_lower(:,:,stim),0,2)/sqrt(size(lowerRow,2))), 'lineProps','k');
+                %     current_stim_index = find(all_fish{1,1}.t >= stim_times(stim))
+                    hold on
+                    xline(len_y_trace/2, 'Color', 'r' )
+                    for little_stim = 1:length(current_stim_ind) % looping over the little stim
+                        plot(collected_yposition_lower(:,fish,current_stim_ind(little_stim)))
+                    end
+                    hold off
+    %                 ylim([-280 -140])
+                    ylim([-140 0])
+                    title([name,' Fish ', int2str(fish), ' Lower ', type_labels(stim)])
+                else 
+                    H=shadedErrorBar(x_values, squeeze(nanmean(collected_yposition_upper(:,fish,current_stim_ind),3)),squeeze(nanstd(collected_yposition_upper(:,fish,current_stim_ind),0,3)/sqrt(length(current_stim_ind))), 'lineProps','k');
+
+                %     H=shadedErrorBar(x_values, squeeze(nanmean(collected_yposition_lower(:,:,stim),2)),squeeze(nanstd(collected_yposition_lower(:,:,stim),0,2)/sqrt(size(lowerRow,2))), 'lineProps','k');
+                %     current_stim_index = find(all_fish{1,1}.t >= stim_times(stim))
+                    hold on
+                    xline(len_y_trace/2, 'Color', 'r' )
+                    for little_stim = 1:length(current_stim_ind) % looping over the little stim
+                        plot(collected_yposition_upper(:,fish,current_stim_ind(little_stim)))
+                    end
+                    hold off
+                    ylim([-140 0])
+                    title([name,' Fish ', int2str(fish), ' Upper ', type_labels(stim)])
+                end
+            end
+            saveas(gcf, fullfile(folder_path_save, figures_subfolder, name, [name, ' Fish_',int2str(fish), '_average_ypos_per_stim.png'])); 
+            close; 
+        end
+    end
+end
+end

@@ -1,0 +1,33 @@
+%%%%% READ ME for Zantics codes
+AO_aj_masterFile_zantics_juv --> masterfile that loads and saves the data 
+AO_masterfile_zantiks_setup --> updated masterfile
+
+%%% loading
+AO_aj_loadFiles_20211206 --> should be well explained in the function how to use it.
+It will just load the data counting from fish 1 to the end. 
+There is a space where you could add your specificities like the Genotype or something to add to the data.
+
+%%% calculations 
+aj_velocityCalc_20211206 --> velocity binned
+aj_burstDuration_20211206  --> bursts (more relevant to epilepsy)
+aj_distCalculation_20211206 --> distance (more relevant to epilepsy)
+aj_pdfPosition_AO --> PDFs for heatmaps
+(avg over the whole one, novel tank one, each stimulus before and after, and avg over baseline (4min) and entire stim period (11min))
+
+%%% some basic plotting that will be updated
+AO_plot_binned_vel_and_y --> plots velocity, x and y of the fish individually (give it the group name to know which fish)
+AO_plot_heatmaps
+AO_avg_stim_over_fish --> heatmaps for the stim
+
+AO_plot_yposition_all_fish --> averages over fish and stimuli for y position
+AO_plot_velo_all_fish --> averages over fish and stimuli for velocity
+
+[there are more plotting functions here but I will update them once I looked at them more in detail]
+
+%%%%% Updated Plotting Functions (in the ploting functions folder)
+AO_average_y_trace_flexibel -> plots the average y trace for the different groups together (flexibel n_groups and time period)
+AO_average_velo_trace_felxibel -> plots the average velo for the different groups together (flexibel n_groups and time period)
+AO_plot_velo_average_and_change -> plots and calculates avg & change (compared to 2s before stim) for each fish and trial [seperate for each group]
+AO_plot_ypos_average_and_change ->  plots and calculates avg & change (compared to 2s before stim) for each fish and trial [seperate for each group]
+
+AO_ploting_noveltank_heatmaps_over_fish --> novel tank heatmaps using the novelPDF (comparing 1-2 min with 18-20 min)

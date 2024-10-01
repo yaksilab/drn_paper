@@ -1,0 +1,99 @@
+function AO_ploting_heatmaps_over_fish(all_fish, group, name, folder_path_save, figures_subfolder)
+% just taking the first fish as an example
+stim_times = ...
+    all_fish{1, 1}.timeStampStim(find(~contains(all_fish{group(1), 1}.stimInfo, "VIB_0")));
+stim_types = unique(all_fish{group(1), 1}.stimInfo); 
+stim_types = stim_types(2:end); % we are taking out the VIB 0 one 
+%
+avg_pdf = nan([size(all_fish{group(1), 1}.stimPDF,1), size(all_fish{group(1), 1}.stimPDF,2), ...
+    2, length(stim_times)]); % 2 for before and after
+for stim = 1: length(stim_times)
+   collected_pdf = nan([size(all_fish{group(1), 1}.stimPDF,1), ...
+       size(all_fish{group(1), 1}.stimPDF,2), 2, size(group,1)]);
+   for fish = 1:size(group, 1)
+      collected_pdf(:,:,:,fish) = all_fish{group(fish), 1}.stimPDF(:,:,:,stim);
+   end
+   avg_pdf(:,:,1,stim) = nanmean(collected_pdf(:,:,1,:),4); % before
+   avg_pdf(:,:,2,stim) = nanmean(collected_pdf(:,:,2,:),4); % after
+end
+% all_fish{group(fish), 1}.stimPDF 21*14*2*30 21*14-positionPD_overall tank
+dur_avg_pdf = nan([size(all_fish{group(fish), 1}.stimPDF, 1), ...
+    size(all_fish{group(fish), 1}.stimPDF, 2), 2, length(stim_types)]); % 2 for before and after
+for stim = 1:length(stim_types)
+   collected_pdf = nan([size(all_fish{group(fish), 1}.stimPDF,1), ...
+       size(all_fish{group(fish), 1}.stimPDF,2), 2, size(group,1)]);
+   for fish = 1:size(group,1)
+        collected_pdf(:, :, :, fish) = all_fish{group(fish), 1}.avgstimPDF(:, :, :, stim);
+   end
+   dur_avg_pdf(:, :, 1, stim) = nanmean(collected_pdf(:, :, 1, :), 4); % before
+   dur_avg_pdf(:, :, 2, stim) = nanmean(collected_pdf(:, :, 2, :), 4); % after
+end
+% plotting part
+figure('units','centimeters','Position',[2 2 18 24])
+counter = 1;
+for stim = 1:length(stim_types)
+    subplot(length(stim_types), 2, counter)
+    imagesc(dur_avg_pdf(:, :, 1, stim))
+    title(['Avg over fish ', stim_types(stim), ' Before ', name])
+    colormap jet %hot
+    caxis([0 0.05])
+    colorbar
+    counter = counter + 1;
+    %
+    subplot(length(stim_types), 2, counter)
+    imagesc(dur_avg_pdf(:, :, 2, stim))
+    title(['Avg over fish ', stim_types(stim), ' After ', name])
+    colormap jet % hot
+    caxis([0 0.05])
+    colorbar
+    counter = counter + 1;
+end
+saveas(gcf, fullfile(folder_path_save, figures_subfolder, name, ...
+    [name, '_heatmaps_avg_stim_over_fish.png']));
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+figure('units','centimeters','Position',[2 2 35 20])
+% subplot_number = [1 2; 3 4; 5 6; 7 8; 9 10; 11 12; 13 14; 15 16; 17 18];
+counter = 1; 
+for stim = 1: length(stim_times)/2
+    subplot(5,6, counter)
+    counter = counter +1; 
+    imagesc(avg_pdf(:,:,1,stim))
+    title(['Avg over fish Stim ', int2str(stim), ' Before'])
+    colormap jet %hot
+    caxis([0 0.05])
+    colorbar
+    %
+    subplot(5,6, counter)
+    counter = counter +1; 
+    imagesc(avg_pdf(:,:,2,stim))
+    title(['Avg over fish Stim ', int2str(stim), ' After'])
+    colormap jet % hot
+    caxis([0 0.05])
+    colorbar
+end
+saveas(gcf, fullfile(folder_path_save, figures_subfolder, name, ...
+    [name, '_heatmaps_single_stim_over_fish_1to15.png']));
+%
+figure('units','centimeters','Position',[2 2 35 20])
+% subplot_number = [1 2; 3 4; 5 6; 7 8; 9 10; 11 12; 13 14; 15 16; 17 18];
+counter = 1; 
+for stim = length(stim_times)/2+1 :length(stim_times)
+    subplot(5,6, counter)
+    counter = counter +1; 
+    imagesc(avg_pdf(:,:,1,stim))
+    title(['Avg over fish Stim ', int2str(stim), ' Before'])
+    colormap jet %hot
+    caxis([0 0.05])
+    colorbar
+    %
+    subplot(5,6, counter)
+    counter = counter +1; 
+    imagesc(avg_pdf(:,:,2,stim))
+    title(['Avg over fish Stim ', int2str(stim), ' After'])
+    colormap jet % hot
+    caxis([0 0.05])
+    colorbar
+end
+saveas(gcf, fullfile(folder_path_save, figures_subfolder, name, ...
+    [name, '_heatmaps_single_stim_over_fish_16to30.png'])); 
+end
