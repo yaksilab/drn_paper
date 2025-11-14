@@ -2,7 +2,6 @@ classdef sam
     properties
         sam_idx
         n_pla_str
-        con
         fil_pat_rec
         fil_pat_exp
         fil_pat_sam
@@ -117,16 +116,6 @@ classdef sam
     methods
         function obj = spe(obj)
             obj.n_ani = length(obj.ani);
-            obj.win_col = ["red"; "green (color wheel) (x11 green)"; "turquoise"; "cyan"; ...
-                "blue gray"];
-            obj.win_siz = 120;
-            obj.abb_par = ["TR (Hz)"; "HR (Hz)"; "OR (Hz)"; "MR (Hz)"; "ER (Hz)"];
-            obj.abb_pcx_par = ["TA (rad)"; "HPC (a.u.)"; "OPC (a.u.)"; "MPC (a.u.)"; ...
-                "EPC (a.u.)"];
-            obj.col_sti = 'magenta'; %%%%
-            obj.col_rat_ave = 'blue';
-            obj.col_sti_ave = 'red';
-            %
             obj.fil_pat_exp = strings(obj.n_ani, 1);
             for i = 1:obj.n_ani
                 raw_dir = strcat("X:\kadiram\Data\Raw\", obj.ani(i));
@@ -148,72 +137,7 @@ classdef sam
             if exist(obj.poo_dir_tem, 'dir') == 0
                 mkdir(obj.poo_dir_tem);
             end
-            obj.tit_par = {'Tail', 'Heart', 'Operculum', 'Mouth', 'Eye'};
             obj.fil_pat_sam = strcat(obj.poo_dir, "\", obj.sam_idx, ".mat");
-            obj.fil_pat_fig_tai_ang = strcat(obj.poo_dir, "\tai_ang.png");
-            obj.fil_pat_fig_eth = strcat(obj.poo_dir, "\eth.png");
-            obj.fil_pat_fig_ang = strcat(obj.poo_dir, "\ang.png");
-            obj.fil_pat_fig_ang_tap = strcat(obj.poo_dir, "\ang_tap.png");
-            obj.fil_pat_fig_spe_tap = strcat(obj.poo_dir, "\spe_tap.png");
-            obj.fil_pat_fig_spo_sta = strcat(obj.poo_dir, "\spo_sta.png");
-            obj.fil_pat_beh_fig = strcat(obj.poo_dir, "\beh.png");
-            obj.fil_pat_fig_beh_bin = strcat(obj.poo_dir, "\beh_bin.png");
-            obj.fil_pat_beh_fig_con = [strcat(obj.poo_dir, "\beh_one.png"); ...
-                strcat(obj.poo_dir, "\beh_two.png"); strcat(obj.poo_dir, "\beh_thr.png")];
-            obj.fil_pat_fig_lat = strcat(obj.poo_dir, "\lat.png");
-            obj.fil_pat_fig_map = strcat(obj.poo_dir, "\map.png");
-            obj.fil_pat_fig_pro = strcat(obj.poo_dir, "\pro.png");
-            obj.fil_pat_fig_eth_spo = strcat(obj.poo_dir, "\eth_spo.png");
-            obj.fil_pat_fig_mat_eth_spo = strcat(obj.poo_dir, "\eth_spo.fig");
-            obj.fil_pat_fig_eth_sti = strcat(obj.poo_dir, "\eth_sti.png");
-            obj.fil_pat_fig_eth_sti_hal = strcat(obj.poo_dir, "\eth_sti_hal.png");
-            obj.fil_pat_fig_ave_pcx = strcat(obj.poo_dir, "\ave_pcx.png");
-            obj.fil_pat_fig_neu_one = strcat(obj.poo_dir, "\neu_one.png");
-            obj.fil_pat_fig_neu_two = strcat(obj.poo_dir, "\neu_two.png");
-            obj.fil_pat_fig_neu_thr = strcat(obj.poo_dir, "\neu_thr.png");
-            obj.fil_pat_fig_neu_fou = strcat(obj.poo_dir, "\neu_fou.png");
-            obj.fil_pat_fig_neu_fiv = strcat(obj.poo_dir, "\neu_fiv.png");
-            obj.fil_pat_fig_neu_six = strcat(obj.poo_dir, "\neu_six.png");
-            obj.fil_pat_fig_neu_sev = strcat(obj.poo_dir, "\neu_sev.png");
-            obj.fil_pat_fig_neu_eig = strcat(obj.poo_dir, "\neu_eig.png");
-            %
-            obj.fil_pat_fig_sum_hab = strcat(obj.poo_dir, "\sum_hab.png");
-            obj.fil_pat_fig_sum_tel = strcat(obj.poo_dir, "\sum_tel.png");
-            obj.fil_pat_fig_dff_com = strcat(obj.poo_dir, "\dff_com.png");
-            obj.fil_pat_fig_neu_cel_one = strcat(obj.poo_dir, "\neu_cel_one.png");
-            obj.fil_pat_fig_neu_cel_two = strcat(obj.poo_dir, "\neu_cel_two.png");
-            obj.fil_pat_fig_neu_cel_ext = strcat(obj.poo_dir, "\neu_cel_ext.png");
-            obj.fil_pat_fig_neu_cel_sig = strcat(obj.poo_dir, "\neu_cel_sig.png");
-            obj.fil_pat_fig_neu_cel_sig_ext = strcat(obj.poo_dir, "\neu_cel_sig_ext.png");
-            obj.fil_pat_fig_cor = strcat(obj.poo_dir, "\cor.png");
-            obj.fil_pat_fig_cor_ext = strcat(obj.poo_dir, "\cor_ext.png");
-            obj.fil_pat_fig_hab_cor = strcat(obj.poo_dir, "\hab_cor.png");
-            obj.fil_pat_fig_dmx_cor = strcat(obj.poo_dir, "\dmx_cor.png");
-            obj.fil_pat_fig_dlx_cor = strcat(obj.poo_dir, "\dlx_cor.png");
-            obj.fil_pat_fig_hab_cor_ext = strcat(obj.poo_dir, "\hab_cor_ext.png");
-            obj.fil_pat_fig_dmx_cor_ext = strcat(obj.poo_dir, "\dmx_cor_ext.png");
-            obj.fil_pat_fig_dlx_cor_ext = strcat(obj.poo_dir, "\dlx_cor_ext.png");
-            obj.fil_pat_fig_spo_one = strcat(obj.poo_dir, "\spo_one.png");
-            obj.fil_pat_fig_spo_nor_one = strcat(obj.poo_dir, "\spo_nor_one.png");
-            obj.fil_pat_fig_spo_cor = strcat(obj.poo_dir, "\spo_cor.png");
-            obj.fil_pat_fig_bra_reg = strcat(obj.poo_dir, "\bra_reg.png");
-            obj.fil_pat_fig_cor_map = strcat(obj.poo_dir, "\cor_map.png");
-            obj.fil_pat_fig_cor_his = strcat(obj.poo_dir, "\cor_his.png");
-            obj.fil_pat_fig_icx_res = strcat(obj.poo_dir, "\icx_res.png");
-            obj.fil_pat_fig_vib_res = strcat(obj.poo_dir, "\vib_res.png");
-            obj.fil_pat_fig_pix_res = strcat(obj.poo_dir, "\pix_res.png");
-            obj.fil_pat_fig_com_res = strcat(obj.poo_dir, "\com_res.png");
-            obj.fil_pat_fig_cdf = strcat(obj.poo_dir, "\cdf.png");
-            %
-            obj.fil_pat_fig_clu_map_cel = strcat(obj.poo_dir, "\clu_map_cel.png");
-            obj.fil_pat_fig_dua_clu_map_cel = strcat(obj.poo_dir, "\dua_clu_map_cel.png");
-            obj.fil_pat_fig_clu_map_cel_ani = strcat(obj.poo_dir, "\clu_map_cel_ani.png");
-            %
-            obj.fil_pat_fig_clu_map_pix = strcat(obj.poo_dir, "\clu_map_pix.png");
-            obj.fil_pat_fig_som_clu_map_pix = strcat(obj.poo_dir, "\som_clu_map_pix.png");
-            obj.fil_pat_fig_clu_map_ani = strcat(obj.poo_dir, "\clu_map_ani.png");
-            obj.fil_pat_fig_clu_map_ani_thr_som = strcat(obj.poo_dir, "\clu_map_ani_thr_som.png");
-            obj.fil_pat_fig_clu_map_ani_thr = strcat(obj.poo_dir, "\clu_map_ani_thr.png");
             %
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             n_con = con_fil.n_con;
@@ -258,39 +182,36 @@ classdef sam
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% behavioral
         function app_tai_dat(obj)
-            mat_fil_obj_exp = matfile(obj.fil_pat_exp(1));
-            n_con = mat_fil_obj_exp.n_con;
-            n_tri_con = mat_fil_obj_exp.n_tri_con;
             mat_fil_obj_rec_one = matfile(obj.fil_pat_rec(2));%!
             fra_tim_uni = mat_fil_obj_rec_one.fra_tim_uni;
             n_fra = length(fra_tim_uni);
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             n_fra_con = con_fil.n_fra;
             n_fra_con = n_fra_con.tai.tri.lon;
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             abs_ani = nan(obj.n_ani, 1); % ave_bas_spe
             ang_fra_ani = nan(n_fra, obj.n_ani);
             spe_fra_ani = nan(n_fra, obj.n_ani);
+            n_con = con_fil.n_con;
             nta_fra_ani_con = nan(n_fra_con, obj.n_ani, n_con);
+            n_tri_con = con_fil.n_tri_con;
+            n_tri_con = n_tri_con.vrs;
             bea_lat_ani_tri = nan(obj.n_ani, n_con*n_tri_con);
             bea_ang_ani_tri = nan(obj.n_ani, n_con*n_tri_con);
             bea_lat_shu_ani_tri = nan(obj.n_ani, n_con*n_tri_con);
             per_pro_ani_con = nan(obj.n_ani, n_con);
-            global n_win_ong lat_thr
-            ave_ang_epo_ani = cell(n_win_ong, 1);
-            for i = 1:n_win_ong
-                ave_ang_epo_ani{i} = nan(obj.n_ani, 1);
-                for j = 1:obj.n_ani
-                    rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(j))]);
-                    tap = rec_fun();
-                    if tap.tai
-                        rec_fil = matfile(obj.fil_pat_rec(j));
-                        ave_ang_epo_ani{i}(j) = rec_fil.ave_ang_epo(i, 1);
-                    end
-                end
+            tac_tri_win = [];
+            nam_fie = {'all'; 'vib'; 'non'; 'spo'};
+            n_fie = length(nam_fie);
+            for fie_num = 1:n_fie% init
+                bou_dur_ani.(nam_fie{fie_num}) = nan(obj.n_ani, 1);
             end
-            p_ave_ang_xep = com_p_xep(ave_ang_epo_ani);
-            %
+            lat_thr = con_fil.lat_thr;
+            ang_bou.all = [];
+            ang_bou.vib = [];
+            ang_bou.non = [];
+            n_sta = 2;
+            nta_fra_sta_con = nan(n_fra_con, n_sta, n_con);
+            dim = 2;
             for i = 1:obj.n_ani
                 rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(i))]);
                 tap = rec_fun();
@@ -298,8 +219,10 @@ classdef sam
                     rec_fil = matfile(obj.fil_pat_rec(i));
                     nta_ani_fra_sta_con = rec_fil.nta_fra_sta_con;
                     abs_ani(i) = rec_fil.ave_bas_spe;
-                    for j = 1:n_con
-                        nta_fra_ani_con(:, i, j) = nta_ani_fra_sta_con(:, 1, j);
+                    for con = 1:n_con
+                        nta_fra_ani_con(:, i, con) = nta_ani_fra_sta_con(:, 1, con);
+                        [nta_fra_sta_con(:, 1, con), ~, nta_fra_sta_con(:, 2, con)] = com_sta(...
+                            nta_fra_ani_con(:, :, con), dim);
                     end
                     per_pro_con = rec_fil.per_pro_con;
                     bea_lat_tri = rec_fil.bea_lat_tri;
@@ -314,43 +237,85 @@ classdef sam
                     ang_fra_ani(:, i) = tai_ang_uni;
                     vir_spe_uni = rec_fil.vir_spe_uni;
                     spe_fra_ani(:, i) = vir_spe_uni;
-                end
-            end
-            %
-            n_sta = 2;
-            ave_tai_sig = nan(n_fra, n_sta);
-            ave_vir_spe = nan(n_fra, n_sta);
-            dim = 2;
-            [ave_tai_sig(:, 1), ~, ave_tai_sig(:, 2)] = com_sta(ang_fra_ani, dim); % entire exp
-            [ave_vir_spe(:, 1), ~, ave_vir_spe(:, 2)] = com_sta(spe_fra_ani, dim);
-            nta_fra_sta_con = nan(n_fra_con, n_sta, n_con);
-            n_win = con_fil.n_win;
-            ave_nta_con_win_ani = cell(n_con, n_win.tri);
-            for i = 1:n_con
-                [nta_fra_sta_con(:, 1, i), ~, nta_fra_sta_con(:, 2, i)] = ...
-                    com_sta(nta_fra_ani_con(:, :, i), dim);
-                for k = 1:n_win.tri
-                    ave_nta_con_win_ani{i, k} = nan(obj.n_ani, 1);
-                    for j = 1:obj.n_ani
-                        rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(j))]);
-                        tap = rec_fun();
-                        if tap.tai
-                            rec_fil = matfile(obj.fil_pat_rec(j));
-                            ave_nta_con_win_ani{i, k}(j) = rec_fil.ave_nta_con_win(i, k);
-                        end
+                    %
+                    nta_tri_win = rec_fil.tac_tri_win;
+                    tac_tri_win = [tac_tri_win; nta_tri_win];
+                    %
+                    bou_dur = rec_fil.bou_dur;
+                    for fie_num = 1:n_fie
+                        bou_dur_ani.(nam_fie{fie_num})(i) = bou_dur.(nam_fie{fie_num});
                     end
+                    ave_ang_bou = rec_fil.ang_bou;
+                    ang_bou.all = [ang_bou.all; ave_ang_bou.all];
+                    ang_bou.vib = [ang_bou.vib; ave_ang_bou.vib];
+                    ang_bou.non = [ang_bou.non; ave_ang_bou.non];
                 end
             end
-            [p_nta_con_xwi, p_nta_win_xco] = com_p_win_con(ave_nta_con_win_ani);
-            %%%%%%%%%%%%%%%%%%%%%%%
-            per_pro_ani_shu = com_per_pro_ani(bea_lat_shu_ani_tri, lat_thr);
-            p_cro = com_p_cro(per_pro_ani_con');
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%
             log_nox_ani_tri = bea_lat_ani_tri > lat_thr;
             [bea_lat_ani_con, p_lat_cro, bea_lat_ani_tri] = ...
                 com_bea_par_ani_con(bea_lat_ani_tri, log_nox_ani_tri);
             [bea_ang_ani_con, p_ang_cro, bea_ang_ani_tri] = ...
                 com_bea_par_ani_con(bea_ang_ani_tri, log_nox_ani_tri);
+            per_pro_ani_shu = com_per_pro_ani(bea_lat_shu_ani_tri, lat_thr);
+            p_cro = com_p_cro(per_pro_ani_con');
+            %
+            bou_dur.all = mean(bou_dur_ani.all, "omitnan");
+            bou_dur.vib = mean(bou_dur_ani.vib, "omitnan");
+            bou_dur.non = mean(bou_dur_ani.non, "omitnan");
+            %
+            n_epo = con_fil.n_epo;
+            n_epo = n_epo.ong;
+            ave_ang_epo_ani = cell(n_epo, 1);
+            for epo = 1:n_epo
+                ave_ang_epo_ani{epo} = nan(obj.n_ani, 1);
+                for j = 1:obj.n_ani
+                    rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(j))]);
+                    tap = rec_fun();
+                    if tap.tai
+                        rec_fil = matfile(obj.fil_pat_rec(j));
+                        ave_ang_epo_ani{epo}(j) = rec_fil.ave_ang_epo(epo, 1);
+                    end
+                end
+            end
+            p_ave_ang_xep = com_p_xep(ave_ang_epo_ani);
+            %
+            ave_tai_sig = nan(n_fra, n_sta);
+            ave_vir_spe = nan(n_fra, n_sta);
+            [ave_tai_sig(:, 1), ~, ave_tai_sig(:, 2)] = com_sta(ang_fra_ani, dim); % entire exp
+            [ave_vir_spe(:, 1), ~, ave_vir_spe(:, 2)] = com_sta(spe_fra_ani, dim);
+            n_win = con_fil.n_win;
+            ave_nta_con_win_ani = cell(n_con, n_win.tri);
+            for con = 1:n_con
+                for k = 1:n_win.tri
+                    ave_nta_con_win_ani{con, k} = nan(obj.n_ani, 1);
+                    for j = 1:obj.n_ani
+                        rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(j))]);
+                        tap = rec_fun();
+                        if tap.tai
+                            rec_fil = matfile(obj.fil_pat_rec(j));
+                            ave_nta_con_win_ani{con, k}(j) = rec_fil.ave_nta_con_win(con, k);
+                        end
+                    end
+                end
+            end
+            [p_nta_con_xwi, p_nta_win_xco] = com_p_win_con(ave_nta_con_win_ani);
+            % from glia
+            dur_bou = [];
+            dur_acb_bou = [];
+            dur_pcb_bou = [];
+            for i = 1:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(i))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                len_bou = rec_fil.dur_bou;
+                dur_bou = [dur_bou; len_bou.non];
+                %
+                len_bou = rec_fil.dur_acb_bou;
+                dur_acb_bou = [dur_acb_bou; len_bou.non];
+                %
+                len_bou = rec_fil.dur_pcb_bou;
+                dur_pcb_bou = [dur_pcb_bou; len_bou.non];
+            end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_sam, 'abs_ani', 'ave_tai_sig', 'ave_vir_spe', ...
                 'bea_lat_ani_tri', 'per_pro_ani_shu', 'bea_ang_ani_tri', ...
@@ -358,335 +323,27 @@ classdef sam
                 'bea_ang_ani_con', 'p_ang_cro', ...
                 'nta_fra_sta_con', 'ave_nta_con_win_ani', 'p_nta_con_xwi', 'p_nta_win_xco', ...
                 'ang_fra_ani', ...
-                'ave_ang_epo_ani', 'p_ave_ang_xep', '-append')
-            %
-            tac_tri_win = [];
-            for j = 1:obj.n_ani
-                rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(j))]);
-                tap = rec_fun();
-                if tap.tai && tap.bri
-                    rec_fil = matfile(obj.fil_pat_rec(j));
-                    nta_tri_win = rec_fil.tac_tri_win;
-                    tac_tri_win = [tac_tri_win; nta_tri_win];
-                end
-            end
-            save(obj.fil_pat_sam, 'tac_tri_win', '-append')
-
-
-            nam_fie = {'all'; 'vib'; 'non'; 'spo'};
-            n_fie = length(nam_fie);
-            for fie_num = 1:n_fie
-                bou_dur_ani.(nam_fie{fie_num}) = nan(obj.n_ani, 1);
-            end
-            ang_bou.all = [];
-            ang_bou.vib = [];
-            ang_bou.non = [];
-            for ani_num = 1:obj.n_ani
-                rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
-                tap = rec_fun();
-                if tap.tai
-                    rec_fil = matfile(tap.fil_pat_rec);
-                    bou_dur = rec_fil.bou_dur;
-                    for fie_num = 1:n_fie
-                        bou_dur_ani.(nam_fie{fie_num})(ani_num) = bou_dur.(nam_fie{fie_num});
-                    end
-                    if tap.bri
-                        ave_ang_bou = rec_fil.ang_bou;
-                        ang_bou.all = [ang_bou.all; ave_ang_bou.all];
-                        ang_bou.vib = [ang_bou.vib; ave_ang_bou.vib];
-                        ang_bou.non = [ang_bou.non; ave_ang_bou.non];
-                    end
-                end
-            end
-            bou_dur.all = mean(bou_dur_ani.all, "omitnan");
-            bou_dur.vib = mean(bou_dur_ani.vib, "omitnan");
-            bou_dur.non = mean(bou_dur_ani.non, "omitnan");
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'bou_dur_ani', 'ang_bou', 'bou_dur', '-append')
+                'ave_ang_epo_ani', 'p_ave_ang_xep', ...
+                'tac_tri_win', ...
+                'bou_dur_ani', 'ang_bou', 'bou_dur', ...
+                'dur_bou', 'dur_acb_bou', 'dur_pcb_bou', '-append')
         end
-        % incorporated
+        % un
         function app_par_tai(obj)
-            nam_fie = {'all'; 'vib'; 'non'; 'spo'};
-            n_fie = length(nam_fie);
-            for fie_num = 1:n_fie
-                bou_dur_ani.(nam_fie{fie_num}) = nan(obj.n_ani, 1);
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_con = con_fil.n_con;
+            n_tri_con = con_fil.n_tri_con;
+            n_tri_con = n_tri_con.vrs;
+            sam_fil = matfile(obj.fil_pat_sam);
+            bea_lat_ani_tri = sam_fil.bea_lat_ani_tri;
+            log_ani_tri = ~isnan(bea_lat_ani_tri);
+            per_pro_tri = sum(log_ani_tri)/obj.n_ani;
+            per_pro_tri_con = nan(n_tri_con, n_con);
+            for con = 1:n_con
+                per_pro_tri_con(:, con) = per_pro_tri((con - 1)*n_tri_con + 1:con*n_tri_con)';
             end
-            ang_bou.all = [];
-            ang_bou.vib = [];
-            ang_bou.non = [];
-            for ani_num = 1:obj.n_ani
-                rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
-                tap = rec_fun();
-                if tap.tai
-                    rec_fil = matfile(tap.fil_pat_rec);
-                    bou_dur = rec_fil.bou_dur;
-                    for fie_num = 1:n_fie
-                        bou_dur_ani.(nam_fie{fie_num})(ani_num) = bou_dur.(nam_fie{fie_num});
-                    end
-                    if tap.bri
-                        ave_ang_bou = rec_fil.ang_bou;
-                        ang_bou.all = [ang_bou.all; ave_ang_bou.all];
-                        ang_bou.vib = [ang_bou.vib; ave_ang_bou.vib];
-                        ang_bou.non = [ang_bou.non; ave_ang_bou.non];
-                    end
-                end
-            end
-            bou_dur.all = mean(bou_dur_ani.all, "omitnan");
-            bou_dur.vib = mean(bou_dur_ani.vib, "omitnan");
-            bou_dur.non = mean(bou_dur_ani.non, "omitnan");
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'bou_dur_ani', 'ang_bou', 'bou_dur', '-append')
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function app_ang_fre_fra_sta_con(obj)
-            n_sta = 2;
-            dim = 2;
-            load(obj.fil_pat_rec(1), 'rec_tai_ang_fre_fra_sta_con')
-            n_ani = length(obj.fil_pat_rec);
-            [n_fra_con, ~, n_con] = size(rec_tai_ang_fre_fra_sta_con);
-            ang_fra_ani_con = nan(n_fra_con, n_ani, n_con);
-            for i = 1:n_ani
-                load(obj.fil_pat_rec(i), 'rec_tai_ang_fre_fra_sta_con')
-                for j = 1:n_con
-                    ang_fra_ani_con(:, i, j) = rec_tai_ang_fre_fra_sta_con(:, 1, j);
-                end
-            end
-            ang_fre_fra_sta_con = nan(n_fra_con, n_sta, n_con);
-            for i = 1:n_con
-                [ang_fre_fra_sta_con(:, 1, i), ~, ang_fre_fra_sta_con(:, 2, i)] = com_sta(ang_fra_ani_con(:, :, i), dim);
-            end
-            save(obj.fil_pat_sam, 'ang_fre_fra_sta_con', '-append')
-        end
-        function app_ave_tai_sig_tri(obj)
-            addpath \\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\statistics
-            n_sta = 2;
-            dim = 2;
-            load(obj.fil_pat_rec(1), 'tim_tri_uni_fra', 'rec_tai_ang_uni_fra_sta_con')
-            n_ani = length(obj.fil_pat_rec);
-            n_fra = length(tim_tri_uni_fra);
-            n_con = size(rec_tai_ang_uni_fra_sta_con, 3);
-            ang_fra_ani_con = nan(n_fra, n_ani, n_con);
-            for i = 1:n_ani
-                load(obj.fil_pat_rec(i), 'rec_tai_ang_uni_fra_sta_con')
-                for j = 1:n_con
-                    ang_fra_ani_con(:, i, j) = rec_tai_ang_uni_fra_sta_con(:, 1, j);
-                end
-            end
-            %
-            ang_fra_sta_con = nan(n_fra, n_sta, n_con);
-            for i = 1:n_con
-                [ang_fra_sta_con(:, 1, i), ~, ang_fra_sta_con(:, 2, i)] = com_sta(ang_fra_ani_con(:, :, i), dim);
-            end
-            %
-            save(obj.fil_pat_sam, 'tim_tri_uni_fra', 'ang_fra_sta_con', '-append')
-        end
-        function app_spo_sta(obj)
-            addpath \\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\statistics
-            load(obj.fil_pat_rec(1), 'rat_tim')
-            load(obj.fil_pat_sam, 'rat_tim_ani_par')
-            poi = ext_poi(obj.fil_pat_exp(1));
-            [ave_rat_win_ani_par, n_par, n_win] = com_ave_rat_win_ani_par(rat_tim, rat_tim_ani_par, obj.win_siz, poi);
-            p_com_par = nan(n_win - 1, n_par);
-            for i = 1:n_par
-                for j = 1:n_win - 1
-                    p_com_par(j, i) = signrank(ave_rat_win_ani_par(j, :, i), ave_rat_win_ani_par(j + 1, :, i));
-                end
-            end
-            save(obj.fil_pat_sam, 'ave_rat_win_ani_par', 'p_com_par', '-append')
-        end
-        function app_per_pro_con(obj)
-            load(obj.fil_pat_exp(1), 'n_con')
-            load(obj.fil_pat_sam, 'bea_lat_ani_tri')
-            per_pro_con = com_per_pro_con(n_con, bea_lat_ani_tri, obj.lat_thr);
-            save(obj.fil_pat_sam, 'per_pro_con', '-append')
-        end
-        function app_bea_lat_ani_tri(obj)
-            load(obj.fil_pat_exp(1), 'n_tri_con', 'n_con')
-            n_ani = length(obj.fil_pat_rec);
-            bea_lat_ani_tri = nan(n_ani, n_con*n_tri_con);
-            for i = 1:n_ani
-                load(obj.fil_pat_rec(i), 'bea_lat_tri')
-                bea_lat_ani_tri(i, :) = bea_lat_tri';
-            end
-            save(obj.fil_pat_sam, 'bea_lat_ani_tri', '-append')
-        end
-        function app_bea_lat_shu_ani_tri(obj)
-            load(obj.fil_pat_exp(1), 'n_tri_con', 'n_con')
-            n_ani = length(obj.fil_pat_rec);
-            bea_lat_shu_ani_tri = nan(n_ani, n_con*n_tri_con);
-            for i = 1:n_ani
-                load(obj.fil_pat_rec(i), 'bea_lat_shu')
-                bea_lat_shu_ani_tri(i, :) = bea_lat_shu';
-            end
-            save(obj.fil_pat_sam, 'bea_lat_shu_ani_tri', '-append')
-        end
-        function app_per_pro_ani_shu(obj)
-            load(obj.fil_pat_sam, 'bea_lat_shu_ani_tri')
-            per_pro_ani_shu = com_per_pro_ani(bea_lat_shu_ani_tri, obj.lat_thr);
-            save(obj.fil_pat_sam, 'per_pro_ani_shu', '-append')
-        end
-        function app_pro_dat(obj)
-            load(obj.fil_pat_exp(1), 'n_con', 'n_tri_con')
-            load(obj.fil_pat_sam, 'bea_lat_ani_tri')
-            n_ani = length(obj.fil_pat_rec);
-            per_pro_con = com_per_pro_con(n_con, bea_lat_ani_tri, obj.lat_thr);
-            bea_lat_shu_ani_tri = nan(n_ani, n_con*n_tri_con);
-            for i = 1:n_ani
-                load(obj.fil_pat_rec(i), 'bea_lat_shu')
-                bea_lat_shu_ani_tri(i, :) = bea_lat_shu';
-            end
-            per_pro_ani_shu = com_per_pro_ani(bea_lat_shu_ani_tri, obj.lat_thr);
-            save(obj.fil_pat_sam, 'per_pro_con', 'per_pro_ani_shu', '-append')
-            %
-            plo_pro(per_pro_con, per_pro_ani_shu)
-            export_fig(char(obj.fil_pat_fig_pro))
-        end
-        function app_n_ani(obj)
-            n_ani = length(obj.fil_pat_rec);
-            save(obj.fil_pat_sam, 'n_ani', '-append')
-        end
-        function app_rat_tri_dat(obj)
-            load(obj.fil_pat_exp(1), 'n_con', 'sti_ons', 'n_tri_con')
-            load(obj.fil_pat_rec(1), 'rat_tim')
-            load(obj.fil_pat_sam, 'rat_tim_ani_par')
-            rat_fra_sta_par_con = cell(n_con, 1);
-            for i = 1:n_con
-                [rat_fra_sta_par_con{i}, tim_tri_bin] = com_rat_fra_sta_par_sam(rat_tim, rat_tim_ani_par, ...
-                    sti_ons((i - 1)*n_tri_con + 1:i*n_tri_con), obj.bas_dur_beh, obj.res_dur_beh);
-            end
-            save(obj.fil_pat_sam, 'rat_fra_sta_par_con', 'tim_tri_bin', '-append')
-        end
-        function app_lat(obj)
-            load(obj.fil_pat_exp(1), 'n_con')
-            n_ani = length(obj.fil_pat_rec);
-            n_thr = 3;
-            %
-            per_cel_thr_con_sid_ani = cell(n_thr, 1);
-            p_val_thr_con = cell(n_thr, 1);
-            lat_ind_thr_con_ani = cell(n_thr, 1);
-            for k = 1:n_thr
-                per_cel_thr_con_sid_ani{k} = nan(n_con, 2, n_ani);
-                lat_ind_thr_con_ani{k} = nan(n_con, n_ani);
-                for i = 1:n_ani
-                    load(obj.fil_pat_rec(i), 'per_cel_thr_con_sid', 'lat_ind_thr_con')
-                    per_cel_thr_con_sid_ani{k}(:, :, i) = per_cel_thr_con_sid{k};
-                    lat_ind_thr_con_ani{k}(:, i) = lat_ind_thr_con{k};
-                end
-                p_val_thr_con{k} = nan(n_con, 1);
-                for i = 1:n_con
-                    [~, p_val_thr_con{k}(i)] = ttest(per_cel_thr_con_sid_ani{k}(i, 1, :), per_cel_thr_con_sid_ani{k}(i, 2, :));
-                end
-            end
-            save(obj.fil_pat_sam, 'per_cel_thr_con_sid_ani', 'p_val_thr_con', 'lat_ind_thr_con_ani', '-append')
-        end
-        function app_rat_con_bin_sta_par(obj)
-            load(obj.fil_pat_exp(1), 'sti_ons', 'n_tri_con')
-            load(obj.fil_pat_rec(1), 'rat_tim', 'rec_tai_ang_uni_fra_sta_con')
-            n_ani = length(obj.fil_pat_rec);
-            [~, ~, n_con] = size(rec_tai_ang_uni_fra_sta_con);
-            %%%%%%%%%%%%%%%%%%
-            n_bin = length(rat_tim);
-            rat_tim_ani_par = nan(n_bin, n_ani, obj.n_par);
-            for i = 1:n_ani
-                load(obj.fil_pat_rec(i), 'rat_bin_par')
-                rat_tim_ani_par(:, i, :) = reshape(rat_bin_par, n_bin, 1, obj.n_par);
-            end
-            rat_con_bin_sta_par = cell(n_con, 1);
-            for i = 1:n_con
-                [rat_con_bin_sta_par{i}, tim_tri_bin] = com_rat_fra_sta_par_sam(rat_tim, rat_tim_ani_par, ...
-                    sti_ons((i - 1)*n_tri_con + 1:i*n_tri_con), obj.bas_dur_beh, obj.res_dur_beh);
-            end
-            save(obj.fil_pat_sam, 'rat_con_bin_sta_par', '-append')
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% figures
-            fon_siz = 24;
-            plo_beh(n_con, tim_tri_bin, rat_con_bin_sta_par, fon_siz, obj.col_rat_ave, obj.col_sti_ave, obj.y_lab, obj.con, obj.tit, n_ani, obj.n_par)
-            export_fig(char(obj.fil_pat_fig_beh_bin))
-        end
-        function app_tai_rat_hig_bin_sta(obj)
-            load(obj.fil_pat_rec(1), 'rat_tim')
-            n_bin = length(rat_tim);
-            n_sta = 2;
-            tai_rat_hig_bin_sta = nan(n_bin, n_sta);
-            tai_rat_hig_bin_ani = nan(n_bin, obj.n_ani);
-            for i = 1:obj.n_ani
-                load(obj.fil_pat_rec(i), 'tai_rat_hig')
-                tai_rat_hig_bin_ani(:, i) = tai_rat_hig;
-            end
-            dim = 2;
-            [tai_rat_hig_bin_sta(:, 1), ~, tai_rat_hig_bin_sta(:, 2)] = com_sta(tai_rat_hig_bin_ani, dim);
-            save(obj.fil_pat_sam, 'tai_rat_hig_bin_sta', '-append')
-        end
-        function app_rat_sti_win(obj)
-            mat_fil_exp = matfile(obj.fil_pat_exp(1));
-            n_tri_con = mat_fil_exp.n_tri_con;
-            isi= mat_fil_exp.isi;
-            %
-            mat_fil_rec = matfile(obj.fil_pat_rec(1));
-            tim_bin = mat_fil_rec.tim_bin;
-            %
-            mat_fil_sam = matfile(obj.fil_pat_sam);
-            rat_tim_ani_par = mat_fil_sam.rat_tim_ani_par;
-            ave_rat_win_ani_par = mat_fil_sam.ave_rat_win_ani_par;
-            %
-            win_siz_sti = n_tri_con*isi;
-            poi_sti = ext_poi_sti(obj.fil_pat_exp(1));
-            [ave_rat_sti_win_ani_par, ~, n_win] = com_ave_rat_win_ani_par(tim_bin, ...
-                rat_tim_ani_par, win_siz_sti, poi_sti);
-            p_sti_com_par = nan(n_win, obj.n_par);
-            ave_rat_bas_win_ani_par = ave_rat_win_ani_par(2:end - 1, :, :);
-            for i = 1:obj.n_par
-                for j = 1:n_win
-                    p_sti_com_par(j, i) = signrank(ave_rat_bas_win_ani_par(j, :, i), ...
-                        ave_rat_sti_win_ani_par(j, :, i));
-                end
-            end
-            %
-            win_siz_sti_hal = win_siz_sti/2;
-            poi_sti_hal = ext_poi_sti_hal(obj.fil_pat_exp(1));
-            ave_rat_sti_hal_win_ani_par = com_ave_rat_win_ani_par(tim_bin, rat_tim_ani_par, ...
-                win_siz_sti_hal, poi_sti_hal);
-            p_sti_hal_com_par = nan(n_win, obj.n_par);
-            for i = 1:obj.n_par
-                for j = 1:n_win
-                    p_sti_hal_com_par(j, i) = signrank(ave_rat_bas_win_ani_par(j, :, i), ...
-                        ave_rat_sti_hal_win_ani_par(j, :, i));
-                end
-            end
-            save(obj.fil_pat_sam, 'poi_sti', 'ave_rat_bas_win_ani_par', ...
-                'ave_rat_sti_win_ani_par', 'p_sti_com_par', ...
-                'poi_sti_hal', 'ave_rat_sti_hal_win_ani_par', 'p_sti_hal_com_par', '-append')
-        end
-        function app_pcx_ave(obj)
-            n_par_pcx = obj.n_par - 1;
-            pcx_par_fra_ani = cell(n_par_pcx, 1);
-            load(obj.fil_pat_rec(1), 'fra_tim_uni', 'rec_tai_ang_uni_fra_sta_con')
-            n_fra = length(fra_tim_uni);
-            pcx_par_fra_ani_con = cell(n_par_pcx, 1);
-            [n_fra_con, ~, n_con] = size(rec_tai_ang_uni_fra_sta_con);
-            for k = 1:n_par_pcx
-                pcx_par_fra_ani{k} = nan(n_fra, obj.n_ani);
-                pcx_par_fra_ani_con{k} = nan(n_fra_con, obj.n_ani, n_con);
-                for i = 1:obj.n_ani
-                    load(obj.fil_pat_rec(i), 'pcx_uni_fra_par', 'rec_pcx_uni_par_fra_sta_con')
-                    pcx_par_fra_ani{k}(:, i) = pcx_uni_fra_par(:, k);
-                    for j = 1:n_con
-                        pcx_par_fra_ani_con{k}(:, i, j) = rec_pcx_uni_par_fra_sta_con{k}(:, 1, j);
-                    end
-                end
-            end
-            ave_pcx_par_fra_sta = cell(n_par_pcx, 1);
-            n_sta = 2;
-            dim = 2;
-            pcx_par_fra_sta_con = cell(n_par_pcx, 1);
-            for i = 1:n_par_pcx
-                ave_pcx_par_fra_sta{i} = nan(n_fra, n_sta);
-                [ave_pcx_par_fra_sta{i}(:, 1), ~, ave_pcx_par_fra_sta{i}(:, 2)] = com_sta(pcx_par_fra_ani{i}, dim);
-                pcx_par_fra_sta_con{i} = nan(n_fra_con, n_sta, n_con);
-                for j = 1:n_con
-                    [pcx_par_fra_sta_con{i}(:, 1, j), ~, pcx_par_fra_sta_con{i}(:, 2, j)] = com_sta(pcx_par_fra_ani_con{i}(:, :, j), dim);
-                end
-            end
-            save(obj.fil_pat_sam, 'ave_pcx_par_fra_sta', 'pcx_par_fra_sta_con', '-append')
+            save(obj.fil_pat_sam, 'per_pro_tri_con', '-append')
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neural
         function app_ave_neu(obj) % pixel
@@ -715,6 +372,10 @@ classdef sam
         end
         %
         function app_dff_all_sam_ave(obj)
+            [n_cel_reg_ani, ~] = ext_n_cel_reg_ani(obj);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'n_cel_reg_ani', '-append')
+
             n_cel = struct('sha', 0, 'abl', 0);
             for ani_num = 1:obj.n_ani
                 disp(ani_num)
@@ -740,27 +401,34 @@ classdef sam
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_sam, 'n_cel', '-append')
-            global n_reg_for n_con n_win n_bin_mag_cor_coe n_cro_tot n_epo n_blo
-            [n_cel_reg_ani, n_cel_reg] = ext_n_cel_reg_ani(obj);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% inh exc
-            act_reg_ani_con_fra_cel = [];
-            act_reg_con_fra_cel = [];
-            act_reg_fra_sta_con = [];
             %
+            global n_reg_for n_con n_win n_bin_mag_cor_coe n_cro_tot n_epo n_blo
+            [~, n_cel_reg] = ext_n_cel_reg_ani(obj);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% all inh exc
+            act_reg_ani_con_fra_cel = [];% not pooled cells
+            act_reg_con_fra_cel = [];
+            act_reg_fra_sta_con = [];% this one used in mul_sam
+            %%%%%%%%%%%%
             fie_num = {'dff'; 'raw'; 'tri'; 'all'};
+            
+            % first ani, rec var: act_reg_con_fra_cel
             act_reg_ani_con_fra_cel = ext_act_reg_ani_con_fra_cel(obj, ...
                 'act_reg_con_fra_cel', fie_num, act_reg_ani_con_fra_cel);
+            % then pooling cells - res_reg_con_win_uni simpler,
+            % for ave.
             [act_reg_con_fra_cel, act_reg_fra_sta_con] = ext_act_reg_con_fra_cel(obj, ...
                 act_reg_ani_con_fra_cel, fie_num, act_reg_con_fra_cel, ...
                 act_reg_fra_sta_con);
-            %
+
+
+            %%%%%%%%%%
             fie_num = {'dff'; 'raw'; 'tri'; 'inh'};
             act_reg_ani_con_fra_cel = ext_act_reg_ani_con_fra_cel(obj, ...
                 'act_reg_con_fra_cel', fie_num, act_reg_ani_con_fra_cel);
             [act_reg_con_fra_cel, act_reg_fra_sta_con] = ext_act_reg_con_fra_cel(obj, ...
                 act_reg_ani_con_fra_cel, fie_num, act_reg_con_fra_cel, ...
                 act_reg_fra_sta_con);
-            %
+            %%%%%%%%%%%%
             fie_num = {'dff'; 'raw'; 'tri'; 'exc'};
             act_reg_ani_con_fra_cel = ext_act_reg_ani_con_fra_cel(obj, ...
                 'act_reg_con_fra_cel', fie_num, act_reg_ani_con_fra_cel);
@@ -768,12 +436,19 @@ classdef sam
                 act_reg_ani_con_fra_cel, fie_num, act_reg_con_fra_cel, ...
                 act_reg_fra_sta_con);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% uni
+
+            % initialization, for scatter res vis and stats
+
+            % first ani, then pooling cells - res_reg_con_win_uni simpler,
+
+            % for ave. used for debugging in the past.
             act_reg_con_win_uni.dff.raw.tri.cel = ...
                 cellfun(@(act_con_win) cell(n_con, n_win.tri), ...
                 cell(n_reg_for, 1), 'UniformOutput', false);
             act_reg_con_win_uni.frc.cel = cellfun(@(act_con_win) cell(n_con, n_win.tri), ...
                 cell(n_reg_for, 1), 'UniformOutput', false);
-            %
+            
+            % animal-based
             act_reg_con_win_uni.dff.raw.tri.ani = ...
                 cellfun(@(act_con_win) cell(n_con, n_win.tri), ...
                 cell(n_reg_for, 1), 'UniformOutput', false);
@@ -959,7 +634,7 @@ classdef sam
                 end
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'n_cel_reg_ani', 'n_cel_reg', 'fra_reg_con_ani', ...
+            save(obj.fil_pat_sam, 'n_cel_reg', 'fra_reg_con_ani', ...
                 'act_reg_con_fra_cel', 'act_reg_fra_sta_con', 'act_reg_con_win_uni', ...
                 ...
                 'pcc_mea_reg_xri_xri', 'pcc_ave_reg_con_ani', ...
@@ -986,8 +661,8 @@ classdef sam
                     rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
                     tap = rec_fun();
                     if tap.tai && tap.bri
-                        mat_fil_rec = matfile(obj.fil_pat_rec(ani_num));
-                        dff_reg_tri_win = mat_fil_rec.act_reg_tri_win;
+                        rec_fil = matfile(obj.fil_pat_rec(ani_num));
+                        dff_reg_tri_win = rec_fil.act_reg_tri_win;
                         if isempty(dff_reg_tri_win{reg})
                             dff_reg_tri_win{reg} = nan(n_tri.vrs, n_win.tri);
                         end
@@ -1098,7 +773,6 @@ classdef sam
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_sam, 'x_cel', 'y_cel', '-append')
 
-
             log_cel_con.exc = [];
             log_cel_con.inh = [];
             for ani_num = 1:obj.n_ani
@@ -1112,9 +786,8 @@ classdef sam
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_sam, 'log_cel_con', '-append')
-        end
-        % unincorporated
-        function app_par(obj)
+
+            %%%%%%%%%% Fig. 6B !!!!!!!!!!!!!!!
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             n_blo = con_fil.n_blo;
             pcc_blo_ani.all = nan(n_blo.xre, obj.n_ani);
@@ -1132,73 +805,367 @@ classdef sam
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_sam, 'pcc_blo_ani', '-append')
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo-cel
-        function app_roi_r(obj)
-            log_ani_pla_icx_row_col = cell(obj.n_ani, 1);
-            r_ani_pla_icx_row_col = cell(obj.n_ani, 1);
+
+            %%%% RESPONSE VIS !!!!!!!!!!!!!!!!!
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            per_cel_bin_ani = nan(con_fil.n_bin_cor_coe, obj.n_ani);
-            r_cel = [];
-            for i = 1:obj.n_ani
-                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(i))]);
-                sti = rec_fun_i();
-                if sti.ali_cax
-                    rec_fil = matfile(sti.fil_pat_rec);
-                    log_pla_icx_row_col = rec_fil.log_pla_icx_row_col;
-                    log_ani_pla_icx_row_col{i} = log_pla_icx_row_col.glu;
-                    r_ani_pla_icx_row_col{i} = rec_fil.r_pla_icx_row_col;
-                    %
-                    per_cel_bin_ani(:, i) = rec_fil.per_cel_bin;
-                    %
-                    r_cel = [r_cel; rec_fil.r_cel];
-                end
-            end
-            [pro_ste, r_ste] = ecdf(r_cel);
-            %
-            n_icx = con_fil.n_icx;
+            n_reg_for = con_fil.n_reg_for;
             n_con = con_fil.n_con;
-            n_fra = con_fil.n_fra;
-            dff_icx_con_fra_ani = ini_cel_arr(n_icx, n_con, n_fra.cal.tri.eig.dff, obj.n_ani);
-            for j = 1:n_icx
-                for k = 1:n_con
-                    for i = 1:obj.n_ani
-                        rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(i))]);
-                        sti = rec_fun_i();
-                        if sti.ali_cax
+            n_win = con_fil.n_win;
+            res_reg_con_win_uni.dff.raw.tri.cel = ...
+                cellfun(@(act_con_win) cell(n_con, n_win.tri), ...
+                cell(n_reg_for, 1), 'UniformOutput', false);
+            [n_cel_reg_ani, ~] = ext_n_cel_reg_ani(obj);
+            for k = 1:n_reg_for
+                for i = 1:n_con
+                    cel_ind = 1;
+                    for j = 1:obj.n_ani
+                        if obj.bri_ani(j) && obj.cel_det_ani(j)
+                            rec_fun_j = ...
+                                str2func(['rec_fun.' convertStringsToChars(obj.ani(j))]);
+                            sti = rec_fun_j();
                             rec_fil = matfile(sti.fil_pat_rec);
-                            dff_icx_con_fra = rec_fil.dff_icx_con_fra;
-                            dff_icx_con_fra_ani{j, k}(:, i) = dff_icx_con_fra{j, k};
+                            act_jjj_reg_con_win_cel = rec_fil.act_reg_con_win_cel;
+                            for l = 1:n_win.tri
+                                res_reg_con_win_uni.dff.raw.tri.cel{k}{i, l}(cel_ind:...
+                                    cel_ind + n_cel_reg_ani.rem(k, j) - 1, 1) = ...
+                                    act_jjj_reg_con_win_cel.dff.raw.tri.all{k}{i, l};%%!!!!!!
+                                    %.all -> inh+exc+non
+                            end
+                            cel_ind = cel_ind + n_cel_reg_ani.rem(k, j);
                         end
                     end
                 end
             end
-            %
-            [clu_roi_k, ioi_k, n_roi, ~] = com_clu_cel_k(obj);
-            %
-            x_ani_roi = cell(obj.n_ani, 1);
-            y_ani_roi = cell(obj.n_ani, 1);
-            z_ani_roi = cell(obj.n_ani, 1);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'res_reg_con_win_uni', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_cel = sam_fil.x_cel;
+            y_cel = sam_fil.y_cel;
+            x_cel.res_all = [];
+            y_cel.res_all = [];
             for ani_num = 1:obj.n_ani
                 disp(ani_num)
                 rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
                 sti = rec_fun_i();
                 rec_fil = matfile(sti.fil_pat_rec);
-                x_ani_roi{ani_num} = rec_fil.x_roi;
-                y_ani_roi{ani_num} = rec_fil.y_roi;
-                z_ani_roi{ani_num} = rec_fil.z_roi;
+                if sti.ani == "esp189"% the only animal for .rem
+                    aps_cel = rec_fil.x_cel;
+                    x_cel.res_all = [x_cel.res_all; aps_cel.res_all];
+                    aps_cel = rec_fil.y_cel;
+                    y_cel.res_all = [y_cel.res_all; aps_cel.res_all];
+                else
+                    aps_cel = rec_fil.x_cel;
+                    x_cel.res_all = [x_cel.res_all; aps_cel.res];
+                    aps_cel = rec_fil.y_cel;
+                    y_cel.res_all = [y_cel.res_all; aps_cel.res];
+                end
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            dff_roi_fra = [];
-            log_fie_roi.inh = logical([]);
-            log_fie_roi.exc = logical([]);
-            res_ani_roi = cell(obj.n_ani, 1);
+            save(obj.fil_pat_sam, 'x_cel', 'y_cel', '-append')
+
+            bas_flu_ani = nan(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                bas_flu_ani(ani_num) = rec_fil.bas_flu;
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'bas_flu_ani', '-append')
+
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg = con_fil.n_reg_for_cro;
+            slo_reg_cel = cell(n_reg, 1);
+            for reg = 1:n_reg
+                for ani_num = 1:obj.n_ani
+                    if obj.bri_ani(ani_num) && obj.cel_det_ani(ani_num)
+                        rec_fun_j = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                        sti = rec_fun_j();
+                        rec_fil = matfile(sti.fil_pat_rec);
+                        slo_tem_reg_cel = rec_fil.slo_reg_cel;
+                        slo_reg_cel{reg} = [slo_reg_cel{reg}; slo_tem_reg_cel{reg}'];
+                    end
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'slo_reg_cel', '-append')
+            
+            tac_ani_tri_cel = cell(obj.n_ani, 1);
+            act_ani_tri_cel = cell(obj.n_ani, 1);
+            log_ani_cel_reg = cell(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                if obj.bri_ani(ani_num) && obj.cel_det_ani(ani_num)
+                    rec_fun_j = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                    sti = rec_fun_j();
+                    rec_fil = matfile(sti.fil_pat_rec);
+                    tac_ani_tri_cel{ani_num} = rec_fil.tac_tri_cel;
+                    act_ani_tri_cel{ani_num} = rec_fil.act_tri_cel;
+                    lox_cel_reg = rec_fil.log_cel_reg;
+                    log_ani_cel_reg{ani_num} = lox_cel_reg.rem;
+                end
+            end
+            tac_tri_cel = [tac_ani_tri_cel{:}];
+            act_tri_cel = [act_ani_tri_cel{:}];
+            log_cel_reg = vertcat(log_ani_cel_reg{:});
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'tac_tri_cel', 'act_tri_cel', 'log_cel_reg', '-append')
+
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg = con_fil.n_reg_for_cro;
+            num_sam = con_fil.num_sam;
+            tac_sam_ani = nan(num_sam, obj.n_ani);
+            for ani_num = 1:obj.n_ani
+                if obj.bri_ani(ani_num) && obj.cel_det_ani(ani_num)
+                    rec_fun_j = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                    sti = rec_fun_j();
+                    rec_fil = matfile(sti.fil_pat_rec);
+                    tac_sam_ani(:, ani_num) = rec_fil.tac_sam;
+                end
+            end
+            act_reg_ani_sam_cel = cell(n_reg, obj.n_ani);
+            for reg = 1:n_reg
+                for ani_num = 1:obj.n_ani
+                    if obj.bri_ani(ani_num) && obj.cel_det_ani(ani_num)
+                        rec_fun_j = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                        sti = rec_fun_j();
+                        rec_fil = matfile(sti.fil_pat_rec);
+                        act_reg_sam_cel = rec_fil.act_reg_sam_cel;
+                        act_reg_ani_sam_cel{reg, ani_num} = act_reg_sam_cel{reg};
+                    end
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'tac_sam_ani', 'act_reg_ani_sam_cel', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            pcc_blo_ani.all_cel = sam_fil.pcc_blo_ani;
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             n_blo = con_fil.n_blo;
-            fra_blo_ani.ros_cau.exc = nan(n_blo.for.ros_cau, obj.n_ani);
-            fra_blo_ani.ros_cau.inh = nan(n_blo.for.ros_cau, obj.n_ani);
-            fra_blo_ani.dor_ven.exc = nan(n_blo.for.dor_ven, obj.n_ani);
-            fra_blo_ani.dor_ven.inh = nan(n_blo.for.dor_ven, obj.n_ani);
+            pcc_blo_ani.thr_cel.all = nan(n_blo.xre, obj.n_ani);
+            pcc_blo_ani.thr_cel.pos = nan(n_blo.xre, obj.n_ani);
+            pcc_blo_ani.thr_cel.neg = nan(n_blo.xre, obj.n_ani);
+            %
+            acc_epo_xre_ani = sam_fil.acc_epo_xre_ani;
+            cor_coe_epo_reg_blo_ani = sam_fil.cor_coe_epo_reg_blo_ani;
+            n_epo = con_fil.n_epo;
+            n_cro_tot = con_fil.n_cro_tot;
+            n_reg_for = con_fil.n_reg_for;
+            acc_epo_xre_ani.thr_cel = ini_cel_arr(n_epo.tot, n_cro_tot, obj.n_ani, 1);
+            cor_coe_epo_reg_blo_ani.thr_cel.all = ini_cel_arr(n_epo.tot, n_reg_for, n_blo.wre, ...
+                obj.n_ani);
+            cor_coe_epo_reg_blo_ani.thr_cel.pos = ini_cel_arr(n_epo.tot, n_reg_for, n_blo.wre, ...
+                obj.n_ani);
+            cor_coe_epo_reg_blo_ani.thr_cel.neg = ini_cel_arr(n_epo.tot, n_reg_for, n_blo.wre, ...
+                obj.n_ani);
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                pcc_blo = rec_fil.pcc_blo;
+                pcc_blo_ani.thr_cel.all(:, ani_num) = pcc_blo.thr_cel.all;
+                pcc_blo_ani.thr_cel.pos(:, ani_num) = pcc_blo.thr_cel.pos;
+                pcc_blo_ani.thr_cel.neg(:, ani_num) = pcc_blo.thr_cel.neg;
+                %
+                for k = 1:n_epo.tot
+                    for j = 1:n_reg_for
+                        cor_coe_epo_reg_blo = rec_fil.cor_coe_epo_reg_blo;
+                        cor_coe_epo_reg_blo_ani.thr_cel.all{k, j}(:, ani_num) = ...
+                            cor_coe_epo_reg_blo.thr_cel.all{k, j};
+                        cor_coe_epo_reg_blo_ani.thr_cel.pos{k, j}(:, ani_num) = ...
+                            cor_coe_epo_reg_blo.thr_cel.pos{k, j};
+                        cor_coe_epo_reg_blo_ani.thr_cel.neg{k, j}(:, ani_num) = ...
+                            cor_coe_epo_reg_blo.thr_cel.neg{k, j};
+                    end
+                    for j = 1:n_cro_tot
+                        acc_epo_xre = rec_fil.acc_epo_xre;
+                        acc_epo_xre_ani.thr_cel{k, j}(ani_num) = acc_epo_xre.thr_cel(k, j);
+                    end
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'pcc_blo_ani', 'acc_epo_xre_ani', 'cor_coe_epo_reg_blo_ani', ...
+                '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            pcc_blo_ani = sam_fil.pcc_blo_ani;
+            acc_epo_xre_ani = sam_fil.acc_epo_xre_ani;
+            cor_coe_epo_reg_blo_ani = sam_fil.cor_coe_epo_reg_blo_ani;
+            [pcc_blo_ani.thr_one, acc_epo_xre_ani.thr_one, cor_coe_epo_reg_blo_ani.thr_one] = ...
+                cal_pcc_blo_ani(obj, 'thr_one');
+            [pcc_blo_ani.thr_two, acc_epo_xre_ani.thr_two, cor_coe_epo_reg_blo_ani.thr_two] = ...
+                cal_pcc_blo_ani(obj, 'thr_two');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'pcc_blo_ani', 'acc_epo_xre_ani', 'cor_coe_epo_reg_blo_ani', ...
+                '-append')
+            
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg = con_fil.n_reg_for_cro;
+            coe_det_reg_cel = cell(n_reg, 1);
+            for reg = 1:n_reg
+                for ani_num = 1:obj.n_ani
+                    if obj.bri_ani(ani_num) && obj.cel_det_ani(ani_num)
+                        rec_fun_j = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                        sti = rec_fun_j();
+                        rec_fil = matfile(sti.fil_pat_rec);
+                        coe_det_tem_reg_cel = rec_fil.coe_det_reg_cel;
+                        coe_det_reg_cel{reg} = [coe_det_reg_cel{reg}; coe_det_tem_reg_cel{reg}'];
+                    end
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'coe_det_reg_cel', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            cor_coe_epo_reg_blo_ani = sam_fil.cor_coe_epo_reg_blo_ani;
+            [~, ~, cor_coe_epo_reg_blo_ani.lon_spo] = cal_pcc_blo_ani(obj, 'lon_spo');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'cor_coe_epo_reg_blo_ani', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            pcc_blo_ani = sam_fil.pcc_blo_ani;
+            acc_epo_xre_ani = sam_fil.acc_epo_xre_ani;
+            cor_coe_epo_reg_blo_ani = sam_fil.cor_coe_epo_reg_blo_ani;
+            [pcc_blo_ani.for_syn, acc_epo_xre_ani.for_syn, cor_coe_epo_reg_blo_ani.for_syn] = ...
+                cal_pcc_blo_ani(obj, 'for_syn');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'pcc_blo_ani', 'acc_epo_xre_ani', 'cor_coe_epo_reg_blo_ani', ...
+                '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            slo_reg_cel.hig_tri = sam_fil.slo_reg_cel;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg = con_fil.n_reg_for_cro;
+            slo_reg_cel.all_tri = cell(n_reg, 1);
+            for reg = 1:n_reg
+                for ani_num = 1:obj.n_ani
+                    if obj.bri_ani(ani_num) && obj.cel_det_ani(ani_num)
+                        rec_fun_j = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                        sti = rec_fun_j();
+                        rec_fil = matfile(sti.fil_pat_rec);
+                        slo_tem_reg_cel = rec_fil.slo_reg_cel;
+                        slo_tem_reg_cel = slo_tem_reg_cel.all_tri;
+                        slo_reg_cel.all_tri{reg} = [slo_reg_cel.all_tri{reg}; slo_tem_reg_cel{reg}'];
+                    end
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'slo_reg_cel', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            slo_reg_cel = sam_fil.slo_reg_cel;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg = con_fil.n_reg_for_cro;
+            slo_reg_cel.lhx_tri = cell(n_reg, 1);
+            for reg = 1:n_reg
+                for ani_num = 1:obj.n_ani
+                    if obj.bri_ani(ani_num) && obj.cel_det_ani(ani_num)
+                        rec_fun_j = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                        sti = rec_fun_j();
+                        rec_fil = matfile(sti.fil_pat_rec);
+                        slo_tem_reg_cel = rec_fil.slo_reg_cel;
+                        slo_tem_reg_cel = slo_tem_reg_cel.lhx_tri;
+                        slo_reg_cel.lhx_tri{reg} = [slo_reg_cel.lhx_tri{reg}; slo_tem_reg_cel{reg}'];
+                    end
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'slo_reg_cel', '-append')
+        end
+        % in
+        function app_par(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            slo_reg_cel = sam_fil.slo_reg_cel;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg = con_fil.n_reg_for_cro;
+            slo_reg_cel.lhx_tri = cell(n_reg, 1);
+            for reg = 1:n_reg
+                for ani_num = 1:obj.n_ani
+                    if obj.bri_ani(ani_num) && obj.cel_det_ani(ani_num)
+                        rec_fun_j = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                        sti = rec_fun_j();
+                        rec_fil = matfile(sti.fil_pat_rec);
+                        slo_tem_reg_cel = rec_fil.slo_reg_cel;
+                        slo_tem_reg_cel = slo_tem_reg_cel.lhx_tri;
+                        slo_reg_cel.lhx_tri{reg} = [slo_reg_cel.lhx_tri{reg}; slo_tem_reg_cel{reg}'];
+                    end
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'slo_reg_cel', '-append')
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function app_par_hig(obj)
+            fie_num = {'dff'; 'raw'; 'tri'; 'all'};
+            act_reg_ani_con_fra_cel = [];% not pooled cells
+            % first ani, rec var: act_reg_con_fra_cel - from rec_fil !
+            act_reg_ani_con_fra_cel = ext_act_reg_ani_con_fra_cel(obj, 'act_reg_con_fra_cel', ...
+                fie_num, act_reg_ani_con_fra_cel);%then pooling cells-res_reg_con_win_uni simpler,
+            % for ave.
+            act_reg_con_fra_cel = [];
+            act_reg_fra_sta_con = [];% this one used in mul_sam
+            [~, act_reg_fra_sta_con] = ext_act_reg_con_fra_cel(obj, act_reg_ani_con_fra_cel, fie_num...
+                , act_reg_con_fra_cel, act_reg_fra_sta_con);
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg_for = con_fil.n_reg_for;
+            n_con = con_fil.n_con;
+            n_win = con_fil.n_win;
+            act_reg_con_win_uni.dff.raw.tri.cel = ...
+                cellfun(@(act_con_win) cell(n_con, n_win.tri), ...
+                cell(n_reg_for, 1), 'UniformOutput', false);
+            [n_cel_reg_ani, ~] = ext_n_cel_reg_ani(obj);
+            for reg = 1:n_reg_for
+                for con = n_con
+                    cel_ind = 1;
+                    for ani_num = 1:obj.n_ani
+                        if obj.bri_ani(ani_num) && obj.cel_det_ani(ani_num)
+                            rec_fun_j = ...
+                                str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                            sti = rec_fun_j();
+                            rec_fil = matfile(sti.fil_pat_rec);
+                            act_jjj_reg_con_win_cel = rec_fil.act_reg_con_win_cel;
+                            for win = 1:n_win.tri
+                                act_reg_con_win_uni.dff.raw.tri.cel{reg}{con, win}(cel_ind:...
+                                    cel_ind + n_cel_reg_ani.rem(reg, ani_num) - 1, 1) = ...
+                                    act_jjj_reg_con_win_cel.dff.raw.tri.all{reg}{con, win};%%!!!!!!
+                                    %.all -> inh+exc+non
+                            end
+                            cel_ind = cel_ind + n_cel_reg_ani.rem(reg, ani_num);
+                        end
+                    end
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'act_reg_fra_sta_con', 'act_reg_con_win_uni', '-append')
+        end
+        %
+        function app_con(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            res_reg_con_win_uni = sam_fil.res_reg_con_win_uni;
+            res_reg_con_win_uni = res_reg_con_win_uni.dff.raw.tri.cel;
+            res_con_win_uni = res_reg_con_win_uni{1};
+            res_uni.all = res_con_win_uni{3, 2};
+            %
+            res_uni.pos = res_uni.all(res_uni.all > 0);
+            [mea, sta_dev] = com_sta(res_uni.pos, 1);
+            res_thr.upp.one = mea + sta_dev;
+            res_thr.upp.two = mea + 2*sta_dev;
+            %
+            res_uni.neg = res_uni.all(res_uni.all < 0);
+            [mea, sta_dev] = com_sta(res_uni.neg, 1);
+            res_thr.low.one = mea - sta_dev;
+            res_thr.low.two = mea - 2*sta_dev;
+            %
+            fil_pat_con = '\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat';
+            save(fil_pat_con, 'res_thr', '-append')
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo-cel
+        function app_roi_r(obj)
+            dff_roi_fra.tai = [];
+            log_fie_roi.tai.inh = logical([]);
+            log_fie_roi.tai.exc = logical([]);
             for ani_num = 1:obj.n_ani
                 disp(ani_num)
                 rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
@@ -1206,47 +1173,102 @@ classdef sam
                 rec_fil = matfile(sti.fil_pat_rec);
                 %
                 act_cel_fra = rec_fil.dff_roi_fra;
-                dff_roi_fra = [dff_roi_fra; act_cel_fra];
+                dff_roi_fra.tai = [dff_roi_fra.tai; act_cel_fra.tai];
                 log_roi = rec_fil.log_roi;
-                log_fie_roi.inh = [log_fie_roi.inh; log_roi.all.srt.inh];
-                log_fie_roi.exc = [log_fie_roi.exc; log_roi.all.srt.exc];
-                %
-                res_ani_roi{ani_num} = rec_fil.res_roi;
-                fra_blo = rec_fil.fra_blo;
-                fra_blo_ani.ros_cau.exc(:, ani_num) = fra_blo.ros_cau.exc;
-                fra_blo_ani.ros_cau.inh(:, ani_num) = fra_blo.ros_cau.inh;
-                fra_blo_ani.dor_ven.exc(:, ani_num) = fra_blo.dor_ven.exc;
-                fra_blo_ani.dor_ven.inh(:, ani_num) = fra_blo.dor_ven.inh;
+                log_fie_roi.tai.inh = [log_fie_roi.tai.inh; log_roi.tai.srt.inh];
+                log_fie_roi.tai.exc = [log_fie_roi.tai.exc; log_roi.tai.srt.exc];
             end
             cor_fie_fie_blo_ani.tai = fin_cor_fie_fie_blo_ani(obj, 'tai');
-            cor_fie_fie_blo_ani.spo = fin_cor_fie_fie_blo_ani(obj, 'spo');
-            [cum_pro_bin_ani.tai, r_ani.tai, p.tai] = gen_cum_pro_bin_ani(obj, 'tai');
-            [cum_pro_bin_ani.spo, r_ani.spo, p.spo] = gen_cum_pro_bin_ani(obj, 'spo');
+            cor_fie_fie_blo_ani.spo_tai = fin_cor_fie_fie_blo_ani(obj, 'spo_tai');
+            [cum_pro_bin_ani.tai, r_ani.tai, p_xco.tai] = gen_cum_pro_bin_ani(obj, 'tai');
+            [cum_pro_bin_ani.spo_tai, r_ani.spo_tai, p_xco.spo_tai] = gen_cum_pro_bin_ani(obj, ...
+                'spo_tai');
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'log_ani_pla_icx_row_col', 'r_ani_pla_icx_row_col', ...
-                'dff_icx_con_fra_ani', 'per_cel_bin_ani', 'r_cel', 'pro_ste', 'r_ste', ...
-                'n_roi', 'dff_roi_fra', 'clu_roi_k', 'ioi_k', 'x_ani_roi', 'y_ani_roi', ...
-                'z_ani_roi', 'res_ani_roi', 'fra_blo_ani', 'cor_fie_fie_blo_ani', 'cum_pro_bin_ani',...
-                'r_ani', 'p', 'log_fie_roi', '-append')
-        end
-        % incorporated
-        function app_par_roi_r(obj)
+            cor_fie_fie_blo_ani.tai_exc = fin_cor_fie_fie_blo_ani(obj, 'tai_exc');
+            cor_fie_fie_blo_ani.tai_inh = fin_cor_fie_fie_blo_ani(obj, 'tai_inh');
+            [cum_pro_bin_ani.tai_exc, r_ani.tai_exc, p_xco.tai_exc] = gen_cum_pro_bin_ani(obj, ...
+                'tai_exc');
+            [cum_pro_bin_ani.tai_inh, r_ani.tai_inh, p_xco.tai_inh] = gen_cum_pro_bin_ani(obj, ...
+                'tai_inh');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            cor_fie_fie_blo_ani.spo_tai_exc = fin_cor_fie_fie_blo_ani(obj, 'spo_tai_exc');
+            cor_fie_fie_blo_ani.spo_tai_inh = fin_cor_fie_fie_blo_ani(obj, 'spo_tai_inh');
+            [cum_pro_bin_ani.spo_tai_exc, r_ani.spo_tai_exc, p_xco.spo_tai_exc] = ...
+                gen_cum_pro_bin_ani(obj, 'spo_tai_exc');
+            [cum_pro_bin_ani.spo_tai_inh, r_ani.spo_tai_inh, p_xco.spo_tai_inh] = ...
+                gen_cum_pro_bin_ani(obj, 'spo_tai_inh');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_roi_fra', 'cor_fie_fie_blo_ani', 'cum_pro_bin_ani', 'r_ani', ...
+                'p_xco', 'log_fie_roi', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_roi_fra = sam_fil.dff_roi_fra;
+            cor_fie_fie_blo_ani = sam_fil.cor_fie_fie_blo_ani;
+            cum_pro_bin_ani = sam_fil.cum_pro_bin_ani;
+            p_xco = sam_fil.p_xco;
+            log_fie_roi = sam_fil.log_fie_roi;
+            %
+            dff_roi_fra.bou_non = [];
+            log_fie_roi.bou_non.inh = logical([]);
+            log_fie_roi.bou_non.exc = logical([]);
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                %
+                act_cel_fra = rec_fil.dff_roi_fra;
+                dff_roi_fra.bou_non = [dff_roi_fra.bou_non; act_cel_fra.bou_non];
+                log_roi = rec_fil.log_roi;
+                log_fie_roi.bou_non.inh = [log_fie_roi.bou_non.inh; log_roi.bou_non.srt.inh];
+                log_fie_roi.bou_non.exc = [log_fie_roi.bou_non.exc; log_roi.bou_non.srt.exc];
+            end
+            cor_fie_fie_blo_ani.bou_non = fin_cor_fie_fie_blo_ani(obj, 'bou_non');
+            cor_fie_fie_blo_ani.spo_bou_non = fin_cor_fie_fie_blo_ani(obj, 'spo_bou_non');
+            [cum_pro_bin_ani.bou_non, ~, p_xco.bou_non] = gen_cum_pro_bin_ani(obj, ...
+                'bou_non');
+            [cum_pro_bin_ani.spo_bou_non, ~, p_xco.spo_bou_non] = ...
+                gen_cum_pro_bin_ani(obj, 'spo_bou_non');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            cor_fie_fie_blo_ani.bou_non_exc = fin_cor_fie_fie_blo_ani(obj, 'bou_non_exc');
+            cor_fie_fie_blo_ani.bou_non_inh = fin_cor_fie_fie_blo_ani(obj, 'bou_non_inh');
+            [cum_pro_bin_ani.bou_non_exc, ~, p_xco.bou_non_exc] = ...
+                gen_cum_pro_bin_ani(obj, 'bou_non_exc');
+            [cum_pro_bin_ani.bou_non_inh, ~, p_xco.bou_non_inh] = ...
+                gen_cum_pro_bin_ani(obj, 'bou_non_inh');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            cor_fie_fie_blo_ani.spo_bou_non_exc = fin_cor_fie_fie_blo_ani(obj, 'spo_bou_non_exc');
+            cor_fie_fie_blo_ani.spo_bou_non_inh = fin_cor_fie_fie_blo_ani(obj, 'spo_bou_non_inh');
+            [cum_pro_bin_ani.spo_bou_non_exc, ~, p_xco.spo_bou_non_exc] = ...
+                gen_cum_pro_bin_ani(obj, 'spo_bou_non_exc');
+            [cum_pro_bin_ani.spo_bou_non_inh, ~, p_xco.spo_bou_non_inh] = ...
+                gen_cum_pro_bin_ani(obj, 'spo_bou_non_inh');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_roi_fra', 'cor_fie_fie_blo_ani', 'cum_pro_bin_ani', ...
+                'p_xco', 'log_fie_roi', '-append')
+
             sam_fil = matfile(obj.fil_pat_sam);
             cor_fie_fie_blo_ani = sam_fil.cor_fie_fie_blo_ani;
-            cor_fie_fie_blo_ani.tai = fin_cor_fie_fie_blo_ani(obj, 'tai');
+            cor_fie_fie_blo_ani.spo_bou_non = fin_cor_fie_fie_blo_ani(obj, 'spo_bou_non');
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_sam, 'cor_fie_fie_blo_ani', '-append')
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo-onl
-        function app_axo_onl_omn(obj)
-            app_par_tai_all(obj)
-            app_par_tai_pix_all(obj)
-            app_par_tai(obj)
-            app_par_axo_onl(obj)
-            sav_fig_bin_sig(obj)
-            sav_fig_inh_exc_sin(obj)
+        % un
+        function app_par_roi_r(obj)
+            dff_fie_cel_fra.bou_non = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                act_cel_fra = rec_fil.dff_cel_fra;
+                dff_fie_cel_fra.bou_non = [dff_fie_cel_fra.bou_non; act_cel_fra.bou_non];
+            end
+            log_fie_fie_cel.bou_non.srt = gen_log_cel(obj, {'bou_non', 'srt'});
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_fie_cel_fra', 'log_fie_fie_cel', '-append')
         end
-        %
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo-onl
         function app_dff_row_con_fra_ani(obj)
             x_ani_bin = cell(obj.n_ani, 1);
             y_ani_bin = cell(obj.n_ani, 1);
@@ -1265,64 +1287,224 @@ classdef sam
             end
             log_bin.dor = logical(log_bin.dor);
             n_bin = size(log_bin.dor, 1);
-            
+            disp('dff')
             dff_bin_fra.bou.all = gen_dff_bin_fra(obj, {'bou', 'all'});
+            dff_lig_bin_fra = gen_dff_bin_fra(obj, {'lig'});
+            dff_sho_bin_fra = gen_dff_bin_fra(obj, {'sho'});
+            dff_tap_bin_fra = gen_dff_bin_fra(obj, {'tap'});
+            disp('fra')
             fra_blo_ani.all = gen_fra_blo_ani(obj, 'all');
             fra_blo_ani.vib = gen_fra_blo_ani(obj, 'vib');
             fra_blo_ani.non = gen_fra_blo_ani(obj, 'non');
+            fra_blo_ani.lig = gen_fra_blo_ani(obj, 'lig');
+            fra_blo_ani.sho = gen_fra_blo_ani(obj, 'sho');
+            fra_blo_ani.tap = gen_fra_blo_ani(obj, 'tap');
+            disp('log')
             log_bin.all = fin_log_bin(obj, 'all');
-            log_bin.vib = fin_log_bin(obj, 'vib');
+            log_bin.vib = fin_log_bin(obj, 'vib');% not determined ...
             log_bin.non = fin_log_bin(obj, 'non');
+            log_bin.lig = fin_log_bin_sen(obj, 'lig');
+            log_bin.sho = fin_log_bin_sen(obj, 'sho');
+            log_bin.tap = fin_log_bin_sen(obj, 'tap');
+            disp('res')
             res_ani_bin.bou.all = gen_res_ani_bin(obj, 'all');
             res_ani_bin.bou.vib = gen_res_ani_bin(obj, 'vib');
             res_ani_bin.bou.non = gen_res_ani_bin(obj, 'non');
-            r_blo_ani.tai = gen_r_blo_ani(obj, 'tai');
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'x_ani_bin', 'y_ani_bin', 'z_ani_bin', 'n_bin', 'fra_blo_ani', ...
-                'dff_bin_fra', 'log_bin', 'res_ani_bin', 'r_blo_ani', '-append')
-
-            sam_fil = matfile(obj.fil_pat_sam);
-            fra_blo_ani = sam_fil.fra_blo_ani;
-            log_bin = sam_fil.log_bin;
-            res_ani_bin = sam_fil.res_ani_bin;
-            dff_lig_bin_fra = gen_dff_bin_fra(obj, {'lig'});
-            disp('dff')
-            dff_sho_bin_fra = gen_dff_bin_fra(obj, {'sho'});
-            dff_tap_bin_fra = gen_dff_bin_fra(obj, {'tap'});
-            fra_blo_ani.lig = gen_fra_blo_ani(obj, 'lig');% doesn't exist !!!
-            disp('fra')
-            fra_blo_ani.sho = gen_fra_blo_ani(obj, 'sho');
-            fra_blo_ani.tap = gen_fra_blo_ani(obj, 'tap');
-            log_bin.lig = fin_log_bin_sen(obj, 'lig');
-            disp('log')
-            log_bin.sho = fin_log_bin_sen(obj, 'sho');
-            log_bin.tap = fin_log_bin_sen(obj, 'tap');
             res_ani_bin.lig = gen_res_ani_bin(obj, 'lig');
-            disp('res')
             res_ani_bin.sho = gen_res_ani_bin(obj, 'sho');
             res_ani_bin.tap = gen_res_ani_bin(obj, 'tap');
-            r_blo_ani.lig = gen_r_blo_ani(obj, 'lig');
             disp('r')
+            r_blo_ani.tai = gen_r_blo_ani(obj, 'tai');
+            r_blo_ani.lig = gen_r_blo_ani(obj, 'lig');
             r_blo_ani.sho = gen_r_blo_ani(obj, 'sho');
             r_blo_ani.tap = gen_r_blo_ani(obj, 'tap');
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'dff_lig_bin_fra', 'dff_sho_bin_fra', 'dff_tap_bin_fra', ...
+            save(obj.fil_pat_sam, 'x_ani_bin', 'y_ani_bin', 'z_ani_bin', 'n_bin', ...
+                'dff_bin_fra', 'dff_lig_bin_fra', 'dff_sho_bin_fra', 'dff_tap_bin_fra', ...
                 'fra_blo_ani', 'log_bin', 'res_ani_bin', 'r_blo_ani', '-append')
+
+            disp('dff')
+            dff_bin_fra.bou.all = gen_dff_bin_fra(obj, {'bou', 'all'});
+            disp('log')
+            sam_fil = matfile(obj.fil_pat_sam);
+            log_bin = sam_fil.log_bin;
+            log_bin.all = fin_log_bin_sen(obj, 'all');
+            disp('res')
+            res_ani_bin = sam_fil.res_ani_bin;
+            res_ani_bin.bou.all = gen_res_ani_bin(obj, 'all');
+            disp('r')
+            r_blo_ani.tai = gen_r_blo_ani(obj, 'tai');
+            r_blo_ani.sho = gen_r_blo_ani(obj, 'sho');
+            r_blo_ani.tap = gen_r_blo_ani(obj, 'tap');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_bin_fra', 'log_bin', 'res_ani_bin', 'r_blo_ani', '-append')
+
+            disp('dff')
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_bin_fra = sam_fil.dff_bin_fra;
+            dff_bin_fra.bou.non = gen_dff_bin_fra(obj, {'bou', 'non'});
+            disp('log')
+            log_bin = sam_fil.log_bin;
+            log_bin.non = fin_log_bin_sen(obj, 'non');
+            disp('res')
+            res_ani_bin = sam_fil.res_ani_bin;
+            res_ani_bin.bou.non = gen_res_ani_bin(obj, 'non');
+            disp('r')
+            r_blo_ani = sam_fil.r_blo_ani;
+            r_blo_ani.non = gen_r_blo_ani(obj, 'non');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_bin_fra', 'log_bin', 'res_ani_bin', 'r_blo_ani', '-append')
+
+            dff_bou_win.all.all = [];
+            dff_bou_win.all.exc = [];
+            dff_bou_win.all.inh = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                tap = rec_fun();
+                if tap.tai && tap.bri
+                    mat_fil_rec = matfile(obj.fil_pat_rec(ani_num));
+                    act_bou_win = mat_fil_rec.dff_bou_win;
+                    dff_bou_win.all.all = [dff_bou_win.all.all; act_bou_win.all.all];
+                    dff_bou_win.all.exc = [dff_bou_win.all.exc; act_bou_win.all.exc];
+                    if isempty(act_bou_win.all.inh)
+                        act_bou_win.all.inh = nan.*act_bou_win.all.exc;
+                    end
+                    dff_bou_win.all.inh = [dff_bou_win.all.inh; act_bou_win.all.inh];
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_bou_win', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_ani_bin = sam_fil.x_ani_bin;
+            y_ani_bin = sam_fil.y_ani_bin;
+            x_bin.all = vertcat(x_ani_bin{:});
+            y_bin.all = vertcat(y_ani_bin{:});
+            x_lim = [min(x_bin.all) max(x_bin.all)];% [44.21 411.63]
+            y_lim = [min(y_bin.all) max(y_bin.all)];% [0.239 227.864]
+            pro_den_bin_ani = gen_pro_den_bin_ani(obj);
+            pro_den_bin = cal_pro_den_bin(pro_den_bin_ani);
+            p_bin = [];
+            log_bin = sam_fil.log_bin;
+            [p_bin, log_bin] = cal_p_bin(p_bin, log_bin, pro_den_bin_ani, 'tai', 'lig');
+            [p_bin, log_bin] = cal_p_bin(p_bin, log_bin, pro_den_bin_ani, 'tai', 'tap');
+            [p_bin, log_bin] = cal_p_bin(p_bin, log_bin, pro_den_bin_ani, 'lig', 'tap');
+            log_bin = det_log_bin_dif(p_bin, log_bin, 'tai', 'lig');
+            log_bin = det_log_bin_dif(p_bin, log_bin, 'tai', 'tap');
+            log_bin = det_log_bin_dif(p_bin, log_bin, 'lig', 'tap');
+            z_ani_bin = sam_fil.z_ani_bin;
+            z_bin.all = vertcat(z_ani_bin{:});
+            z_lim = [min(z_bin.all) max(z_bin.all)];
+            pro_den_sid_bin_ani = gen_pro_den_sid_bin_ani(obj);
+            pro_den_sid_bin = cal_pro_den_sid_bin(pro_den_sid_bin_ani);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'pro_den_bin_ani', 'pro_den_bin', 'p_bin', 'log_bin', 'x_lim', ...
+                'y_lim', 'pro_den_sid_bin_ani', 'pro_den_sid_bin', 'z_lim', '-append')
         end
-        % incorporated
+        % un
         function app_par_axo_onl(obj)
             sam_fil = matfile(obj.fil_pat_sam);
-            r_blo_ani = sam_fil.r_blo_ani;
-            r_blo_ani.ong = gen_r_blo_ani(obj, 'ong');
+            pro_den_bin_ani_tai = sam_fil.pro_den_bin_ani;
+            pro_den_bin_ani = gen_pro_den_bin_ani(obj);
+            %
+            pro_den_bin_tai = sam_fil.pro_den_bin;
+            pro_den_bin = cal_pro_den_bin(pro_den_bin_ani);
+            %
+            pro_den_sid_bin_ani_tai = sam_fil.pro_den_sid_bin_ani;
+            pro_den_sid_bin_ani = gen_pro_den_sid_bin_ani(obj);
+            %
+            pro_den_sid_bin_tai = sam_fil.pro_den_sid_bin;
+            pro_den_sid_bin = cal_pro_den_sid_bin(pro_den_sid_bin_ani);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'r_blo_ani', '-append')
-        end       
+            save(obj.fil_pat_sam, 'pro_den_bin_ani', 'pro_den_bin', 'pro_den_sid_bin_ani', ...
+                'pro_den_sid_bin', 'pro_den_bin_ani_tai', 'pro_den_bin_tai', ...
+                'pro_den_sid_bin_ani_tai', 'pro_den_sid_bin_tai', '-append')
+        end
+        %%%%%%
+        function app_con_axo_onl(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_ani_bin = sam_fil.x_ani_bin;
+            y_ani_bin = sam_fil.y_ani_bin;
+            log_bin = sam_fil.log_bin;
+            fie_num = {'axo', 'bou', 'all', 'srt'};
+            coo_bin_dim.tai = ext_coo_bin_dim(x_ani_bin, y_ani_bin, log_bin, fie_num);
+            z_ani_bin = sam_fil.z_ani_bin;
+            coo_sid_bin_dim.tai = ext_coo_sid_bin_dim(x_ani_bin, z_ani_bin, log_bin, fie_num);
+            fie_num = {'axo', 'bou', 'lig', 'srt'};
+            coo_bin_dim.lig = ext_coo_bin_dim(x_ani_bin, y_ani_bin, log_bin, fie_num);
+            coo_sid_bin_dim.lig = ext_coo_sid_bin_dim(x_ani_bin, z_ani_bin, log_bin, fie_num);
+            fie_num = {'axo', 'bou', 'tap', 'srt'};
+            coo_bin_dim.tap = ext_coo_bin_dim(x_ani_bin, y_ani_bin, log_bin, fie_num);
+            coo_sid_bin_dim.tap = ext_coo_sid_bin_dim(x_ani_bin, z_ani_bin, log_bin, fie_num);
+            %
+            coo_bin_dim = uni_coo_bin_dim(coo_bin_dim);
+            coo_bin_dim = rou_coo_bin_dim(coo_bin_dim);
+            coo_sid_bin_dim = uni_coo_sid_bin_dim(coo_sid_bin_dim);
+            coo_sid_bin_dim = rou_coo_sid_bin_dim(coo_sid_bin_dim);
+            fil_pat_con = '\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat';
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(fil_pat_con, 'coo_bin_dim', 'coo_sid_bin_dim', '-append')
+        end
+        % un
+        function app_par_con_axo_onl(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_ani_bin = sam_fil.x_ani_bin;
+            y_ani_bin = sam_fil.y_ani_bin;
+            log_bin = sam_fil.log_bin;
+            fie_num = {'axo', 'bou', 'non', 'srt'};
+            coo_bin_dim.non = ext_coo_bin_dim(x_ani_bin, y_ani_bin, log_bin, fie_num);
+            z_ani_bin = sam_fil.z_ani_bin;
+            coo_sid_bin_dim.non = ext_coo_sid_bin_dim(x_ani_bin, z_ani_bin, log_bin, fie_num);
+            fie_num = {'axo', 'bou', 'lig', 'srt'};
+            coo_bin_dim.lig = ext_coo_bin_dim(x_ani_bin, y_ani_bin, log_bin, fie_num);
+            coo_sid_bin_dim.lig = ext_coo_sid_bin_dim(x_ani_bin, z_ani_bin, log_bin, fie_num);
+            fie_num = {'axo', 'bou', 'tap', 'srt'};
+            coo_bin_dim.tap = ext_coo_bin_dim(x_ani_bin, y_ani_bin, log_bin, fie_num);
+            coo_sid_bin_dim.tap = ext_coo_sid_bin_dim(x_ani_bin, z_ani_bin, log_bin, fie_num);
+            %
+            coo_bin_dim = uni_coo_bin_dim(coo_bin_dim);
+            coo_bin_dim = rou_coo_bin_dim(coo_bin_dim);
+            coo_sid_bin_dim = uni_coo_sid_bin_dim(coo_sid_bin_dim);
+            coo_sid_bin_dim = rou_coo_sid_bin_dim(coo_sid_bin_dim);
+            fil_pat_con = '\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat';
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(fil_pat_con, 'coo_bin_dim', 'coo_sid_bin_dim', '-append')
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% cel-onl
         function app_som(obj)
+            pcc_blo_ani = [];
+            pcc_blo_ani = gen_pcc_blo_ani(obj, pcc_blo_ani, 'ong');
+            r_pai.one.dat = [];
+            r_pai.one.shu = [];
+            r_pai.two.dat = [];
+            r_pai.two.shu = [];
+            clu_fid_ani.dat = nan(obj.n_ani, 1);
+            clu_fid_ani.shu = nan(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                pcc_pai = rec_fil.r_pai;
+                r_pai.one.dat = [r_pai.one.dat; pcc_pai.one.dat];
+                r_pai.one.shu = [r_pai.one.shu; pcc_pai.one.shu];
+                r_pai.two.dat = [r_pai.two.dat; pcc_pai.two.dat];
+                r_pai.two.shu = [r_pai.two.shu; pcc_pai.two.shu];
+                clu_fid = rec_fil.clu_fid;
+                clu_fid_ani.dat(ani_num) = clu_fid.dat;
+                clu_fid_ani.shu(ani_num) = clu_fid.shu;
+            end
+            r.dat = corr(r_pai.one.dat, r_pai.two.dat);
+            r.shu = corr(r_pai.one.shu, r_pai.two.shu);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'pcc_blo_ani', 'r_pai', 'clu_fid_ani', 'r', '-append')
+
             x_ani_cel = cell(obj.n_ani, 1);
             y_ani_cel = cell(obj.n_ani, 1);
             z_ani_cel = cell(obj.n_ani, 1);
             clu_ani_cel.bou.all = cell(obj.n_ani, 1);
+            clu_ani_cel.bou.spo = cell(obj.n_ani, 1);
             for ani_num = 1:obj.n_ani
                 disp(ani_num)
                 rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
@@ -1337,86 +1519,11 @@ classdef sam
                     z_ani_cel{ani_num} = z_cel;
                     clu_cel_k = rec_fil.clu_cel_k;
                     clu_ani_cel.bou.all{ani_num} = clu_cel_k.bou.all(:, 5);
-                end
-            end
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'x_ani_cel', 'y_ani_cel', 'z_ani_cel', 'clu_ani_cel', '-append')
-
-            pcc_blo_ani = [];
-            pcc_blo_ani = gen_pcc_blo_ani(obj, pcc_blo_ani, 'ses');
-            pcc_blo_ani = gen_pcc_blo_ani(obj, pcc_blo_ani, 'ong');
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'pcc_blo_ani', '-append')
-
-            sam_fil = matfile(obj.fil_pat_sam);
-            ioi_k.pix = sam_fil.ioi_k;
-            [clu_cel_k, ioi_k.cel, n_cel, dff_cel_fra] = ext_clu_cel_k(obj);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'n_cel', 'dff_cel_fra', 'clu_cel_k', 'ioi_k', '-append')
-
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            n_blo = con_fil.n_blo;
-            fra_blo_ani.ros_cau.exc = nan(n_blo.rap, obj.n_ani);
-            fra_blo_ani.ros_cau.inh = nan(n_blo.rap, obj.n_ani);
-            %
-            fra_blo_ani.dor_ven.exc = nan(n_blo.rap, obj.n_ani);
-            fra_blo_ani.dor_ven.inh = nan(n_blo.rap, obj.n_ani);
-            for ani_num = 1:obj.n_ani
-                disp(ani_num)
-                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
-                sti = rec_fun_i();
-                if sti.tai
-                    rec_fil = matfile(sti.fil_pat_rec);
-                    fra_blo = rec_fil.fra_blo;
-                    fra_blo_ani.ros_cau.exc(:, ani_num) = fra_blo.ros_cau.exc;
-                    fra_blo_ani.ros_cau.inh(:, ani_num) = fra_blo.ros_cau.inh;
-                    %
-                    fra_blo_ani.dor_ven.exc(:, ani_num) = fra_blo.dor_ven.exc;
-                    fra_blo_ani.dor_ven.inh(:, ani_num) = fra_blo.dor_ven.inh;
-                end
-            end
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'fra_blo_ani', '-append')
-
-            sam_fil = matfile(obj.fil_pat_sam);
-            pcc_blo_ani = sam_fil.pcc_blo_ani;
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            n_blo = con_fil.n_blo;
-            pcc_blo_ani.tai.cel.pos = nan(n_blo.rap.thr, obj.n_ani);
-            pcc_blo_ani.tai.cel.neg = nan(n_blo.rap.thr, obj.n_ani);
-            pcc_blo_ani.tai.shu.pos = nan(n_blo.rap.thr, obj.n_ani);
-            pcc_blo_ani.tai.shu.neg = nan(n_blo.rap.thr, obj.n_ani);
-            for ani_num = 1:obj.n_ani
-                disp(ani_num)
-                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
-                sti = rec_fun_i();
-                if sti.tai
-                    rec_fil = matfile(sti.fil_pat_rec);
-                    pcc_blo = rec_fil.pcc_blo;
-                    pcc_blo_ani.tai.cel.pos(:, ani_num) = pcc_blo.cel_tai.pos;
-                    pcc_blo_ani.tai.cel.neg(:, ani_num) = pcc_blo.cel_tai.neg;
-                    pcc_blo_ani.tai.shu.pos(:, ani_num) = pcc_blo.shu_tai.pos;
-                    pcc_blo_ani.tai.shu.neg(:, ani_num) = pcc_blo.shu_tai.neg;
-                end
-            end
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'pcc_blo_ani', '-append')
-
-            sam_fil = matfile(obj.fil_pat_sam);
-            clu_ani_cel = sam_fil.clu_ani_cel;
-            clu_ani_cel.bou.spo = cell(obj.n_ani, 1);
-            for ani_num = 1:obj.n_ani
-                disp(ani_num)
-                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
-                sti = rec_fun_i();
-                if sti.tai
-                    rec_fil = matfile(sti.fil_pat_rec);
-                    clu_cel_k = rec_fil.clu_cel_k;
                     clu_ani_cel.bou.spo{ani_num} = clu_cel_k.bou.spo(:, 5);
                 end
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'clu_ani_cel', '-append')
+            save(obj.fil_pat_sam, 'x_ani_cel', 'y_ani_cel', 'z_ani_cel', 'clu_ani_cel', '-append')
 
             dff_bou_win.all = [];
             dff_bou_win.vib = [];
@@ -1437,10 +1544,9 @@ classdef sam
             save(obj.fil_pat_sam, 'dff_bou_win', '-append')
 
             sam_fil = matfile(obj.fil_pat_sam);
-            dff_fie_cel_fra = sam_fil.dff_fie_cel_fra;
+            dff_fie_cel_fra = sam_fil.dff_fie_cel_fra;% .bou - .all, .spo
             log_fie_fie_cel = sam_fil.log_fie_fie_cel;
             res_fie_fie_cel = sam_fil.res_fie_fie_cel;
-            fra_blo_ani.tai = sam_fil.fra_blo_ani;
             dff_fie_cel_fra.bou_all = [];
             dff_fie_cel_fra.lig = [];
             dff_fie_cel_fra.sho = [];
@@ -1486,21 +1592,39 @@ classdef sam
                 'srt_001'});
             [log_fie_fie_cel.tap.zsc, res_fie_fie_cel.tap.zsc] = gen_log_cel(obj, {'tap', 'zsc'});
             
+            fra_blo_ani.tai = gen_fra_blo_ani(obj, 'bou_all');
             fra_blo_ani.lig = gen_fra_blo_ani(obj, 'lig');
             fra_blo_ani.sho = gen_fra_blo_ani(obj, 'sho');
             fra_blo_ani.tap = gen_fra_blo_ani(obj, 'tap');
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'dff_fie_cel_fra', 'log_fie_fie_cel', 'res_fie_fie_cel', ...
-                'fra_blo_ani', '-append')
 
-            sam_fil = matfile(obj.fil_pat_sam);
             pcc_blo_ani = sam_fil.pcc_blo_ani;
             pcc_blo_ani = gen_pcc_blo_ani(obj, pcc_blo_ani, 'lig');
             pcc_blo_ani = gen_pcc_blo_ani(obj, pcc_blo_ani, 'sho');
             pcc_blo_ani = gen_pcc_blo_ani(obj, pcc_blo_ani, 'tap');
             pcc_blo_ani = gen_pcc_blo_ani(obj, pcc_blo_ani, 'tai');
+            % sensory responses with/wo tail
+            dff_fie_cel_fra.tap_tai = [];
+            dff_fie_cel_fra.tap_not = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                act_cel_fra = rec_fil.dff_cel_fra;
+                dff_fie_cel_fra.tap_tai = [dff_fie_cel_fra.tap_tai; act_cel_fra.tap_tai];
+                dff_fie_cel_fra.tap_not = [dff_fie_cel_fra.tap_not; act_cel_fra.tap_not];
+            end
+            [log_fie_fie_cel.tap_tai.zsc, res_fie_fie_cel.tap_tai.zsc] = gen_log_cel(obj, {'tap_tai'...
+                , 'zsc'});
+            [log_fie_fie_cel.tap_not.zsc, res_fie_fie_cel.tap_not.zsc] = gen_log_cel(obj, {'tap_not'...
+                , 'zsc'});
+            fra_blo_ani.tap_tai = gen_fra_blo_ani(obj, 'tap_tai');
+            fra_blo_ani.tap_not = gen_fra_blo_ani(obj, 'tap_not');
+            pcc_blo_ani = gen_pcc_blo_ani(obj, pcc_blo_ani, 'tap_tai');
+            pcc_blo_ani = gen_pcc_blo_ani(obj, pcc_blo_ani, 'tap_not');
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'pcc_blo_ani', '-append')
+            save(obj.fil_pat_sam, 'dff_fie_cel_fra', 'log_fie_fie_cel', 'res_fie_fie_cel', ...
+                'fra_blo_ani', 'pcc_blo_ani', '-append')
 
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             n_kxx = con_fil.n_kxx;
@@ -1518,66 +1642,271 @@ classdef sam
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_sam, 'ioi_kxx_ani', 'ioi_shu_kxx_ani', 'del_ioi_kxx_ani', '-append')
 
-            clu_fid_ani.dat = nan(obj.n_ani, 1);
-            clu_fid_ani.shu = nan(obj.n_ani, 1);
+            n_cel_ani = nan(obj.n_ani, 1);
             for i = 1:obj.n_ani
                 rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(i))]);
                 sti = rec_fun_i();
                 rec_fil = matfile(sti.fil_pat_rec);
-                clu_fid = rec_fil.clu_fid;
-                clu_fid_ani.dat(i) = clu_fid.dat;
-                clu_fid_ani.shu(i) = clu_fid.shu;
+                n_cel = rec_fil.n_cel;
+                n_cel_ani(i) = n_cel.all;
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'clu_fid_ani', '-append')
+            save(obj.fil_pat_sam, 'n_cel_ani', '-append')
 
             sam_fil = matfile(obj.fil_pat_sam);
-            pcc_blo_ani = sam_fil.pcc_blo_ani;
-            pcc_blo_ani = gen_pcc_blo_ani(obj, pcc_blo_ani, 'ong');
+            dff_fie_cel_fra = sam_fil.dff_fie_cel_fra;
+            clu_cel.bou_all = ext_clu_cel(dff_fie_cel_fra.bou_all);
+            clu_cel.lig = ext_clu_cel(dff_fie_cel_fra.lig);
+            clu_cel.tap = ext_clu_cel(dff_fie_cel_fra.tap);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'clu_cel', '-append')
+
+            x_cel = vertcat(x_ani_cel{:});
+            y_cel = vertcat(y_ani_cel{:});
+            z_cel = vertcat(z_ani_cel{:});
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'x_cel', 'y_cel', 'z_cel', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            clu_cel = sam_fil.clu_cel;
+            n_clu = 4;
+            n_cel_clu = nan(n_clu, 1);
+            for clu = 1:n_clu
+                n_cel_clu(clu) = sum(clu_cel.tap == clu);
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'n_cel_clu', '-append')
+
+            dff_bou_win.all.all = [];
+            dff_bou_win.all.exc = [];
+            dff_bou_win.all.inh = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                tap = rec_fun();
+                if tap.tai && tap.bri
+                    mat_fil_rec = matfile(obj.fil_pat_rec(ani_num));
+                    act_bou_win = mat_fil_rec.dff_bou_win;
+                    dff_bou_win.all.all = [dff_bou_win.all.all; act_bou_win.all.all];
+                    dff_bou_win.all.exc = [dff_bou_win.all.exc; act_bou_win.all.exc];
+                    if isempty(act_bou_win.all.inh)
+                        act_bou_win.all.inh = nan.*act_bou_win.all.exc;
+                    end
+                    dff_bou_win.all.inh = [dff_bou_win.all.inh; act_bou_win.all.inh];
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_bou_win', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            fra_blo_ani = sam_fil.fra_blo_ani;
+            fra_blo_ani.tai_two = gen_fra_blo_ani(obj, 'tai_two');
+            fra_blo_ani.lig_two = gen_fra_blo_ani(obj, 'lig_two');
+            fra_blo_ani.tap_two = gen_fra_blo_ani(obj, 'tap_two');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'fra_blo_ani', '-append')
+            
+            % modality
+            sam_fil = matfile(obj.fil_pat_sam);
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            log_fie_fie_cel.mul_all = gen_log_cel_sim(obj, 'mul_all');
+            log_fie_fie_cel.uni_tai = gen_log_cel_sim(obj, 'uni_tai');
+            log_fie_fie_cel.uni_lig = gen_log_cel_sim(obj, 'uni_lig');
+            log_fie_fie_cel.uni_tap = gen_log_cel_sim(obj, 'uni_tap');
+            log_fie_fie_cel.non_all = ~log_fie_fie_cel.mul_all & ~log_fie_fie_cel.uni_tai & ...
+                ~log_fie_fie_cel.uni_lig & ~log_fie_fie_cel.uni_tap;
             %
-            r_pai.one.dat = [];
-            r_pai.one.shu = [];
-            r_pai.two.dat = [];
-            r_pai.two.shu = [];
+            dff_cel.tai = gen_dff_cel(obj, 'tai');% responses of all cells to tail.
+            dff_cel.lig = gen_dff_cel(obj, 'lig');
+            dff_cel.tap = gen_dff_cel(obj, 'tap');
+            %
+            n_cel = sam_fil.n_cel;
+            fra_mod = nan(5, 1);
+            fra_mod(1) = sum(log_fie_fie_cel.non_all)/n_cel;
+            fra_mod(2) = sum(log_fie_fie_cel.uni_tai)/n_cel;
+            fra_mod(3) = sum(log_fie_fie_cel.uni_lig)/n_cel;
+            fra_mod(4) = sum(log_fie_fie_cel.uni_tap)/n_cel;
+            fra_mod(5) = sum(log_fie_fie_cel.mul_all)/n_cel;
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'log_fie_fie_cel', 'dff_cel', 'fra_mod', '-append')
+
+            pve_ani = nan(obj.n_ani, 1);
+            pve_cel = [];
             for ani_num = 1:obj.n_ani
                 disp(ani_num)
                 rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
                 sti = rec_fun_i();
                 rec_fil = matfile(sti.fil_pat_rec);
-                pcc_pai = rec_fil.r_pai;
-                r_pai.one.dat = [r_pai.one.dat; pcc_pai.one.dat];
-                r_pai.one.shu = [r_pai.one.shu; pcc_pai.one.shu];
-                r_pai.two.dat = [r_pai.two.dat; pcc_pai.two.dat];
-                r_pai.two.shu = [r_pai.two.shu; pcc_pai.two.shu];
+                pve_ani(ani_num) = rec_fil.pve;
+                pve_cel = [pve_cel; rec_fil.pve_cel'];
             end
-            r.dat = corr(r_pai.one.dat, r_pai.two.dat);
-            r.shu = corr(r_pai.one.shu, r_pai.two.shu);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'pcc_blo_ani', 'r_pai', 'r', '-append')
+            save(obj.fil_pat_sam, 'pve_ani', 'pve_cel', '-append')
 
-            n_cel_ani = nan(obj.n_ani, 1);
-            for i = 1:obj.n_ani
-                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(i))]);
+            fra_ani.tap_tai.exc = nan(obj.n_ani, 1);
+            fra_ani.tap_not.exc = nan(obj.n_ani, 1);
+            fra_ani.tap_tai.inh = nan(obj.n_ani, 1);
+            fra_ani.tap_not.inh = nan(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
                 sti = rec_fun_i();
                 rec_fil = matfile(sti.fil_pat_rec);
-                n_cel = rec_fil.n_cel;
-                n_cel_ani(i) = n_cel.all;
+                fra = rec_fil.fra;
+                fra_ani.tap_tai.exc(ani_num) = fra.tap_tai.exc;
+                fra_ani.tap_not.exc(ani_num) = fra.tap_not.exc;
+                fra_ani.tap_tai.inh(ani_num) = fra.tap_tai.inh;
+                fra_ani.tap_not.inh(ani_num) = fra.tap_not.inh;
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'n_cel_ani', '-append')
+            save(obj.fil_pat_sam, 'fra_ani', '-append')
+
+            per_sat_pix_ani = nan(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                per_sat_pix_ani(ani_num) = rec_fil.per_sat_pix;
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'per_sat_pix_ani', '-append')
+
+            pve_cel_tau = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                pve_cel_tau = [pve_cel_tau; rec_fil.pve_cel_tau];
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'pve_cel_tau', '-append')
+
+            % spo tail beats
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_fie_cel_fra = sam_fil.dff_fie_cel_fra;% .bou - .all, .spo
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            res_fie_fie_cel = sam_fil.res_fie_fie_cel;
+            dff_fie_cel_fra.bou_non = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                act_cel_fra = rec_fil.dff_cel_fra;
+                dff_fie_cel_fra.bou_non = [dff_fie_cel_fra.bou_non; act_cel_fra.bou_non];
+            end
+            [log_fie_fie_cel.bou_non.srt, res_fie_fie_cel.bou_non.srt] = gen_log_cel(obj, {'bou_non'...
+                , 'srt'});
+            [log_fie_fie_cel.bou_non.zsc, res_fie_fie_cel.bou_non.zsc] = gen_log_cel(obj, {'bou_non'...
+                , 'zsc'});
+            fra_blo_ani = sam_fil.fra_blo_ani;
+            fra_blo_ani.bou_non = gen_fra_blo_ani(obj, 'bou_non');
+            pcc_blo_ani = sam_fil.pcc_blo_ani;
+            pcc_blo_ani = gen_pcc_blo_ani(obj, pcc_blo_ani, 'bou_non');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_fie_cel_fra', 'log_fie_fie_cel', 'res_fie_fie_cel', ...
+                'fra_blo_ani', 'pcc_blo_ani', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_cel = sam_fil.dff_cel;
+            dff_cel.tap_tai = gen_dff_cel(obj, 'tap_tai');
+            dff_cel.tap_not = gen_dff_cel(obj, 'tap_not');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_cel', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            res_fie_fie_cel = sam_fil.res_fie_fie_cel;
+            res_cel = res_fie_fie_cel.tap.srt;
+            log_fie_fie_cel.tap.srt.res = res_cel == 1 | res_cel == 3;
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'log_fie_fie_cel', '-append')
+
+            dff_tri_cel.lig = [];
+            dff_tri_cel.tap = [];
+            win = 2;
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                dff_cel_tri_win = rec_fil.dff_cel_tri_win;
+                act_tri_cel.lig = extract_dff_at_window(dff_cel_tri_win.lig, win);
+                dff_tri_cel.lig = [dff_tri_cel.lig act_tri_cel.lig];
+                act_tri_cel.tap = extract_dff_at_window(dff_cel_tri_win.tap, win);
+                dff_tri_cel.tap = [dff_tri_cel.tap act_tri_cel.tap];
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_tri_cel', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            log_fie_fie_cel.tai_lig = gen_log_cel_two(obj, 'tai', 'lig');
+            log_fie_fie_cel.tai_tap = gen_log_cel_two(obj, 'tai', 'tap');
+            log_fie_fie_cel.lig_tap = gen_log_cel_two(obj, 'lig', 'tap');
+            %
+            dff_cel = sam_fil.dff_cel;
+            dff_cel.bou_non = gen_dff_cel(obj, 'bou_non');
+            %
+            fra_mod.tai_lig_tap = sam_fil.fra_mod;
+            fra_mod.tai_lig = cal_fra_mod(log_fie_fie_cel.tai_lig, 'tai', 'lig');
+            fra_mod.tai_tap = cal_fra_mod(log_fie_fie_cel.tai_tap, 'tai', 'tap');
+            fra_mod.lig_tap = cal_fra_mod(log_fie_fie_cel.lig_tap, 'lig', 'tap');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'log_fie_fie_cel', 'dff_cel', 'fra_mod', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            clu_cel = sam_fil.clu_cel;
+            dff_fie_cel_fra = sam_fil.dff_fie_cel_fra;
+            clu_cel.bou_non = ext_clu_cel(dff_fie_cel_fra.bou_non);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'clu_cel', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            n_cel_clu.tap = sam_fil.n_cel_clu;
+            clu_cel = sam_fil.clu_cel;
+            n_clu = 4;
+            n_cel_clu.bou_non = nan(n_clu, 1);
+            for clu = 1:n_clu
+                n_cel_clu.bou_non(clu) = sum(clu_cel.bou_non == clu);
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'n_cel_clu', '-append')
         end
-        % incorporated
+        % un
         function app_par_som(obj)
-            n_cel_ani = nan(obj.n_ani, 1);
-            for i = 1:obj.n_ani
-                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(i))]);
+            sam_fil = matfile(obj.fil_pat_sam);
+            fra_ani = sam_fil.fra_ani;
+            fra_ani.bou_non.exc = nan(obj.n_ani, 1);
+            fra_ani.lig.exc = nan(obj.n_ani, 1);
+            fra_ani.tap.exc = nan(obj.n_ani, 1);
+            fra_ani.bou_non.inh = nan(obj.n_ani, 1);
+            fra_ani.lig.inh = nan(obj.n_ani, 1);
+            fra_ani.tap.inh = nan(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
                 sti = rec_fun_i();
                 rec_fil = matfile(sti.fil_pat_rec);
-                n_cel = rec_fil.n_cel;
-                n_cel_ani(i) = n_cel.all;
+                fra = rec_fil.fra;
+                fra_ani.bou_non.exc(ani_num) = fra.bou_non.exc;
+                fra_ani.lig.exc(ani_num) = fra.lig.exc;
+                fra_ani.tap.exc(ani_num) = fra.tap.exc;
+                fra_ani.bou_non.inh(ani_num) = fra.bou_non.inh;
+                fra_ani.lig.inh(ani_num) = fra.lig.inh;
+                fra_ani.tap.inh(ani_num) = fra.tap.inh;
             end
+            dim = 1;
+            [mea_fra.bou_non.exc, sta_dev_fra.bou_non.exc, ~, ~] = com_sta(fra_ani.bou_non.exc, dim);
+            [mea_fra.lig.exc, sta_dev_fra.lig.exc, ~, ~] = com_sta(fra_ani.lig.exc, dim);
+            [mea_fra.tap.exc, sta_dev_fra.tap.exc, ~, ~] = com_sta(fra_ani.tap.exc, dim);
+            [mea_fra.bou_non.inh, sta_dev_fra.bou_non.inh, ~, ~] = com_sta(fra_ani.bou_non.inh, dim);
+            [mea_fra.lig.inh, sta_dev_fra.lig.inh, ~, ~] = com_sta(fra_ani.lig.inh, dim);
+            [mea_fra.tap.inh, sta_dev_fra.tap.inh, ~, ~] = com_sta(fra_ani.tap.inh, dim);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_sam, 'n_cel_ani', '-append')
+            save(obj.fil_pat_sam, 'fra_ani', 'mea_fra', 'sta_dev_fra', '-append')
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gab
         function con = ext_con(obj)
@@ -1687,9 +2016,7 @@ classdef sam
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_sam, 'dff_cel_fra', 'log_fie_fie_cel', 'res_fie_cel', 'fra_fie_ani', ...
                 '-append')
-        end
-        % unincorporated
-        function app_par_gab(obj)
+
             sam_fil = matfile(obj.fil_pat_sam);
             log_fie_fie_cel = sam_fil.log_fie_fie_cel;
             log_fie_fie_cel.gab = logical([]);
@@ -1705,6 +2032,252 @@ classdef sam
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_sam, 'log_fie_fie_cel', '-append')
+
+            n_cel_ani.all = nan(obj.n_ani, 1);
+            n_cel_ani.gab = nan(obj.n_ani, 1);
+            n_cel_ani.non = nan(obj.n_ani, 1);
+            for i = 1:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(i))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                n_cel = rec_fil.n_cel;
+                n_cel_ani.all(i) = n_cel.all;
+                n_cel_ani.gab(i) = n_cel.gab;
+                n_cel_ani.non(i) = n_cel.non;
+            end
+            sam_fil = matfile(obj.fil_pat_sam);
+            n_cel.all = sam_fil.n_cel;
+            n_cel.gab = sum(n_cel_ani.gab);
+            n_cel.non = sum(n_cel_ani.non);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'n_cel_ani', 'n_cel', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            fra_fie_ani = sam_fil.fra_fie_ani;
+            fra_fie_ani.gab = nan(obj.n_ani, 1);
+            fra_fie_ani.non = nan(obj.n_ani, 1);
+            for i = 1:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(i))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                fra_fie = rec_fil.fra_fie;
+                fra_fie_ani.gab(i) = fra_fie.gab;
+                fra_fie_ani.non(i) = fra_fie.non;
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'fra_fie_ani', '-append')
+
+            z_sco_cel = [];
+            for i = 1:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(i))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                z_sco_cel = [z_sco_cel; rec_fil.z_sco_cel];
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'z_sco_cel', '-append')
+        end
+        % un
+        function app_par_gab(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_cel_fra = sam_fil.dff_cel_fra;
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            res_fie_cel = sam_fil.res_fie_cel;
+            fra_fie_ani = sam_fil.fra_fie_ani;
+            [dff_cel_fra.bou_non, log_fie_fie_cel.bou_non, res_fie_cel.bou_non, ...
+                fra_fie_ani.bou_non] = gen_dff_cel_fra_bou_non(obj);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_cel_fra', 'log_fie_fie_cel', 'res_fie_cel', 'fra_fie_ani', ...
+                '-append')
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gli
+        function app_gli(obj)
+            dff_fra_bou.all = [];
+            dff_fra_bou.dor = [];
+            dff_fra_bou.ven_exc = [];
+
+            dff_bou_win.all = [];
+            dff_bou_win.dor = [];
+            dff_bou_win.ven_exc = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fil = matfile(obj.fil_pat_rec(ani_num));
+                act_fra_bou = rec_fil.dff_fra_bou;
+                dff_fra_bou.all = [dff_fra_bou.all act_fra_bou.all];
+                dff_fra_bou.dor = [dff_fra_bou.dor act_fra_bou.dor];
+                dff_fra_bou.ven_exc = [dff_fra_bou.ven_exc act_fra_bou.ven_exc];
+
+                act_bou_win = rec_fil.dff_bou_win;
+                dff_bou_win.all = [dff_bou_win.all; act_bou_win.all];
+                dff_bou_win.dor = [dff_bou_win.dor; act_bou_win.dor];
+                dff_bou_win.ven_exc = [dff_bou_win.ven_exc; act_bou_win.ven_exc];
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_fra_bou', 'dff_bou_win', '-append')
+
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_fra_bou = sam_fil.dff_fra_bou;
+            dff_bou_win = sam_fil.dff_bou_win;
+
+            dff_fra_bou.acb_all_all = [];
+            dff_fra_bou.acb_all_dor = [];
+            dff_fra_bou.acb_all_ven_exc = [];
+            dff_bou_win.acb_all_all = [];
+            dff_bou_win.acb_all_dor = [];
+            dff_bou_win.acb_all_ven_exc = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fil = matfile(obj.fil_pat_rec(ani_num));
+                act_fra_bou = rec_fil.dff_fra_bou;
+                dff_fra_bou.acb_all_all = [dff_fra_bou.acb_all_all act_fra_bou.acb_all_all];
+                dff_fra_bou.acb_all_dor = [dff_fra_bou.acb_all_dor act_fra_bou.acb_all_dor];
+                dff_fra_bou.acb_all_ven_exc = [dff_fra_bou.acb_all_ven_exc act_fra_bou.acb_all_ven_exc];
+                act_bou_win = rec_fil.dff_bou_win;
+                dff_bou_win.acb_all_all = [dff_bou_win.acb_all_all; act_bou_win.acb_all_all];
+                dff_bou_win.acb_all_dor = [dff_bou_win.acb_all_dor; act_bou_win.acb_all_dor];
+                dff_bou_win.acb_all_ven_exc = [dff_bou_win.acb_all_ven_exc; act_bou_win.acb_all_ven_exc];
+            end
+
+            dff_fra_bou.acb_exc_all = [];
+            dff_fra_bou.acb_exc_dor = [];
+            dff_fra_bou.acb_exc_ven_exc = [];
+            dff_bou_win.acb_exc_all = [];
+            dff_bou_win.acb_exc_dor = [];
+            dff_bou_win.acb_exc_ven_exc = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fil = matfile(obj.fil_pat_rec(ani_num));
+                act_fra_bou = rec_fil.dff_fra_bou;
+                dff_fra_bou.acb_exc_all = [dff_fra_bou.acb_exc_all act_fra_bou.acb_exc_all];
+                dff_fra_bou.acb_exc_dor = [dff_fra_bou.acb_exc_dor act_fra_bou.acb_exc_dor];
+                dff_fra_bou.acb_exc_ven_exc = [dff_fra_bou.acb_exc_ven_exc act_fra_bou.acb_exc_ven_exc];
+                act_bou_win = rec_fil.dff_bou_win;
+                dff_bou_win.acb_exc_all = [dff_bou_win.acb_exc_all; act_bou_win.acb_exc_all];
+                dff_bou_win.acb_exc_dor = [dff_bou_win.acb_exc_dor; act_bou_win.acb_exc_dor];
+                dff_bou_win.acb_exc_ven_exc = [dff_bou_win.acb_exc_ven_exc; act_bou_win.acb_exc_ven_exc];
+            end
+
+            dff_fra_bou.acb_inh_all = [];
+            dff_fra_bou.acb_inh_dor = [];
+            dff_fra_bou.acb_inh_ven_exc = [];
+            dff_bou_win.acb_inh_all = [];
+            dff_bou_win.acb_inh_dor = [];
+            dff_bou_win.acb_inh_ven_exc = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fil = matfile(obj.fil_pat_rec(ani_num));
+                act_fra_bou = rec_fil.dff_fra_bou;
+                dff_fra_bou.acb_inh_all = [dff_fra_bou.acb_inh_all act_fra_bou.acb_inh_all];
+                dff_fra_bou.acb_inh_dor = [dff_fra_bou.acb_inh_dor act_fra_bou.acb_inh_dor];
+                dff_fra_bou.acb_inh_ven_exc = [dff_fra_bou.acb_inh_ven_exc act_fra_bou.acb_inh_ven_exc];
+                act_bou_win = rec_fil.dff_bou_win;
+                dff_bou_win.acb_inh_all = [dff_bou_win.acb_inh_all; act_bou_win.acb_inh_all];
+                dff_bou_win.acb_inh_dor = [dff_bou_win.acb_inh_dor; act_bou_win.acb_inh_dor];
+                dff_bou_win.acb_inh_ven_exc = [dff_bou_win.acb_inh_ven_exc; act_bou_win.acb_inh_ven_exc];
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_fra_bou', 'dff_bou_win', '-append')
+
+
+            dff_fra_tri.all = [];
+            dff_fra_tri.dor = [];
+            dff_fra_tri.ven_exc = [];
+
+            dff_tri_win.all = [];
+            dff_tri_win.dor = [];
+            dff_tri_win.ven_exc = [];
+
+            dff_win.all = [];
+            dff_win.dor = [];
+            dff_win.ven_exc = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fil = matfile(obj.fil_pat_rec(ani_num));
+                act_fra_bou = rec_fil.dff_fra_tri;
+                dff_fra_tri.all = [dff_fra_tri.all act_fra_bou.all];
+                dff_fra_tri.dor = [dff_fra_tri.dor act_fra_bou.dor];
+                dff_fra_tri.ven_exc = [dff_fra_tri.ven_exc act_fra_bou.ven_exc];
+
+                act_bou_win = rec_fil.dff_tri_win;
+                dff_tri_win.all = [dff_tri_win.all; act_bou_win.all];
+                dff_tri_win.dor = [dff_tri_win.dor; act_bou_win.dor];
+                dff_tri_win.ven_exc = [dff_tri_win.ven_exc; act_bou_win.ven_exc];
+
+                act_win = rec_fil.dff_win;
+                dff_win.all = [dff_win.all; act_win.all];
+                dff_win.dor = [dff_win.dor; act_win.dor];
+                dff_win.ven_exc = [dff_win.ven_exc; act_win.ven_exc];
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_fra_tri', 'dff_tri_win', 'dff_win', '-append')
+
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_fra_bou = sam_fil.dff_fra_bou;
+            dff_bou_win = sam_fil.dff_bou_win;
+            dff_fra_bou.acb_exc_ven_exc = [];
+            dff_bou_win.acb_exc_ven_exc = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fil = matfile(obj.fil_pat_rec(ani_num));
+                act_fra_bou = rec_fil.dff_fra_bou;
+                dff_fra_bou.acb_exc_ven_exc = [dff_fra_bou.acb_exc_ven_exc act_fra_bou.acb_exc_ven_exc];
+                act_bou_win = rec_fil.dff_bou_win;
+                dff_bou_win.acb_exc_ven_exc = [dff_bou_win.acb_exc_ven_exc; ...
+                    act_bou_win.acb_exc_ven_exc];
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_fra_bou', 'dff_bou_win', '-append')
+
+            dff_fra_tri.lig = [];
+            dff_fra_tri.tap = [];
+
+            dff_tri_win.lig = [];
+            dff_tri_win.tap = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fil = matfile(obj.fil_pat_rec(ani_num));
+                act_fra_bou = rec_fil.dff_fra_tri;
+                dff_fra_tri.lig = [dff_fra_tri.lig act_fra_bou.lig];
+                dff_fra_tri.tap = [dff_fra_tri.tap act_fra_bou.tap];
+
+                act_bou_win = rec_fil.dff_tri_win;
+                dff_tri_win.lig = [dff_tri_win.lig; act_bou_win.lig];
+                dff_tri_win.tap = [dff_tri_win.tap; act_bou_win.tap];
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_fra_tri', 'dff_tri_win', '-append')
+        end
+        % un
+        function app_par_gli(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_fra_bou = sam_fil.dff_fra_bou;
+            dff_fra_bou.pcb_exc_ven_exc = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fil = matfile(obj.fil_pat_rec(ani_num));
+                act_fra_bou = rec_fil.dff_fra_bou;
+                dff_fra_bou.pcb_exc_ven_exc = [dff_fra_bou.pcb_exc_ven_exc act_fra_bou.pcb_exc_ven_exc];
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'dff_fra_bou', '-append')
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% spo
+        function app_spo(obj)
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_win = con_fil.n_win;
+            n_win = n_win.spo;
+            ofr_ani_win = nan(obj.n_ani, n_win);
+            for j = 1:obj.n_ani
+                rec_fun_j = ...
+                    str2func(['rec_fun.' convertStringsToChars(obj.ani(j))]);
+                sti = rec_fun_j();
+                rec_fil = matfile(sti.fil_pat_rec);
+                ofr_win = rec_fil.ofr_win;
+                ofr_ani_win(j, :) = ofr_win';
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'ofr_ani_win', '-append')
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neurobehavioral
         function app_neu_beh(obj)
@@ -1794,6 +2367,21 @@ classdef sam
             sam_fil = matfile(obj.fil_pat_sam);
             ang_bou = sam_fil.ang_bou;
             h_fig = plo_ang_his(ang_bou);
+        end
+        function h_fig = plo_nta_win_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            nta_fra_sta_con = sam_fil.nta_fra_sta_con;
+            h_fig = plo_nta_win(nta_fra_sta_con);
+        end
+        function h_fig = plo_pro_mul_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            bea_lat_ani_tri = sam_fil.bea_lat_ani_tri;
+            h_fig = plo_pro_mul(bea_lat_ani_tri);
+        end
+        function h_fig = plo_hab_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            per_pro_tri_con = sam_fil.per_pro_tri_con;
+            h_fig = plo_hab(per_pro_tri_con);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEURAL
         
@@ -1954,59 +2542,6 @@ classdef sam
             end
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo-cel
-        function h_fig = plo_cor_map_met(obj, sta_ani)
-            mat_fil = matfile(obj.fil_pat_sam);
-            h_fig = plo_cor_map(obj.ani, sta_ani, mat_fil.log_ani_pla_icx_row_col, ...
-                mat_fil.r_ani_pla_icx_row_col);
-        end
-        function h_fig = plo_icx_res_met(obj)
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            mat_fil = matfile(obj.fil_pat_sam);
-            tim_fra = con_fil.tim_fra;
-            h_fig = plo_icx_res(tim_fra.cal.eig.tri.dff, mat_fil.dff_icx_con_fra_ani, 'population');
-        end
-        function h_fig = plo_vib_res_met(obj)
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            mat_fil = matfile(obj.fil_pat_sam);
-            tim_fra = con_fil.tim_fra;
-            h_fig = plo_vib_res(tim_fra.cal.eig.tri.dff, mat_fil.dff_icx_con_fra_ani, 'population');
-        end
-        function h_fig = plo_cor_his_met(obj)
-            mat_fil = matfile(obj.fil_pat_sam);
-            h_fig = plo_cor_his(mat_fil.per_cel_bin_ani);
-        end
-        function h_fig = plo_cdf_met(obj, fie)
-            sam_fil = matfile(obj.fil_pat_sam);
-            r_cel = sam_fil.r_cel;
-            h_fig = plo_cdf(r_cel.(fie));
-        end
-        function h_fig = plo_clu_map_roi_met(obj)
-            sam_fil = matfile(obj.fil_pat_sam);
-            dff_roi_fra = sam_fil.dff_roi_fra;
-            clu_roi_k = sam_fil.clu_roi_k;
-            bou_dur_ani = nan;
-            k = 5;
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            piv_col_pcx = con_fil.piv_col_pcx;
-            fie_num = {'axo_cel'};
-            h_fig = plo_clu_map_cel(dff_roi_fra, clu_roi_k(:, k), bou_dur_ani, ...
-                piv_col_pcx.axo.bou.all, obj.n_pla_str, fie_num);
-        end
-        function h_fig = plo_inh_exc_axo_met(obj)
-            sam_fil = matfile(obj.fil_pat_sam);
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            piv_col_pcx = con_fil.piv_col_pcx;
-            mar_siz = con_fil.mar_siz;
-            h_fig = plo_clu_map_ani_thr(sam_fil.x_ani_roi, sam_fil.y_ani_roi, ...
-                sam_fil.z_ani_roi, piv_col_pcx.div, sam_fil.res_ani_roi, mar_siz.roi);
-        end
-        function h_fig = plo_cor_dis_met(obj, fie)
-            sam_fil = matfile(obj.fil_pat_sam);
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            dis_blo = con_fil.dis_blo;
-            cor_fie_fie_blo_ani = sam_fil.cor_fie_fie_blo_ani;
-            h_fig = plo_pcc_dis(cor_fie_fie_blo_ani.(fie), dis_blo.xre);
-        end
         function h_fig = plo_cor_dis_all_met(obj, fie)
             sam_fil = matfile(obj.fil_pat_sam);
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
@@ -2028,7 +2563,20 @@ classdef sam
             log_fie_roi = sam_fil.log_fie_roi;
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             win_len = con_fil.win_len;
-            h_fig = plo_inh_exc_fie.smo_pub_sid(dff_roi_fra, log_fie_roi, win_len.dff.pha.drn.tai);
+            % h_fig = plo_inh_exc_fie.smo_pub_sid(dff_roi_fra.tai, log_fie_roi.tai, ...
+            %     win_len.dff.pha.drn.tai);
+            h_fig = plo_inh_exc_fie.smo_pub_sid(dff_roi_fra.bou_non, log_fie_roi.bou_non, ...
+                win_len.dff.pha.drn.tai);
+        end
+        function h_fig = plo_cor_dis_tog_met(obj, fie)
+            sam_fil = matfile(obj.fil_pat_sam);
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            dis_blo = con_fil.dis_blo;
+            dis_blo = dis_blo.axo;
+            cor_fie_fie_blo_ani = sam_fil.cor_fie_fie_blo_ani;
+            x_lim = 210;
+            dis_blo(end) = x_lim;
+            h_fig = plo_pcc_dis.all(cor_fie_fie_blo_ani.(fie).all, dis_blo, x_lim);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo onl
         function [h_fig, dff_pla_pix_fra] = plo_clu_map_pix_met(obj)
@@ -2163,7 +2711,7 @@ classdef sam
             h_fig = plo_inh_exc_fie.raw(dff_bin_fra.bou.all, log_bin.all, dff_bin_win.bou.all, ...
                 pha_win_len);
         end
-        %
+        % sig
         function h_fig = plo_bin_sig_lig_met(obj)
             sam_fil = matfile(obj.fil_pat_sam);
             dff_lig_bin_fra = sam_fil.dff_lig_bin_fra;
@@ -2198,59 +2746,17 @@ classdef sam
             h_fig = plo_inh_exc_fie.smo_pub(dff_bin_fra.bou.all, log_bin.all.(fie), ...
                 win_len.dff.pha.drn.tai);
         end
-        %
-        function h_fig = plo_inh_exc_sin_bou_dur_met(obj)
+        function h_fig = plo_bin_sig_bou_non_met(obj)
             sam_fil = matfile(obj.fil_pat_sam);
-            x_ani_bin = sam_fil.x_ani_bin;
-            y_ani_bin = sam_fil.y_ani_bin;
-            z_ani_bin = sam_fil.z_ani_bin;
+            dff_bin_fra = sam_fil.dff_bin_fra;
+            log_bin = sam_fil.log_bin;
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            piv_col_pcx = con_fil.piv_col_pcx;
-            res_bin = sam_fil.res_bin;
-            mar_siz.pix = 7;
-            h_fig = plo_clu_map_ani_sin_tog(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
-                res_bin, mar_siz.pix);
+            win_len = con_fil.win_len;
+            fie = 'srt';
+            h_fig = plo_inh_exc_fie.smo_pub(dff_bin_fra.bou.non, log_bin.non.(fie), ...
+                win_len.dff.pha.drn.tai);
         end
-        function h_fig = plo_inh_exc_ani_bin_met(obj, fie_num)
-            sam_fil = matfile(obj.fil_pat_sam);
-            x_ani_bin = sam_fil.x_ani_bin;
-            y_ani_bin = sam_fil.y_ani_bin;
-            z_ani_bin = sam_fil.z_ani_bin;
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            piv_col_pcx = con_fil.piv_col_pcx;
-            res_ani_bin = sam_fil.res_ani_bin;
-            res_ani_bin = getfield(res_ani_bin, fie_num{2:end});
-            mar_siz.pix = 7;
-            h_fig = plo_clu_map_ani_cle(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
-                res_ani_bin, mar_siz.pix);
-        end
-        function h_fig = plo_inh_exc_sin_met(obj, fie_num)
-            sam_fil = matfile(obj.fil_pat_sam);
-            x_ani_bin = sam_fil.x_ani_bin;
-            y_ani_bin = sam_fil.y_ani_bin;
-            z_ani_bin = sam_fil.z_ani_bin;
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            piv_col_pcx = con_fil.piv_col_pcx;
-            res_ani_bin = sam_fil.res_ani_bin;
-            res_ani_bin = getfield(res_ani_bin, fie_num{2:end});
-            mar_siz.pix = 7;
-            h_fig = plo_clu_map_ani_sin(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
-                res_ani_bin, mar_siz.pix);
-        end
-        function h_fig = plo_inh_exc_sid_met(obj, fie_num)
-            sam_fil = matfile(obj.fil_pat_sam);
-            x_ani_bin = sam_fil.x_ani_bin;
-            y_ani_bin = sam_fil.y_ani_bin;
-            z_ani_bin = sam_fil.z_ani_bin;
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            piv_col_pcx = con_fil.piv_col_pcx;
-            res_ani_bin = sam_fil.res_ani_bin;
-            res_ani_bin = getfield(res_ani_bin, fie_num{2:end});
-            mar_siz.pix = 7;
-            vie_ang_dir = [180 3];
-            h_fig = plo_clu_map_ani_sin(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
-                res_ani_bin, mar_siz.pix, vie_ang_dir);
-        end
+        % 3d
         function h_fig = plo_inh_exc_spl_met(obj, fie_num)
             sam_fil = matfile(obj.fil_pat_sam);
             x_ani_bin = sam_fil.x_ani_bin;
@@ -2260,28 +2766,12 @@ classdef sam
             piv_col_pcx = con_fil.piv_col_pcx;
             res_ani_bin = sam_fil.res_ani_bin;
             res_ani_bin = getfield(res_ani_bin, fie_num{2:end});
-            mar_siz.pix = 7*(100/50);
+            mar_siz.pix = 5;
             vie_ang_dir = [-120 30];
             h_fig = plo_clu_map_ani_spl(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
                 res_ani_bin, mar_siz.pix, vie_ang_dir);
         end
-        %
-        function h_fig = plo_spa_den_met(obj, fie_num, pop)
-            sam_fil = matfile(obj.fil_pat_sam);
-            x_ani_bin = sam_fil.x_ani_bin;
-            y_ani_bin = sam_fil.y_ani_bin;
-            log_bin = sam_fil.log_bin;
-            mar_siz.pix = 7;
-            boo_bin = getfield(log_bin, fie_num{3:end});
-            if pop == "dor"
-                boo_bin.exc = boo_bin.exc & log_bin.dor;
-                boo_bin.inh = boo_bin.inh & log_bin.dor;
-            elseif pop == "ven"
-                boo_bin.exc = boo_bin.exc & ~log_bin.dor;
-                boo_bin.inh = boo_bin.inh & ~log_bin.dor;
-            end
-            h_fig = plo_spa_den_axo(x_ani_bin, y_ani_bin, boo_bin, mar_siz.pix);
-        end
+        % den, pie
         function h_fig = plo_spa_den_dor_ven_met(obj, fie_num)
             sam_fil = matfile(obj.fil_pat_sam);
             x_ani_bin = sam_fil.x_ani_bin;
@@ -2297,18 +2787,32 @@ classdef sam
             res_bin = vertcat(res_ani_bin{:});
             h_fig = plo_pie(res_bin);
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% cel onl
-        function h_fig = plo_clu_map_cel_met(obj)
+        function h_fig = plo_dif_spa_den_met(obj, fie)
             sam_fil = matfile(obj.fil_pat_sam);
-            dff_cel_fra = sam_fil.dff_cel_fra;
+            x_ani_bin = sam_fil.x_ani_bin;
+            y_ani_bin = sam_fil.y_ani_bin;
+            vie_ang_dir = [-90 90];
+            pro_den_bin = sam_fil.pro_den_bin;
+            h_fig = plo_dif_spa_den(x_ani_bin, y_ani_bin, vie_ang_dir, pro_den_bin.(fie));
+        end
+        function h_fig = plo_spa_den_sid_met(obj, fie_num)
+            sam_fil = matfile(obj.fil_pat_sam);
+            y_ani_bin = sam_fil.y_ani_bin;
+            z_ani_bin = sam_fil.z_ani_bin;
+            log_bin = sam_fil.log_bin;
+            vie_ang_dir = [-90 90];
+            h_fig = plo_spa_den_sid(y_ani_bin, z_ani_bin, log_bin, vie_ang_dir, fie_num);
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% cel onl
+        function h_fig = plo_clu_map_cel_met(obj, fie_num)
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_fie_cel_fra = sam_fil.dff_fie_cel_fra;
             clu_cel_k = sam_fil.clu_cel_k;
-            bou_dur_ani = sam_fil.bou_dur_ani;
             k = 5;
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             piv_col_pcx = con_fil.piv_col_pcx;
-            fie_num = {'cel_onl_cel'};
-            h_fig = plo_clu_map_cel(dff_cel_fra.bou.all, clu_cel_k.bou.all(:, k), bou_dur_ani.all, ...
-                piv_col_pcx.axo.bou.all, obj.n_pla_str, fie_num);
+            h_fig = plo_clu_map_cel(dff_fie_cel_fra, clu_cel_k.bou.all(:, k), ...
+                piv_col_pcx, obj.n_pla_str, fie_num);
         end
         function h_fig = plo_clu_map_ani_thr_cel_met(obj, fie_num)
             sam_fil = matfile(obj.fil_pat_sam);
@@ -2327,12 +2831,12 @@ classdef sam
             h_fig = plo_clu_map_ani_thr(x_ani_cel, y_ani_cel, z_ani_cel, ...
                 piv_col_pcx, clu_ani_cel, mar_siz.cel);
         end
-        %
-        function h_fig = plo_dff_ang_met(obj)
+        function h_fig = plo_dff_ang_met(obj, fie)
             sam_fil = matfile(obj.fil_pat_sam);
             ang_bou = sam_fil.ang_bou;
             dff_bou_win = sam_fil.dff_bou_win;
-            h_fig = plo_dff_bou(ang_bou, dff_bou_win(:, 2));
+            % for gli
+            h_fig = plo_dff_bou(ang_bou.non, dff_bou_win.(fie)(:, 2));
         end
         function h_fig = plo_pcc_dis_cel_met(obj, fie)
             sam_fil = matfile(obj.fil_pat_sam);
@@ -2343,6 +2847,11 @@ classdef sam
                 dis_blo = dis_blo.tel;
                 x_lim = 310;
                 dis_blo(end) = x_lim;
+            elseif obj.sam_idx == "gfa"
+                pcc_blo_ani = sam_fil.r_blo_ani;
+                dis_blo = dis_blo.wre;
+                x_lim = 100;
+                %dis_blo(end) = x_lim;
             else
                 pcc_blo_ani = sam_fil.pcc_blo_ani;
                 dis_blo = dis_blo.rap.thr;
@@ -2359,7 +2868,7 @@ classdef sam
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             piv_col_pcx = con_fil.piv_col_pcx;
             fie_num = {'cel_onl_cel_bou_spo'};
-            h_fig = plo_clu_map_cel(dff_cel_fra.bou.spo, clu_cel_k.bou.spo(:, k), bou_dur_ani.non, ...
+            h_fig = plo_clu_map_cel(dff_cel_fra.bou.spo, clu_cel_k.bou.spo(:, k), ...
                 piv_col_pcx.axo.bou.all, obj.n_pla_str, fie_num);
         end
         function h_fig = plo_inh_exc_sig_met(obj, fie)
@@ -2369,29 +2878,20 @@ classdef sam
             dff_fie_cel_fra = sam_fil.dff_fie_cel_fra;
             pha_win_len = win_len.dff.pha.drn.tai;
             log_fie_fie_cel = sam_fil.log_fie_fie_cel;
-%             h_fig = plo_inh_exc_fie.smo_pub(dff_fie_cel_fra.(fie), log_fie_fie_cel.(fie).srt, ...
-%                 pha_win_len);
-
-%             h_fig = plo_inh_exc_fie.smo(dff_fie_cel_fra.(fie), log_fie_fie_cel.(fie).srt, ...
-%                 pha_win_len);
-
-            h_fig = plo_inh_exc_fie.raw(dff_fie_cel_fra.(fie), log_fie_fie_cel.(fie).srt, ...
+            h_fig = plo_inh_exc_fie.smo_pub(dff_fie_cel_fra.(fie), log_fie_fie_cel.(fie).srt, ...
                 pha_win_len);
+
+            % h_fig = plo_inh_exc_fie.smo_pub(dff_fie_cel_fra.(fie), log_fie_fie_cel.(fie).zsc, ...
+            %     pha_win_len);
         end
-        function h_fig = plo_inh_exc_spa_met(obj, fie)
+        function [h_fig, p_row_col] = plo_inh_exc_spa_all_met(obj, fie_num)
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             dis_blo = con_fil.dis_blo;
             sam_fil = matfile(obj.fil_pat_sam);
             fra_blo_ani = sam_fil.fra_blo_ani;
-            h_fig = plo_inh_exc_spa(dis_blo.rap, fra_blo_ani.(fie));
+            [h_fig, p_row_col] = plo_inh_exc_spa_all(dis_blo.rap, fra_blo_ani, fie_num);
         end
-        function h_fig = plo_inh_exc_spa_all_met(obj)
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            dis_blo = con_fil.dis_blo;
-            sam_fil = matfile(obj.fil_pat_sam);
-            fra_blo_ani = sam_fil.fra_blo_ani;
-            h_fig = plo_inh_exc_spa_all(dis_blo.rap, fra_blo_ani);
-        end
+        %3d rec.
         function h_fig = plo_res_met(obj, fie_num)
             sam_fil = matfile(obj.fil_pat_sam);
             x_ani_cel = sam_fil.x_ani_cel;
@@ -2402,6 +2902,7 @@ classdef sam
             vie_ang_dir = [-120 30];
             h_fig = plo_res(x_ani_cel, y_ani_cel, z_ani_cel, res_cel, vie_ang_dir);
         end
+        %
         function h_fig = plo_clu_met(obj)
             sam_fil = matfile(obj.fil_pat_sam);
             ioi_kxx_ani = sam_fil.ioi_kxx_ani;
@@ -2414,21 +2915,132 @@ classdef sam
             clu_fid_ani = sam_fil.clu_fid_ani;
             h_fig = plo_clu_fid(clu_fid_ani);
         end
-        function h_fig = plo_cor_cor_met(obj)
+        function h_fig = plo_cor_cor_den_met(obj, fie)
             sam_fil = matfile(obj.fil_pat_sam);
             r_pai = sam_fil.r_pai;
-            h_fig = plo_cor_cor(r_pai);
-        end
-        function h_fig = plo_cor_cor_den_met(obj)
-            sam_fil = matfile(obj.fil_pat_sam);
-            r_pai = sam_fil.r_pai;
-            h_fig = plo_cor_cor_den(r_pai);
+            h_fig = plo_cor_cor_den(r_pai, fie);
         end
         function h_fig = plo_pie_met(obj, fie_num)
             sam_fil = matfile(obj.fil_pat_sam);
             res_cel = sam_fil.res_fie_fie_cel;
             res_cel = getfield(res_cel, fie_num{:});
-            h_fig = plo_pie(res_cel);
+            h_fig = plo_pie.cat(res_cel);
+        end
+        function h_fig = plo_clu_loc_sig_met(obj, fie_num)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_cel = sam_fil.x_cel;
+            y_cel = sam_fil.y_cel;
+            z_cel = sam_fil.z_cel;
+            dff_fie_cel_fra = sam_fil.dff_fie_cel_fra;
+            clu_cel = sam_fil.clu_cel;
+            h_fig = plo_clu_loc_sig(dff_fie_cel_fra, clu_cel, obj.n_pla_str, fie_num, x_cel, y_cel, ...
+                z_cel);
+        end
+        function h_fig = plo_pie_k_met(obj, fie_num)
+            sam_fil = matfile(obj.fil_pat_sam);
+            clu_cel = sam_fil.clu_cel;
+            [~, str_met] = gen_str(fie_num);
+            clu_cel = clu_cel.(str_met);
+            h_fig = plo_pie.cat(clu_cel);
+        end
+        function h_fig = plo_pie_k_tap_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            n_cel_clu = sam_fil.n_cel_clu;
+            n_cel_red = n_cel_clu(2);
+            n_cel_gre = n_cel_clu(3);
+            n_cel_cya = n_cel_clu(4);
+            n_cel_clu(2) = n_cel_gre;
+            n_cel_clu(3) = n_cel_cya;
+            n_cel_clu(4) = n_cel_red;
+            h_fig = plo_pie.num(n_cel_clu);
+        end
+        function h_fig = plo_pie_k_bou_non_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            n_cel_clu = sam_fil.n_cel_clu;
+            h_fig = plo_pie.num(n_cel_clu.bou_non([1 3 2 4]));
+        end
+        function h_fig = plo_res_acc_mod_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            dff_cel = sam_fil.dff_cel;
+            h_fig = plo_res_acc_mod(log_fie_fie_cel, dff_cel);
+        end
+        function h_fig = plo_mod_loc_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_cel = sam_fil.x_cel;
+            y_cel = sam_fil.y_cel;
+            z_cel = sam_fil.z_cel;
+            log_cel = sam_fil.log_fie_fie_cel;
+            h_fig = plo_mod_loc(x_cel, y_cel, z_cel, log_cel);
+        end
+        function h_fig = plo_pve_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            h_fig = plo_num_gab(sam_fil.pve_ani);
+        end
+        function h_fig = plo_pve_cel_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            pve_cel_tau = sam_fil.pve_cel_tau;
+            pve_cel = pve_cel_tau(:, 4);% 10s
+            h_fig = plo_pve_cel(pve_cel);
+        end
+        function h_fig = plo_pve_cel_tau_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            h_fig = plo_pve_cel_tau(sam_fil.pve_cel_tau);
+        end
+        function h_fig = plo_pai_mod_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            dff_cel = sam_fil.dff_cel;
+            h_fig = plo_pai_mod(log_fie_fie_cel, dff_cel);
+        end
+        function h_fig = plo_tap_tai_not_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            h_fig = plo_tap_tai_not(sam_fil.fra_ani);
+        end
+        function h_fig = plo_per_sat_pix_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            h_fig = plo_per_sat_pix(100*sam_fil.per_sat_pix_ani);
+        end
+        function h_fig = plo_ttn_sca_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            log_cel = log_fie_fie_cel.tap.srt.res;
+            dff_cel = sam_fil.dff_cel;
+            h_fig = plo_ttn_sca(log_cel, dff_cel);
+        end
+        function h_fig = plo_ttn_sca_all_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            log_cel = log_fie_fie_cel;
+            dff_cel = sam_fil.dff_cel;
+            h_fig = plo_ttn_sca_all(log_cel, dff_cel);
+        end
+        function [h_fig, p_row_col] = plo_rep_sup_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            dff_tri_cel = sam_fil.dff_tri_cel;
+            [h_fig, p_row_col] = plo_rep_sup(dff_tri_cel, log_fie_fie_cel);
+        end
+        function h_fig = plo_per_pai_mod_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            dff_cel = sam_fil.dff_cel;
+            fra_mod = sam_fil.fra_mod;
+            h_fig = plo_per_pai_mod(log_fie_fie_cel, dff_cel, fra_mod);
+        end
+        function h_fig = plo_clu_map_ani_spl_met(obj, fie_num)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_ani_cel = sam_fil.x_ani_cel;
+            y_ani_cel = sam_fil.y_ani_cel;
+            z_ani_cel = sam_fil.z_ani_cel;
+            res_cel = sam_fil.res_fie_fie_cel;
+            res_cel = getfield(res_cel, fie_num{:});
+            mar_siz = 100;
+            vie_ang_dir = [-120 30];
+            tra = 0.7;
+            sca_bar = 50;
+            h_fig = plo_clu_map_ani_spl(x_ani_cel, y_ani_cel, z_ani_cel, res_cel, mar_siz, ...
+                vie_ang_dir, tra, sca_bar);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gab
         function h_fig = plo_clu_sel_met(obj)
@@ -2442,6 +3054,14 @@ classdef sam
             acc_ani = sam_fil.acc_ani;
             xcc_ani = sam_fil.xcc_ani;
             h_fig = plo_pai_cor(acc_ani, xcc_ani);
+        end
+        function h_fig = plo_clu_sel_pai_cor_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            clu_sel_ani_k = sam_fil.clu_sel_ani_k;
+            k = 4;
+            acc_ani = sam_fil.acc_ani;
+            xcc_ani = sam_fil.xcc_ani;
+            h_fig = plo_clu_sel_pai_cor(clu_sel_ani_k, k, acc_ani, xcc_ani);
         end
         function h_fig = plo_inh_exc_ros_cau_met(obj)
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
@@ -2489,14 +3109,16 @@ classdef sam
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             win_len = con_fil.win_len;
             
-            %dff_fie_cel_fra = sam_fil.dff_fie_cel_fra;
-            %pha_win_len = win_len.dff.pha.drn.tai;
+            dff_cel_fra = sam_fil.dff_fie_cel_fra;
+            pha_win_len = win_len.dff.pha.drn.tai;
 
-            dff_fie_cel_fra = sam_fil.dff_cel_fra;
-            pha_win_len = win_len.dff.pha.drn.gab;
 
+            % dff_cel_fra = sam_fil.dff_cel_fra;
+            % pha_win_len = win_len.dff.pha.drn.gab;%!!!!!!!!!!!!!!!!!!!
+
+            
             log_fie_fie_cel = sam_fil.log_fie_fie_cel;
-            h_fig = plo_inh_exc_fie.smo_pub_sid(dff_fie_cel_fra.(fie), log_fie_fie_cel.(fie).srt, ...
+            h_fig = plo_inh_exc_fie.smo_pub_sid(dff_cel_fra.(fie), log_fie_fie_cel.(fie).srt, ...
                 pha_win_len);
         end
         function h_fig = plo_gab_clu_met(obj, fie)
@@ -2507,57 +3129,127 @@ classdef sam
             log_fie_fie_cel = sam_fil.log_fie_fie_cel;
             h_fig = plo_gab_clu(x_cel, y_cel, z_cel, log_fie_fie_cel, fie);
         end
+        function h_fig = plo_gab_clu_onl_met(obj, fie)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_cel = sam_fil.x_cel;
+            y_cel = sam_fil.y_cel;
+            z_cel = sam_fil.z_cel;
+            log_fie_fie_cel = sam_fil.log_fie_fie_cel;
+            h_fig = plo_gab_clu_onl(x_cel, y_cel, z_cel, log_fie_fie_cel, fie);
+        end
         function h_fig = plo_inh_exc_met(obj, fie)
             sam_fil = matfile(obj.fil_pat_sam);
             fra_fie_ani = sam_fil.fra_fie_ani;
             h_fig = plo_inh_exc(fra_fie_ani.(fie).srt);
         end
+        function h_fig = plo_pie_gab_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            n_cel = sam_fil.n_cel;
+            h_fig = plo_pie.num([n_cel.gab n_cel.non]);
+        end
+        function h_fig = plo_num_gab_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            n_cel_ani = sam_fil.n_cel_ani;
+            h_fig = plo_num_gab(n_cel_ani);
+        end
+        function h_fig = plo_fra_gab_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            fra_fie_ani = sam_fil.fra_fie_ani;
+            h_fig = plo_num_gab(fra_fie_ani.gab);
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gli
+        function h_fig = plo_inh_exc_hab_met(obj, fie_num)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_ani_bin = sam_fil.x_ani_bin;
+            y_ani_bin = sam_fil.y_ani_bin;
+            z_ani_bin = sam_fil.z_ani_bin;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            piv_col_pcx = con_fil.piv_col_pcx;
+            res_ani_bin = sam_fil.res_ani_bin;
+            res_ani_bin = getfield(res_ani_bin, fie_num{2:end});
+            mar_siz.pix = 5;
+            vie_ang_dir = [-120 30];
+            h_fig = plo_clu_map_ani_hab(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
+                res_ani_bin, mar_siz.pix, vie_ang_dir);
+        end
+        function h_fig = plo_bin_sig_all_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_bin_fra = sam_fil.dff_bin_fra;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            win_len = con_fil.win_len;
+            h_fig = plo_sha_hea(dff_bin_fra.bou.all, win_len.dff.pha.drn.tai);
+        end
+        function h_fig = plo_spa_den_exc_inh_met(obj, fie_num)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_ani_bin = sam_fil.x_ani_bin;
+            y_ani_bin = sam_fil.y_ani_bin;
+            log_bin = sam_fil.log_bin;
+            vie_ang_dir = [-90 90];
+            h_fig = plo_spa_den_exc_inh(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
+        end
+        function h_fig = plo_bin_sig_spo_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_bin_fra = sam_fil.dff_bin_fra;
+            log_bin = sam_fil.log_bin;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            win_len = con_fil.win_len;
+            fie = 'srt';
+            h_fig = plo_inh_exc_fie.smo_pub(dff_bin_fra.bou.non, log_bin.non.(fie), ...
+                win_len.dff.pha.drn.tai);
+        end
+        function h_fig = plo_bou_sig_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_bin_fra = sam_fil.dff_bin_fra;
+            log_bin = sam_fil.log_bin;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            win_len = con_fil.win_len;
+            fie = 'srt';
+            h_fig = plo_bou_sig(dff_bin_fra.bou.non, log_bin.non.(fie), ...
+                win_len.dff.pha.drn.tai);
+        end
+        function h_fig = plo_bou_sig_tri_met(obj, fie)
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_fra_bou = sam_fil.dff_fra_bou;
+            %dur_bou = sam_fil.dur_acb_bou;
+            dur_bou = sam_fil.dur_pcb_bou;
+            h_fig = plo_bou_sig_tri(dff_fra_bou.(fie), dur_bou);
+        end
+        function [h_fig, p] = plo_bou_com_met(obj, fie)
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_bou_win = sam_fil.dff_bou_win;
+            [h_fig, p] = plo_bou_com(dff_bou_win.(fie));
+        end
+        %
+        function h_fig = plo_tri_sig_met(obj, fie)
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_fra_tri = sam_fil.dff_fra_tri;
+            h_fig = plo_tri_sig(dff_fra_tri.(fie));
+        end
+        function [h_fig, p] = plo_dff_tri_met(obj, fie)
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_ani_win = sam_fil.dff_tri_win;
+            dff_ani_win = dff_ani_win.(fie);
+            dff_ani = dff_ani_win(:, 2);
+            [h_fig, p] = plo_var_uni(dff_ani);
+        end
+        function h_fig = plo_tri_com_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            dff_tri_win = sam_fil.dff_tri_win;
+            [h_fig, p] = plo_var_uni([dff_tri_win.lig(:, 2) [dff_tri_win.tap(:, 2); nan(5, 1)]]);
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% spo
+        function h_fig = plo_ofr_met(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            ofr_ani_win = sam_fil.ofr_ani_win;
+            h_fig = plo_ofr(ofr_ani_win);
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% figures
+        
         % behavioral
         function sav_fig_tai_ang(obj)
             h_fig = plo_tai_ang_met(obj);
             fil_pat = char(obj.fil_pat_fig_tai_ang);
             exp_fig(h_fig, fil_pat)
-        end
-        function sav_fig_spo_sta(obj)
-            addpath(genpath('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\figure'))
-            load(obj.fil_pat_sam, 'ave_rat_win_ani_par', 'p_com_par')
-            [n_com, n_par] = size(p_com_par);
-            com_cel = cell(n_com, 1);
-            for i = 1:n_com
-                com_cel{i} = [i i + 1];
-            end
-            fig
-            for i = 1:n_par
-                subplot(n_par, 1, i)
-                plo_kad_plo_mat(ave_rat_win_ani_par(:, :, i), obj.mar, obj.mar_siz)
-                sigstar(com_cel, obj.fon_siz, p_com_par(:, i));
-                if i == 1
-                    title('Tail')
-                elseif i == 2
-                    title('Heart')
-                elseif i == 3
-                    title('Operculum')
-                elseif i == 4
-                    title('Mouth')
-                elseif i == 5
-                    title('Eye')
-                end
-                %
-                pre_for_exp(obj.fon_siz)
-                if i == n_par
-                    xticks(1:n_com + 1)
-                    xticklabels({'Baseline', 'Drug', 'After Taps 1', 'After Taps 2', 'After Taps 3'})
-                else
-                    xticks([])
-                end
-            end
-            [~,h]=suplabel('Rate (Hz)','y');
-            set(h,'FontSize',obj.fon_siz)
-            n = length(obj.fil_pat_exp);
-            [~,h]=suplabel([obj.tit '; n = ' sprintf('%d', n) ' animals'],'t', [.08 .08 .87 .9]);
-            set(h,'FontSize',obj.fon_siz + 3)
-            export_fig(char(obj.fil_pat_fig_spo_sta))
         end
         function sav_fig_lat_map(obj)
             plo_lat_map_met(obj)
@@ -2595,7 +3287,15 @@ classdef sam
             h_fig = plo_ang_his(ang_bou.non);
             exp_fig(h_fig, [char(obj.poo_dir) '\ang_his_non.png'])
         end
-        % neural
+        function sav_fig_nta_win(obj)
+            h_fig = plo_nta_win_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\nta_win.png'])
+        end
+        function sav_fig_hab(obj)
+            h_fig = plo_hab_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\hab.png'])
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neural
         function sav_fig_neu_one(obj)
             stx_ani = 1;
             plo_neu_pix(obj, stx_ani)
@@ -2722,7 +3422,7 @@ classdef sam
             plo_spo_cor_met(obj)
             export_fig(char(obj.fil_pat_fig_spo_cor))
         end
-        function sav_fig_bra_reg(obj)
+        function sav_fig_bra_reg(obj)% vis for brain region delineation
             plo_bra_reg_met(obj)
             export_fig(char(obj.fil_pat_fig_bra_reg))
         end
@@ -2779,33 +3479,145 @@ classdef sam
             h_fig = plo_inh_exc_spa(dis_blo.for, sam_fil.fra_blo_ani);
             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spa.png'])
         end
-        function sav_fig_cdf_exc_inh(obj)
-            h_fig = plo_cdf_met(obj, 'exc');
-            exp_fig(h_fig, [char(obj.poo_dir) '\cdf_exc.png'])
-            h_fig = plo_cdf_met(obj, 'inh');
-            exp_fig(h_fig, [char(obj.poo_dir) '\cdf_inh.png'])
-        end
-        function sav_fig_cor_dis(obj)
-            h_fig = plo_cor_dis_met(obj, 'exc');
-            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_exc.png'])
-            h_fig = plo_cor_dis_met(obj, 'inh');
-            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_inh.png'])
-        end
-        function sav_fig_cor_dis_all(obj)
-            h_fig = plo_cor_dis_all_met(obj, 'tai');
-            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_tai.png'])
-%             h_fig = plo_cor_dis_all_met(obj, 'spo');
-%             exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_spo.png'])
+        function sav_fig_inh_exc_sig_roi(obj)
+            h_fig = plo_inh_exc_sig_roi_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_sig_roi.png'])
         end
         function sav_fig_edf(obj)
             h_fig = plo_edf_met(obj, 'tai');
             exp_fig(h_fig, [char(obj.poo_dir) '\edf_tai.png'])
-%             h_fig = plo_edf_met(obj, 'spo');
-%             exp_fig(h_fig, [char(obj.poo_dir) '\edf_spo.png'])
+            
+            % h_fig = plo_edf_met(obj, 'spo_tai');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\edf_spo_tai.png'])
+
+            % h_fig = plo_edf_met(obj, 'tai_exc');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\edf_tai_exc.png'])
+            % h_fig = plo_edf_met(obj, 'tai_inh');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\edf_tai_inh.png'])
+
+            % h_fig = plo_edf_met(obj, 'spo_tai_exc');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\edf_spo_tai_exc.png'])
+            % h_fig = plo_edf_met(obj, 'spo_tai_inh');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\edf_spo_tai_inh.png'])
         end
-        function sav_fig_inh_exc_sig_roi(obj)
+        function sav_fig_cor_dis_all(obj)
+            h_fig = plo_cor_dis_all_met(obj, 'tai');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_tai.png'])
+            
+            % h_fig = plo_cor_dis_all_met(obj, 'spo_tai');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_spo_tai.png'])
+            
+            % h_fig = plo_cor_dis_all_met(obj, 'tai_exc');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_tai_exc.png'])
+            % h_fig = plo_cor_dis_all_met(obj, 'tai_inh');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_tai_inh.png'])
+
+            % h_fig = plo_cor_dis_all_met(obj, 'spo_tai_exc');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_spo_tai_exc.png'])
+            % h_fig = plo_cor_dis_all_met(obj, 'spo_tai_inh');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_spo_tai_inh.png'])
+        end
+        function sav_fig_nuc_axo(obj)
             h_fig = plo_inh_exc_sig_roi_met(obj);
             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_sig_roi.png'])
+            
+            % main fig
+            
+            % tail-triggered
+            ani_num = 4;
+            rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+            tap = rec_fun();
+            sav_fig_cor_map_ove(tap)
+            %
+            h_fig = plo_edf_met(obj, 'tai');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_tai.png'])
+            %
+            h_fig = plo_cor_dis_all_met(obj, 'tai');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_tai.png'])
+            % spo
+            sav_fig_cor_map_ove_spo(tap)
+            %
+            h_fig = plo_edf_met(obj, 'spo_tai');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_spo_tai.png'])
+            %
+            h_fig = plo_cor_dis_all_met(obj, 'spo_tai');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_spo_tai.png'])
+
+            % supp fig
+
+            % tail-triggered
+            h_fig = plo_edf_met(obj, 'tai_exc');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_tai_exc.png'])
+            h_fig = plo_edf_met(obj, 'tai_inh');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_tai_inh.png'])
+            %
+            h_fig = plo_cor_dis_all_met(obj, 'tai_exc');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_tai_exc.png'])
+            h_fig = plo_cor_dis_all_met(obj, 'tai_inh');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_tai_inh.png'])
+            % spo
+            h_fig = plo_edf_met(obj, 'spo_tai_exc');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_spo_tai_exc.png'])
+            h_fig = plo_edf_met(obj, 'spo_tai_inh');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_spo_tai_inh.png'])
+            %
+            h_fig = plo_cor_dis_all_met(obj, 'spo_tai_exc');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_spo_tai_exc.png'])
+            h_fig = plo_cor_dis_all_met(obj, 'spo_tai_inh');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_spo_tai_inh.png'])
+        end
+        function sav_fig_nuc_axo_bou_non(obj)
+            h_fig = plo_inh_exc_sig_roi_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_sig_roi_bou_non.png'])
+            
+            % main fig
+            
+            % tail-triggered
+            ani_num = 4;
+            rec_fun = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+            tap = rec_fun();
+            sav_fig_cor_map_ove(tap)
+            %
+            h_fig = plo_edf_met(obj, 'bou_non');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_bou_non.png'])
+            %
+            h_fig = plo_cor_dis_all_met(obj, 'bou_non');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_bou_non.png'])
+            % spo
+            sav_fig_cor_map_ove_spo(tap)
+            %
+            h_fig = plo_edf_met(obj, 'spo_bou_non');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_spo_bou_non.png'])
+            %
+            h_fig = plo_cor_dis_all_met(obj, 'spo_bou_non');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_spo_bou_non.png'])
+
+            % supp fig
+
+            % tail-triggered
+            h_fig = plo_edf_met(obj, 'bou_non_exc');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_bou_non_exc.png'])
+            h_fig = plo_edf_met(obj, 'bou_non_inh');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_bou_non_inh.png'])
+            %
+            h_fig = plo_cor_dis_all_met(obj, 'bou_non_exc');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_bou_non_exc.png'])
+            h_fig = plo_cor_dis_all_met(obj, 'bou_non_inh');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_bou_non_inh.png'])
+            % spo
+            h_fig = plo_edf_met(obj, 'spo_bou_non_exc');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_spo_bou_non_exc.png'])
+            h_fig = plo_edf_met(obj, 'spo_bou_non_inh');
+            exp_fig(h_fig, [char(obj.poo_dir) '\edf_spo_bou_non_inh.png'])
+            %
+            h_fig = plo_cor_dis_all_met(obj, 'spo_bou_non_exc');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_spo_bou_non_exc.png'])
+            h_fig = plo_cor_dis_all_met(obj, 'spo_bou_non_inh');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_all_spo_bou_non_inh.png'])
+        end
+        function sav_fig_cor_dis_tog(obj)
+            h_fig = plo_cor_dis_tog_met(obj, 'spo_bou_non');
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_tog_spo_bou_non.png'])
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo onl
         function sav_fig_clu_map_ani(obj, sta_ani_num, sto_ani_num, fie_num)
@@ -2867,10 +3679,6 @@ classdef sam
             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_ani_bin.png'])
         end
         %
-        function sav_fig_bin_sig_raw(obj)
-            h_fig = plo_bin_sig_raw_met(obj);
-            exp_fig(h_fig, [char(obj.poo_dir) '\bin_sig_raw.png'])
-        end
         function sav_fig_bin_sig_all(obj)
             sam_fil = matfile(obj.fil_pat_sam);
             dff_lig_bin_fra = sam_fil.dff_lig_bin_fra;
@@ -2910,93 +3718,84 @@ classdef sam
             h_fig = plo_bin_sig_met(obj);
             exp_fig(h_fig, [char(obj.poo_dir) '\bin_sig.png'])
         end
+        function sav_fig_bin_sig_bou_non(obj)
+            h_fig = plo_bin_sig_bou_non_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\bin_sig_bou_non.png'])
+        end
         %
         function sav_fig_inh_exc_spl(obj)
-            sam_fil = matfile(obj.fil_pat_sam);
-            x_ani_bin = sam_fil.x_ani_bin;
-            y_ani_bin = sam_fil.y_ani_bin;
-            z_ani_bin = sam_fil.z_ani_bin;
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            piv_col_pcx = con_fil.piv_col_pcx;
-            res_ani_bin = sam_fil.res_ani_bin;
-            %mar_siz.pix = 7*(100/50);
-            mar_siz.pix = 5;
-            vie_ang_dir = [-120 30];
+            % sam_fil = matfile(obj.fil_pat_sam);
+            % x_ani_bin = sam_fil.x_ani_bin;
+            % y_ani_bin = sam_fil.y_ani_bin;
+            % z_ani_bin = sam_fil.z_ani_bin;
+            % con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            % piv_col_pcx = con_fil.piv_col_pcx;
+            % res_ani_bin = sam_fil.res_ani_bin;
+            % mar_siz.pix = 5;
+            % vie_ang_dir = [-120 30];
 
-%             fie_num = {'axo', 'lig', 'srt'};
-%             res_lig_ani_bin = getfield(res_ani_bin, fie_num{2:end});
-%             h_fig = plo_clu_map_ani_spl(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
-%                 res_lig_ani_bin, mar_siz.pix, vie_ang_dir);
-%             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_lig.png'])
-            
-            fie_num = {'axo', 'sho', 'srt'};
-            res_sho_ani_bin = getfield(res_ani_bin, fie_num{2:end});
-            h_fig = plo_clu_map_ani_spl(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
-                res_sho_ani_bin, mar_siz.pix, vie_ang_dir);
-            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_sho.png'])
-            
-%             fie_num = {'axo', 'tap', 'srt'};
-%             res_tap_ani_bin = getfield(res_ani_bin, fie_num{2:end});
-%             h_fig = plo_clu_map_ani_spl(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
-%                 res_tap_ani_bin, mar_siz.pix, vie_ang_dir);
-%             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_tap.png'])
-% 
-%             fie_num = {'axo', 'bou', 'all', 'srt'};
-%             res_ani_bin = getfield(res_ani_bin, fie_num{2:end});
-%             h_fig = plo_clu_map_ani_spl(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
-%                 res_ani_bin, mar_siz.pix, vie_ang_dir);
-%             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl.png'])
+            % fie_num = {'axo', 'lig', 'srt'};
+            % res_lig_ani_bin = getfield(res_ani_bin, fie_num{2:end});
+            % h_fig = plo_clu_map_ani_spl(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
+            %     res_lig_ani_bin, mar_siz.pix, vie_ang_dir);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_lig.png'])
+            % 
+            % fie_num = {'axo', 'sho', 'srt'};
+            % res_sho_ani_bin = getfield(res_ani_bin, fie_num{2:end});
+            % h_fig = plo_clu_map_ani_spl(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
+            %     res_sho_ani_bin, mar_siz.pix, vie_ang_dir);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_sho.png'])
+            % 
+            % fie_num = {'axo', 'tap', 'srt'};
+            % res_tap_ani_bin = getfield(res_ani_bin, fie_num{2:end});
+            % h_fig = plo_clu_map_ani_spl(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
+            %     res_tap_ani_bin, mar_siz.pix, vie_ang_dir);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_tap.png'])
+            % 
+            % fie_num = {'axo', 'bou', 'all', 'srt'};
+            % res_ani_bin = getfield(res_ani_bin, fie_num{2:end});
+            % h_fig = plo_clu_map_ani_spl(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
+            %     res_ani_bin, mar_siz.pix, vie_ang_dir);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl.png'])
+
+            % fie_num = {'axo', 'bou', 'non', 'srt'};
+            % res_ani_bin = getfield(res_ani_bin, fie_num{2:end});
+            % h_fig = plo_clu_map_ani_spl(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
+            %     res_ani_bin, mar_siz.pix, vie_ang_dir);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_non.png'])
+
+            % cel_onl
+            h_fig = plo_clu_map_ani_spl_met(obj, {'bou_non', 'srt'});
+            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_non.png'])
+            h_fig = plo_clu_map_ani_spl_met(obj, {'lig', 'srt'});
+            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_lig.png'])
+            h_fig = plo_clu_map_ani_spl_met(obj, {'tap', 'srt'});
+            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_tap.png'])
         end
         %
-        function sav_fig_spa_den_srt(obj)
-            fie_num = {'axo', 'bou', 'all', 'srt_010'};
-            h_fig = plo_spa_den_met(obj, fie_num);
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_010.png'])
-            %
-            fie_num = {'axo', 'bou', 'all', 'srt_001'};
-            h_fig = plo_spa_den_met(obj, fie_num);
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_001.png'])
-        end
-        function sav_fig_spa_den_dvx(obj)
-            fie_num = {'axo', 'bou', 'all', 'srt'};
-            h_fig = plo_spa_den_met(obj, fie_num, "dor");
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_dor.png'])
-            h_fig = plo_spa_den_met(obj, fie_num, "ven");
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_ven.png'])
-            %
-            fie_num = {'axo', 'bou', 'all', 'srt_010'};
-            h_fig = plo_spa_den_met(obj, fie_num, "dor");
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_dor_010.png'])
-            h_fig = plo_spa_den_met(obj, fie_num, "ven");
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_ven_010.png'])
-            %
-            fie_num = {'axo', 'bou', 'all', 'srt_001'};
-            h_fig = plo_spa_den_met(obj, fie_num, "dor");
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_dor_001.png'])
-            h_fig = plo_spa_den_met(obj, fie_num, "ven");
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_ven_001.png'])
-        end
         function sav_fig_spa_den_dor_ven(obj)
-            fie_num = {'axo', 'bou', 'lig', 'srt'};
             sam_fil = matfile(obj.fil_pat_sam);
             x_ani_bin = sam_fil.x_ani_bin;
             y_ani_bin = sam_fil.y_ani_bin;
             log_bin = sam_fil.log_bin;
             vie_ang_dir = [-90 90];
-            h_fig = plo_spa_den_dor_ven(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_dor_ven_str_lig.png'])
 
-            fie_num = {'axo', 'bou', 'sho', 'srt'};
-            h_fig = plo_spa_den_dor_ven(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_dor_ven_str_sho.png'])
-
-            fie_num = {'axo', 'bou', 'tap', 'srt'};
-            h_fig = plo_spa_den_dor_ven(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_dor_ven_str_tap.png'])
+            % fie_num = {'axo', 'bou', 'all', 'srt'};
+            % h_fig = plo_spa_den_dor_ven(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_dor_ven_str.png'])
+            % 
+            % fie_num = {'axo', 'bou', 'lig', 'srt'};
+            % h_fig = plo_spa_den_dor_ven(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_dor_ven_str_lig.png'])
+            % 
+            % fie_num = {'axo', 'bou', 'tap', 'srt'};
+            % h_fig = plo_spa_den_dor_ven(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_dor_ven_str_tap.png'])
             
-            fie_num = {'axo', 'bou', 'all', 'srt'};
+            %glia
+            fie_num = {'axo', 'bou', 'non', 'srt'};
             h_fig = plo_spa_den_dor_ven(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
-            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_dor_ven_str.png'])
+            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_dor_ven_str_non.png'])
         end
         function sav_fig_pie_axo(obj)
             sam_fil = matfile(obj.fil_pat_sam);
@@ -3008,34 +3807,151 @@ classdef sam
 %             h_fig = plo_pie(res_bin);
 %             exp_fig(h_fig, [char(obj.poo_dir) '\pie_lig.png'])
 
-            fie_num = {'sho', 'srt'};
+            % fie_num = {'sho', 'srt'};
+            % res_ani_bin = getfield(res_fie_ani_bin, fie_num{:});
+            % res_bin = vertcat(res_ani_bin{:});
+            % h_fig = plo_pie.cat(res_bin);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_sho.png'])
+            % 
+            % fie_num = {'tap', 'srt'};
+            % res_ani_bin = getfield(res_fie_ani_bin, fie_num{:});
+            % res_bin = vertcat(res_ani_bin{:});
+            % h_fig = plo_pie.cat(res_bin);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_tap.png'])
+
+            % fie_num = {'bou', 'all', 'srt'};
+            % res_ani_bin = getfield(res_fie_ani_bin, fie_num{:});
+            % res_bin = vertcat(res_ani_bin{:});
+            % h_fig = plo_pie.cat(res_bin);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_bou_all.png'])
+
+            fie_num = {'bou', 'non', 'srt'};
             res_ani_bin = getfield(res_fie_ani_bin, fie_num{:});
             res_bin = vertcat(res_ani_bin{:});
-            h_fig = plo_pie(res_bin);
-            exp_fig(h_fig, [char(obj.poo_dir) '\pie_sho.png'])
+            h_fig = plo_pie.cat(res_bin);
+            exp_fig(h_fig, [char(obj.poo_dir) '\pie_bou_non.png'])
+        end
+        function sav_fig_dif_spa_den(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_ani_bin = sam_fil.x_ani_bin;
+            y_ani_bin = sam_fil.y_ani_bin;
+            vie_ang_dir = [-90 90];
+            pro_den_bin = sam_fil.pro_den_bin;
+            h_fig = plo_dif_spa_den(x_ani_bin, y_ani_bin, vie_ang_dir, pro_den_bin.tai_lig);
+            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_tai_lig.png'])
+            h_fig = plo_dif_spa_den(x_ani_bin, y_ani_bin, vie_ang_dir, pro_den_bin.tai_tap);
+            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_tai_tap.png'])
+            h_fig = plo_dif_spa_den(x_ani_bin, y_ani_bin, vie_ang_dir, pro_den_bin.lig_tap);
+            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_lig_tap.png'])
+        end
+        function sav_fig_dsd(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            pro_den_bin = sam_fil.pro_den_bin;
+            x_lim = sam_fil.x_lim;
+            y_lim = sam_fil.y_lim;
+            max_den = 0.00005;
+            log_bin = [];
             
-%             fie_num = {'tap', 'srt'};
-%             res_ani_bin = getfield(res_fie_ani_bin, fie_num{:});
-%             res_bin = vertcat(res_ani_bin{:});
-%             h_fig = plo_pie(res_bin);
-%             exp_fig(h_fig, [char(obj.poo_dir) '\pie_tap.png'])
-%             
-%             fie_num = {'bou', 'all', 'srt'};
-%             res_ani_bin = getfield(res_fie_ani_bin, fie_num{:});
-%             res_bin = vertcat(res_ani_bin{:});
-%             h_fig = plo_pie(res_bin);
-%             exp_fig(h_fig, [char(obj.poo_dir) '\pie_bou_all.png'])
+            % h_fig = plo_dsd(pro_den_bin.tai_lig, x_lim, y_lim, max_den, log_bin);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_tai_lig.png'])
+            % h_fig = plo_dsd(pro_den_bin.tai_tap, x_lim, y_lim, max_den, log_bin);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_tai_tap.png'])
+            % h_fig = plo_dsd(pro_den_bin.lig_tap, x_lim, y_lim, max_den, log_bin);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_lig_tap.png'])
+            
+            % log_bin = sam_fil.log_bin;
+            % h_fig = plo_dsd(pro_den_bin.tai_lig, x_lim, y_lim, max_den, log_bin.tai_lig_raw);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_raw_tai_lig.png'])
+            % h_fig = plo_dsd(pro_den_bin.tai_tap, x_lim, y_lim, max_den, log_bin.tai_tap_raw);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_raw_tai_tap.png'])
+            % h_fig = plo_dsd(pro_den_bin.lig_tap, x_lim, y_lim, max_den, log_bin.lig_tap_raw);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_raw_lig_tap.png'])
+            % h_fig = plo_dsd(pro_den_bin.tai_lig, x_lim, y_lim, max_den, log_bin.tai_lig);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_sig_tai_lig.png'])
+            % h_fig = plo_dsd(pro_den_bin.tai_tap, x_lim, y_lim, max_den, log_bin.tai_tap);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_sig_tai_tap.png'])
+            % h_fig = plo_dsd(pro_den_bin.lig_tap, x_lim, y_lim, max_den, log_bin.lig_tap);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_sig_lig_tap.png'])
+
+            h_fig = plo_dsd(pro_den_bin.non_lig, x_lim, y_lim, max_den, log_bin);
+            exp_fig(h_fig, [char(obj.poo_dir) '\dsd_non_lig.png'])
+            h_fig = plo_dsd(pro_den_bin.non_tap, x_lim, y_lim, max_den, log_bin);
+            exp_fig(h_fig, [char(obj.poo_dir) '\dsd_non_tap.png'])
+        end
+        function sav_fig_spa_den_ave(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            coo_bix_dim = sam_fil.coo_bix_dim;
+            vie_ang_dir = [-90 90];
+            pro_den_bix = sam_fil.pro_den_bix;
+            max_den = 0.0001;
+            h_fig = plo_sda(coo_bix_dim, vie_ang_dir, pro_den_bix.tai, max_den);
+            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_ave_tai.png'])
+            h_fig = plo_sda(coo_bix_dim, vie_ang_dir, pro_den_bix.lig);
+            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_ave_lig.png'])
+            h_fig = plo_sda(coo_bix_dim, vie_ang_dir, pro_den_bix.tap);
+            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_ave_tap.png'])
+        end
+        function sav_fig_spa_den_sid(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_ani_bin = sam_fil.x_ani_bin;
+            z_ani_bin = sam_fil.z_ani_bin;
+            log_bin = sam_fil.log_bin;
+
+            % fie_num = {'axo', 'bou', 'all', 'srt'};
+            % h_fig = plo_spa_den_sid(x_ani_bin, z_ani_bin, log_bin, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_sid_tai.png'])
+            % 
+            % fie_num = {'axo', 'bou', 'lig', 'srt'};
+            % h_fig = plo_spa_den_sid(x_ani_bin, z_ani_bin, log_bin, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_sid_lig.png'])
+            % 
+            % fie_num = {'axo', 'bou', 'tap', 'srt'};
+            % h_fig = plo_spa_den_sid(x_ani_bin, z_ani_bin, log_bin, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_sid_tap.png'])
+
+
+            fie_num = {'axo', 'bou', 'non', 'srt'};
+            h_fig = plo_spa_den_sid(x_ani_bin, z_ani_bin, log_bin, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_sid_non.png'])
+        end
+        function sav_fig_dsd_sid(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            pro_den_sid_bin = sam_fil.pro_den_sid_bin;
+            x_lim = sam_fil.x_lim;
+            z_lim = sam_fil.z_lim;
+            max_den = 0.00005;
+            log_bin = [];
+            % h_fig = plo_dsd_sid(pro_den_sid_bin.tai_lig, x_lim, z_lim, max_den, log_bin);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_sid_tai_lig.png'])
+            % h_fig = plo_dsd_sid(pro_den_sid_bin.tai_tap, x_lim, z_lim, max_den, log_bin);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_sid_tai_tap.png'])
+            % h_fig = plo_dsd_sid(pro_den_sid_bin.lig_tap, x_lim, z_lim, max_den, log_bin);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dsd_sid_lig_tap.png'])
+
+            h_fig = plo_dsd_sid(pro_den_sid_bin.non_lig, x_lim, z_lim, max_den, log_bin);
+            exp_fig(h_fig, [char(obj.poo_dir) '\dsd_sid_non_lig.png'])
+            h_fig = plo_dsd_sid(pro_den_sid_bin.non_tap, x_lim, z_lim, max_den, log_bin);
+            exp_fig(h_fig, [char(obj.poo_dir) '\dsd_sid_non_tap.png'])
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% cel onl
-        function sav_fig_clu_map_cel(obj)
-            h_fig = plo_clu_map_cel_met(obj);
-            fil_pat = char(obj.fil_pat_fig_clu_map_cel);
-            exp_fig(h_fig, fil_pat)
+        function sav_fig_clu_map_spo(obj)
+            h_fig = plo_clu_map_spo_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\clu_map_spo.png'])
         end
-        %
+        function sav_fig_clu_map_cel(obj)
+            fie_num = {'bou_all'};
+            h_fig = plo_clu_map_cel_met(obj, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\clu_map_cel_bou_all.png'])
+            %
+            fie_num = {'lig'};
+            h_fig = plo_clu_map_cel_met(obj, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\clu_map_cel_lig.png'])
+            %
+            fie_num = {'tap'};
+            h_fig = plo_clu_map_cel_met(obj, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\clu_map_cel_tap.png'])
+        end
         function sav_fig_pcc_dis(obj)
-            %sav_fig_pcc_dis_cel(obj, 'ong')
-            
             sam_fil = matfile(obj.fil_pat_sam);
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             dis_blo = con_fil.dis_blo;
@@ -3044,49 +3960,58 @@ classdef sam
                 dis_blo = dis_blo.tel;
                 x_lim = 310;
                 dis_blo(end) = x_lim;
+            elseif obj.sam_idx == "gfa"
+                pcc_blo_ani = sam_fil.r_blo_ani;
+                dis_blo = dis_blo.wre;
+                x_lim = 100;
+                %dis_blo(end) = x_lim;
             else
                 pcc_blo_ani = sam_fil.pcc_blo_ani;
                 dis_blo = dis_blo.rap.thr;
                 x_lim = 150;
             end
-
-            fie = 'lig';
-            h_fig = plo_pcc_dis.all(pcc_blo_ani.(fie), dis_blo, x_lim);
             sav_dir = char(obj.poo_dir);
-            exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
-
-            fie = 'sho';
+            
+            fie = 'ong';
             h_fig = plo_pcc_dis.all(pcc_blo_ani.(fie), dis_blo, x_lim);
             exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
 
-            fie = 'tap';
-            h_fig = plo_pcc_dis.all(pcc_blo_ani.(fie), dis_blo, x_lim);
-            exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
+            % fie = 'lig';
+            % h_fig = plo_pcc_dis.all(pcc_blo_ani.(fie), dis_blo, x_lim);
+            % exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
+            % fie = 'tap';
+            % h_fig = plo_pcc_dis.all(pcc_blo_ani.(fie), dis_blo, x_lim);
+            % exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
+            % fie = 'tai';
+            % h_fig = plo_pcc_dis.all(pcc_blo_ani.(fie), dis_blo, x_lim);
+            % exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
+            %
+            % fie = 'tap_tai';
+            % h_fig = plo_pcc_dis.all(pcc_blo_ani.(fie), dis_blo, x_lim);
+            % exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
+            % fie = 'tap_not';
+            % h_fig = plo_pcc_dis.all(pcc_blo_ani.(fie), dis_blo, x_lim);
+            % exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
 
-            fie = 'tai';
-            h_fig = plo_pcc_dis.all(pcc_blo_ani.(fie), dis_blo, x_lim);
-            exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
-        end
-        function sav_fig_pcc_dis_cel(obj, fie)
-            h_fig = plo_pcc_dis_cel_met(obj, fie);
-            sav_dir = char(obj.poo_dir);
-            %sav_dir = char(obj.poo_dir_tem);
-            exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
-        end
-        function sav_fig_clu_map_spo(obj)
-            h_fig = plo_clu_map_spo_met(obj);
-            exp_fig(h_fig, [char(obj.poo_dir) '\clu_map_spo.png'])
+            % fie = 'bou_non';
+            % h_fig = plo_pcc_dis.all(pcc_blo_ani.(fie), dis_blo, x_lim);
+            % exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
+
+            % axo_onl
+            % fie = 'non';
+            % h_fig = plo_pcc_dis.all(pcc_blo_ani.(fie), dis_blo, x_lim);
+            % exp_fig(h_fig, [sav_dir '\cor_dis_' fie '.png'])
         end
         function sav_fig_dff_ang(obj)
             sam_fil = matfile(obj.fil_pat_sam);
             ang_bou = sam_fil.ang_bou;
             dff_bou_win = sam_fil.dff_bou_win;
-            h_fig = plo_dff_bou(ang_bou.all, dff_bou_win.all(:, 2));
-            exp_fig(h_fig, [char(obj.poo_dir) '\dff_ang_all.png'])
-            h_fig = plo_dff_bou(ang_bou.vib, dff_bou_win.vib(:, 2));
-            exp_fig(h_fig, [char(obj.poo_dir) '\dff_ang_vib.png'])
-            h_fig = plo_dff_bou(ang_bou.non, dff_bou_win.non(:, 2));
-            exp_fig(h_fig, [char(obj.poo_dir) '\dff_ang_non.png'])
+            h_fig = plo_dff_bou(ang_bou.all, dff_bou_win.all.all(:, 2));
+            exp_fig(h_fig, [char(obj.poo_dir) '\dff_ang_all_all.png'])
+            h_fig = plo_dff_bou(ang_bou.all, dff_bou_win.all.exc(:, 2));
+            exp_fig(h_fig, [char(obj.poo_dir) '\dff_ang_all_exc.png'])
+            h_fig = plo_dff_bou(ang_bou.all, dff_bou_win.all.inh(:, 2));
+            exp_fig(h_fig, [char(obj.poo_dir) '\dff_ang_all_inh.png'])
         end
         function sav_fig_inh_exc_cel_onl(obj)
             sav_fig_inh_exc_sig(obj)
@@ -3094,17 +4019,25 @@ classdef sam
             sav_fig_res(obj)
         end
         function sav_fig_inh_exc_sig(obj)
-            h_fig = plo_inh_exc_sig_met(obj, 'lig');
             sav_dir = char(obj.poo_dir);
-            exp_fig(h_fig, [sav_dir '\inh_exc_sig_lig.png'])
-            h_fig = plo_inh_exc_sig_met(obj, 'sho');
-            exp_fig(h_fig, [sav_dir '\inh_exc_sig_sho.png'])
-            h_fig = plo_inh_exc_sig_met(obj, 'tap');
-            exp_fig(h_fig, [sav_dir '\inh_exc_sig_tap.png'])
-            h_fig = plo_inh_exc_sig_met(obj, 'bou_all');
-            exp_fig(h_fig, [sav_dir '\inh_exc_sig_bou_all.png'])
+            % h_fig = plo_inh_exc_sig_met(obj, 'lig');
+            % exp_fig(h_fig, [sav_dir '\inh_exc_sig_lig.png'])
+            % h_fig = plo_inh_exc_sig_met(obj, 'sho');
+            % exp_fig(h_fig, [sav_dir '\inh_exc_sig_sho.png'])
+            % h_fig = plo_inh_exc_sig_met(obj, 'tap');
+            % exp_fig(h_fig, [sav_dir '\inh_exc_sig_tap.png'])
+            % h_fig = plo_inh_exc_sig_met(obj, 'bou_all');
+            % exp_fig(h_fig, [sav_dir '\inh_exc_sig_bou_all.png'])
+            
+            % h_fig = plo_inh_exc_sig_met(obj, 'tap_tai');
+            % exp_fig(h_fig, [sav_dir '\inh_exc_sig_tap_tai.png'])
+            % h_fig = plo_inh_exc_sig_met(obj, 'tap_not');
+            % exp_fig(h_fig, [sav_dir '\inh_exc_sig_tap_not.png'])
+
+            h_fig = plo_inh_exc_sig_met(obj, 'bou_non');
+            exp_fig(h_fig, [sav_dir '\inh_exc_sig_bou_non.png'])
         end
-        function sav_fig_inh_exc_spa(obj)
+        function sav_fig_inh_exc_spa(obj)% along the dimensions
             h_fig = plo_inh_exc_spa_met(obj, 'lig');
             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spa_lig.png'])
             h_fig = plo_inh_exc_spa_met(obj, 'sho');
@@ -3115,18 +4048,19 @@ classdef sam
             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spa_bou_all.png'])
         end
         function sav_fig_res(obj)
-            h_fig = plo_res_met(obj, {'lig', 'srt'});
-            exp_fig(h_fig, [char(obj.poo_dir) '\res_lig.png'])
-            h_fig = plo_res_met(obj, {'sho', 'srt'});
-            exp_fig(h_fig, [char(obj.poo_dir) '\res_sho.png'])
-            h_fig = plo_res_met(obj, {'tap', 'srt'});
-            exp_fig(h_fig, [char(obj.poo_dir) '\res_tap.png'])
-            h_fig = plo_res_met(obj, {'bou_all', 'srt'});
-            exp_fig(h_fig, [char(obj.poo_dir) '\res_bou_all.png'])
-        end
-        function sav_fig_inh_exc_spa_all(obj)
-            h_fig = plo_inh_exc_spa_all_met(obj);
-            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spa_all.png'])
+            % h_fig = plo_res_met(obj, {'bou_all', 'srt'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\res_bou_all.png'])
+            % h_fig = plo_res_met(obj, {'lig', 'srt'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\res_lig.png'])
+            % h_fig = plo_res_met(obj, {'tap', 'srt'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\res_tap.png'])
+            %
+            % h_fig = plo_res_met(obj, {'tap_tai', 'zsc'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\res_tap_tai.png'])
+            % h_fig = plo_res_met(obj, {'tap_not', 'zsc'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\res_tap_not.png'])
+            h_fig = plo_res_met(obj, {'bou_non', 'srt'});
+            exp_fig(h_fig, [char(obj.poo_dir) '\res_bou_non.png'])
         end
         function sav_fig_clu(obj)
             h_fig = plo_clu_met(obj);
@@ -3136,45 +4070,160 @@ classdef sam
             h_fig = plo_clu_fid_met(obj);
             exp_fig(h_fig, [char(obj.poo_dir) '\clu_fid.png'])
         end
-        function sav_fig_cor_cor(obj)
-            h_fig = plo_cor_cor_met(obj);
-            exp_fig(h_fig, [char(obj.poo_dir) '\cor_cor.png'])
-        end
         function sav_fig_cor_cor_den(obj)
             h_fig = plo_cor_cor_den_met(obj);
             exp_fig(h_fig, [char(obj.poo_dir) '\cor_cor_den.png'])
         end
+        function sav_fig_ccd_spl(obj)
+            fie = 'dat';
+            h_fig = plo_cor_cor_den_met(obj, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\ccd_dat.png'])
+            %
+            fie = 'shu';
+            h_fig = plo_cor_cor_den_met(obj, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\ccd_shu.png'])
+        end
         function sav_fig_pie(obj)
-            h_fig = plo_pie_met(obj, {'lig', 'srt'});
-            %exp_fig(h_fig, [char(obj.poo_dir) '\pie_lig.png'])
-            h_fig.Children.Proportions
+            % h_fig = plo_pie_met(obj, {'lig', 'srt'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_lig.png'])
+            % h_fig.Children.Proportions
+            % 
+            % h_fig = plo_pie_met(obj, {'sho', 'srt'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_sho.png'])
+            % h_fig.Children.Proportions
+            % 
+            % h_fig = plo_pie_met(obj, {'tap', 'srt'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_tap.png'])
+            % h_fig.Children.Proportions
+            % 
+            % h_fig = plo_pie_met(obj, {'bou_all', 'srt'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_bou_all.png'])
+            % h_fig.Children.Proportions
 
-            h_fig = plo_pie_met(obj, {'sho', 'srt'});
-            %exp_fig(h_fig, [char(obj.poo_dir) '\pie_sho.png'])
-            h_fig.Children.Proportions
+            % h_fig = plo_pie_met(obj, {'tap_tai', 'zsc'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_tap_tai.png'])
+            % h_fig.Children.Proportions
+            % 
+            % h_fig = plo_pie_met(obj, {'tap_not', 'zsc'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_tap_not.png'])
+            % h_fig.Children.Proportions
 
-            h_fig = plo_pie_met(obj, {'tap', 'srt'});
-            %exp_fig(h_fig, [char(obj.poo_dir) '\pie_tap.png'])
+            h_fig = plo_pie_met(obj, {'bou_non', 'srt'});
             h_fig.Children.Proportions
+            exp_fig(h_fig, [char(obj.poo_dir) '\pie_bou_non.png'])
+        end
+        function sav_fig_clu_loc_sig(obj)
+            % fie_num = {'bou_all'};
+            % h_fig = plo_clu_loc_sig_met(obj, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\clu_loc_sig_bou_all.png'])
+            % %
+            % fie_num = {'lig'};
+            % h_fig = plo_clu_loc_sig_met(obj, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\clu_loc_sig_lig.png'])
+            % %
+            % fie_num = {'tap'};
+            % h_fig = plo_clu_loc_sig_met(obj, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\clu_loc_sig_tap.png'])
 
-            h_fig = plo_pie_met(obj, {'bou_all', 'srt'});
-            %exp_fig(h_fig, [char(obj.poo_dir) '\pie_bou_all.png'])
+            fie_num = {'bou_non'};
+            h_fig = plo_clu_loc_sig_met(obj, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\clu_loc_sig_bou_non.png'])
+        end
+        function sav_fig_pie_k(obj)
+            % h_fig = plo_pie_k_met(obj, {'bou_all'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_k_bou_all.png'])
+            % h_fig.Children.Proportions
+            % 
+            % h_fig = plo_pie_k_met(obj, {'lig'});
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_k_lig.png'])
+            % h_fig.Children.Proportions
+            %
+            % h_fig = plo_pie_k_tap_met(obj);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\pie_k_tap.png'])
+            % h_fig.Children.Proportions
+
+            h_fig = plo_pie_k_bou_non_met(obj);
             h_fig.Children.Proportions
+            exp_fig(h_fig, [char(obj.poo_dir) '\pie_k_bou_non.png'])
+        end% for clusters
+        function sav_fig_n_cel(obj)
+            h_fig = plo_num_gab_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\n_cel.png'])
+        end
+        function sav_fig_pro_mul(obj)
+            h_fig = plo_pro_mul_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\pro_mul.png'])
+        end
+        function sav_fig_inh_exc_spa_two(obj)
+            fie_num = {'tai_two', 'lig_two', 'tap_two'};
+            [h_fig, p_row_col] = plo_inh_exc_spa_all_met(obj, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spa_two.png'])
+            display(p_row_col)
+        end
+        function sav_fig_res_acc_mod(obj)
+            h_fig = plo_res_acc_mod_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\res_acc_mod.png'])
+        end
+        function sav_fig_mod_loc(obj)
+            h_fig = plo_mod_loc_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\mod_loc.png'])
+        end
+        function sav_fig_pai_mod(obj)
+            h_fig = plo_pai_mod_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\pai_mod.png'])
+        end
+        function sav_fig_pve(obj)
+            h_fig = plo_pve_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\pve.png'])
+        end
+        function sav_fig_pve_cel(obj)
+            h_fig = plo_pve_cel_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\pve_cel.png'])
+        end
+        function sav_fig_pve_cel_tau(obj)
+            h_fig = plo_pve_cel_tau_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\pve_cel_tau.png'])
+        end
+        function sav_fig_tap_tai_not(obj)
+            h_fig = plo_tap_tai_not_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\tap_tai_not.png'])
+        end
+        function sav_fig_per_sat_pix(obj)
+            h_fig = plo_per_sat_pix_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\per_sat_pix.png'])
+        end
+        function sav_fig_inh_exc_spa_bou_non(obj)
+            fie_num = {'bou_non', 'lig', 'tap'};
+            [h_fig, p_row_col] = plo_inh_exc_spa_all_met(obj, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spa_bou_non.png'])
+            display(p_row_col)
+        end
+        function sav_fig_per_pai_mod(obj)
+            h_fig = plo_per_pai_mod_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\per_pai_mod.png'])
+        end
+        function sav_fig_rep_sup(obj)
+            h_fig = plo_rep_sup_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\rep_sup.png'])
+        end
+        function sav_fig_ttn_sca_all(obj)
+            h_fig = plo_ttn_sca_all_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\ttn_sca_all.png'])
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gab
-        function sav_fig_gab_tog(obj)
-            sav_fig_gab_all(obj)
-            sav_fig_gab_neu_beh(obj)
-            sav_fig_gab_ong(obj)
-        end
-        %
-        function sav_fig_gab_neu_beh(obj)
-            sav_fig_inh_exc(obj)
-            sav_fig_inh_exc_ros_cau(obj)
-        end
         function sav_fig_gab_ong(obj)
             sav_fig_clu_sel(obj)
             sav_fig_pai_cor(obj)
+        end
+        function sav_fig_gab_mod(obj)
+            h_fig = plo_inh_exc_sig_sid_met(obj, 'bou_non');
+            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_sig_bou_non.png'])
+            %
+            h_fig = plo_gab_clu_met(obj, 'bou_non');
+            exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_bou_non.png'])
+            %
+            h_fig = plo_inh_exc_met(obj, 'bou_non');
+            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_bou_non.png'])
         end
         %
         function sav_fig_clu_sel(obj)
@@ -3185,6 +4234,10 @@ classdef sam
             h_fig = plo_pai_cor_met(obj);
             exp_fig(h_fig, [char(obj.poo_dir) '\pai_cor.png'])
         end
+        function sav_fig_clu_sel_pai_cor(obj)
+            h_fig = plo_clu_sel_pai_cor_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\clu_sel_pai_cor.png'])
+        end
         function sav_fig_inh_exc_ros_cau(obj)
             h_fig = plo_inh_exc_ros_cau_met(obj);
             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_ros_cau.png'])
@@ -3192,26 +4245,40 @@ classdef sam
             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_dor_ven.png'])
         end
         function sav_fig_inh_exc_sig_sid(obj)
-            h_fig = plo_inh_exc_sig_sid_met(obj, 'lig');
-            sav_dir = char(obj.poo_dir);
-            exp_fig(h_fig, [sav_dir '\inh_exc_sig_lig.png'])
-            h_fig = plo_inh_exc_sig_sid_met(obj, 'sho');
-            exp_fig(h_fig, [sav_dir '\inh_exc_sig_sho.png'])
-            h_fig = plo_inh_exc_sig_sid_met(obj, 'tap');
-            exp_fig(h_fig, [sav_dir '\inh_exc_sig_tap.png'])
-            h_fig = plo_inh_exc_sig_sid_met(obj, 'bou_all');
-            exp_fig(h_fig, [sav_dir '\inh_exc_sig_bou_all.png'])
+            % h_fig = plo_inh_exc_sig_sid_met(obj, 'lig');
+            % sav_dir = char(obj.poo_dir);
+            % exp_fig(h_fig, [sav_dir '\inh_exc_sig_lig.png'])
+            % h_fig = plo_inh_exc_sig_sid_met(obj, 'sho');
+            % exp_fig(h_fig, [sav_dir '\inh_exc_sig_sho.png'])
+            % h_fig = plo_inh_exc_sig_sid_met(obj, 'tap');
+            % exp_fig(h_fig, [sav_dir '\inh_exc_sig_tap.png'])
+            % h_fig = plo_inh_exc_sig_sid_met(obj, 'bou_all');
+            % exp_fig(h_fig, [sav_dir '\inh_exc_sig_bou_all.png'])
+
+            h_fig = plo_inh_exc_sig_sid_met(obj, 'bou_non');
+            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_sig_bou_non.png'])
         end
         function sav_fig_gab_clu(obj)
-            h_fig = plo_gab_clu_met(obj, 'lig');
-            exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_lig.png'])
-            h_fig = plo_gab_clu_met(obj, 'sho');
-            exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_sho.png'])
-            h_fig = plo_gab_clu_met(obj, 'tap');
-            exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_tap.png'])
-            h_fig = plo_gab_clu_met(obj, 'bou_all');
-            exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_bou_all.png'])
-        end
+            % h_fig = plo_gab_clu_met(obj, 'lig');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_lig.png'])
+            % h_fig = plo_gab_clu_met(obj, 'sho');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_sho.png'])
+            % h_fig = plo_gab_clu_met(obj, 'tap');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_tap.png'])
+            % h_fig = plo_gab_clu_met(obj, 'bou_all');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_bou_all.png'])
+
+            h_fig = plo_gab_clu_met(obj, 'bou_non');
+            exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_bou_non.png'])
+        end% 3d reco.
+        function sav_fig_gab_clu_onl(obj)
+            h_fig = plo_gab_clu_onl_met(obj, 'bou_non');
+            exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_onl_bou_non.png'])
+            h_fig = plo_gab_clu_onl_met(obj, 'lig');
+            exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_onl_lig.png'])
+            h_fig = plo_gab_clu_onl_met(obj, 'tap');
+            exp_fig(h_fig, [char(obj.poo_dir) '\gab_clu_onl_tap.png'])
+        end% 3d reco.
         function sav_fig_inh_exc(obj)
             h_fig = plo_inh_exc_met(obj, 'lig');
             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_lig.png'])
@@ -3222,7 +4289,181 @@ classdef sam
             h_fig = plo_inh_exc_met(obj, 'bou_all');
             exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_bou_all.png'])
         end
+        function sav_fig_pie_gab(obj)
+            h_fig = plo_pie_gab_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\pie_gab.png'])
+        end
+        function sav_fig_num_gab(obj)
+            h_fig = plo_num_gab_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\num_gab.png'])
+            %
+            h_fig = plo_fra_gab_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\fra_gab.png'])
+        end
+        function sav_fig_z_sco_cel(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            z_sco_cel = sam_fil.z_sco_cel;
+            [h_fig, h, p] = plo_z_sco_cel(z_sco_cel);
+            exp_fig(h_fig, [char(obj.poo_dir) '\z_sco_cel.png'])
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gli
+        function sav_fig_bin_sig_spo(obj)
+            h_fig = plo_bin_sig_spo_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\bin_sig_spo.png'])
+        end
+        function sav_fig_inh_exc_hab(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_ani_bin = sam_fil.x_ani_bin;
+            y_ani_bin = sam_fil.y_ani_bin;
+            z_ani_bin = sam_fil.z_ani_bin;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            piv_col_pcx = con_fil.piv_col_pcx;
+            res_ani_bin = sam_fil.res_ani_bin;
+            mar_siz.pix = 5;
+            vie_ang_dir = [-120 30];
+            
+            % fie_num = {'axo', 'sho', 'srt'};
+            % res_sho_ani_bin = getfield(res_ani_bin, fie_num{2:end});
+            % h_fig = plo_clu_map_ani_hab(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
+            %     res_sho_ani_bin, mar_siz.pix, vie_ang_dir);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_sho.png'])
+            % 
+            % fie_num = {'axo', 'tap', 'srt'};
+            % res_tap_ani_bin = getfield(res_ani_bin, fie_num{2:end});
+            % h_fig = plo_clu_map_ani_hab(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
+            %     res_tap_ani_bin, mar_siz.pix, vie_ang_dir);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_tap.png'])
+
+            % fie_num = {'axo', 'bou', 'all', 'srt'};
+            % res_ani_bin = getfield(res_ani_bin, fie_num{2:end});
+            % h_fig = plo_clu_map_ani_hab(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
+            %     res_ani_bin, mar_siz.pix, vie_ang_dir);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl.png'])
+
+            fie_num = {'axo', 'bou', 'non', 'srt'};
+            res_ani_bin = getfield(res_ani_bin, fie_num{2:end});
+            h_fig = plo_clu_map_ani_hab(x_ani_bin, y_ani_bin, z_ani_bin, piv_col_pcx.div, ...
+                res_ani_bin, mar_siz.pix, vie_ang_dir);
+            exp_fig(h_fig, [char(obj.poo_dir) '\inh_exc_spl_spo.png'])
+        end
+        function sav_fig_bin_sig_all_all(obj)% sha_hea
+            sam_fil = matfile(obj.fil_pat_sam);
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            win_len = con_fil.win_len;
+
+            dff_sho_bin_fra = sam_fil.dff_sho_bin_fra;
+            h_fig = plo_sha_hea(dff_sho_bin_fra, win_len.dff.pha.drn.tai);
+            exp_fig(h_fig, [char(obj.poo_dir) '\bin_sig_sho_all.png'])
+
+            dff_tap_bin_fra = sam_fil.dff_tap_bin_fra;
+            h_fig = plo_sha_hea(dff_tap_bin_fra, win_len.dff.pha.drn.tai);
+            exp_fig(h_fig, [char(obj.poo_dir) '\bin_sig_tap_all.png'])
+
+            dff_bin_fra = sam_fil.dff_bin_fra;
+            h_fig = plo_sha_hea(dff_bin_fra.bou.all, win_len.dff.pha.drn.tai);
+            exp_fig(h_fig, [char(obj.poo_dir) '\bin_sig_all.png'])
+        end
+        function sav_fig_spa_den_exc_inh(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            x_ani_bin = sam_fil.x_ani_bin;
+            y_ani_bin = sam_fil.y_ani_bin;
+            log_bin = sam_fil.log_bin;
+            vie_ang_dir = [-90 90];
+
+            % fie_num = {'axo', 'bou', 'sho', 'srt'};
+            % h_fig = plo_spa_den_exc_inh(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_exc_inh_sho.png'])
+            % 
+            % fie_num = {'axo', 'bou', 'tap', 'srt'};
+            % h_fig = plo_spa_den_exc_inh(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_exc_inh_tap.png'])
+            % 
+            % fie_num = {'axo', 'bou', 'all', 'srt'};
+            % h_fig = plo_spa_den_exc_inh(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_exc_inh_tai.png'])
+
+            fie_num = {'axo', 'bou', 'non', 'srt'};
+            h_fig = plo_spa_den_exc_inh(x_ani_bin, y_ani_bin, log_bin, vie_ang_dir, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\spa_den_exc_inh_non.png'])
+        end
+        function sav_fig_bou_sig_tri(obj)
+            %fie = 'acb_exc_ven_exc';
+            fie = 'pcb_exc_ven_exc';
+            h_fig = plo_bou_sig_tri_met(obj, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\bou_sig_tri_' fie '.png'])
+        end
+        function sav_fig_dff_ang_gli(obj)
+            fie = 'all';
+            h_fig = plo_dff_ang_met(obj, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\dff_ang_' fie '.png'])
+
+            fie = 'dor';
+            h_fig = plo_dff_ang_met(obj, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\dff_ang_' fie '.png'])
+
+            fie = 'ven_exc';
+            h_fig = plo_dff_ang_met(obj, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\dff_ang_' fie '.png'])
+        end
+        function p = sav_fig_bou_com(obj)
+            fie = 'acb_exc_ven_exc';
+            [h_fig, p] = plo_bou_com_met(obj, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\bou_com_' fie '.png'])
+        end
+        function sav_fig_tri_sig(obj)
+            % fie = 'all';
+            % h_fig = plo_tri_sig_met(obj, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\tri_sig_' fie '.png'])
+            % 
+            % fie = 'dor';
+            % h_fig = plo_tri_sig_met(obj, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\tri_sig_' fie '.png'])
+            % 
+            % fie = 'ven_exc';
+            % h_fig = plo_tri_sig_met(obj, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\tri_sig_' fie '.png'])
+
+            fie = 'lig';
+            h_fig = plo_tri_sig_met(obj, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\tri_sig_' fie '.png'])
+
+            fie = 'tap';
+            h_fig = plo_tri_sig_met(obj, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\tri_sig_' fie '.png'])
+        end
+        function [p_lig, p_tap] = sav_fig_dff_tri(obj)
+        % function [p_all, p_dor, p_ven_exc] = sav_fig_dff_tri(obj)
+            % fie = 'all';
+            % [h_fig, p_all] = plo_dff_tri_met(obj, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dff_tri_' fie '.png'])
+            % 
+            % fie = 'dor';
+            % [h_fig, p_dor] = plo_dff_tri_met(obj, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dff_tri_' fie '.png'])
+            % 
+            % fie = 'ven_exc';
+            % [h_fig, p_ven_exc] = plo_dff_tri_met(obj, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dff_tri_' fie '.png'])
+
+            fie = 'lig';
+            [h_fig, p_lig] = plo_dff_tri_met(obj, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\dff_tri_' fie '.png'])
+
+            fie = 'tap';
+            [h_fig, p_tap] = plo_dff_tri_met(obj, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\dff_tri_' fie '.png'])
+        end
+        function sav_fig_tri_com(obj)
+            h_fig = plo_tri_com_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\tri_com.png'])
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% spo
+        function sav_fig_ofr(obj)
+            h_fig = plo_ofr_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\ofr.png'])
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% all
+        
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% pre
         function sav_rec_all(obj, beg_ani)
             nam_ani = cell(obj.n_ani, 1);
@@ -3261,6 +4502,30 @@ classdef sam
                 disp(sti.factor_meter)
             end
         end
+        function sav_ima_gfa_all(obj, beg_ani)
+            nam_ani = cell(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                nam_ani{ani_num} = convertStringsToChars(obj.ani(ani_num));
+            end
+            for ani_num = beg_ani:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' nam_ani{ani_num}]);
+                sti = rec_fun_i();
+                sav_ima_gfa(sti)
+            end
+        end
+        function sav_ima_spo_all(obj, beg_ani)
+            nam_ani = cell(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                nam_ani{ani_num} = convertStringsToChars(obj.ani(ani_num));
+            end
+            for ani_num = beg_ani:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' nam_ani{ani_num}]);
+                sti = rec_fun_i();
+                sav_ima_spo(sti)
+            end
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% behavioral
         function app_syn_all(obj, sta_ani)
             nam_ani = cell(obj.n_ani, 1);
@@ -3295,8 +4560,8 @@ classdef sam
             for i = 1:obj.n_ani
                 nam_ani{i} = convertStringsToChars(obj.ani(i));
             end
-            %parfor i = sta_ani:obj.n_ani
-            for i = sta_ani:obj.n_ani
+            parfor i = sta_ani:obj.n_ani
+            %for i = sta_ani:obj.n_ani
                 disp(i)
                 rec_fun_i = str2func(['rec_fun.' nam_ani{i}]);
                 sti = rec_fun_i();
@@ -3310,12 +4575,28 @@ classdef sam
             for i = 1:obj.n_ani
                 nam_ani{i} = convertStringsToChars(obj.ani(i));
             end
-            parfor i = 1:obj.n_ani
+            %parfor i = 1:obj.n_ani
+            for i = 1:obj.n_ani
                 disp(i)
                 rec_fun_i = str2func(['rec_fun.' nam_ani{i}]);
                 sti = rec_fun_i();
                 if sti.tai
                     app_par_tai(sti)
+                end
+            end
+        end
+        function pri_dur_res_per_all(obj)
+            nam_ani = cell(obj.n_ani, 1);
+            for i = 1:obj.n_ani
+                nam_ani{i} = convertStringsToChars(obj.ani(i));
+            end
+            %parfor i = 1:obj.n_ani
+            for i = 1:obj.n_ani
+                disp(i)
+                rec_fun_i = str2func(['rec_fun.' nam_ani{i}]);
+                sti = rec_fun_i();
+                if sti.tai
+                    pri_dur_res_per(sti)
                 end
             end
         end
@@ -3566,19 +4847,68 @@ classdef sam
                 disp(i)
                 rec_fun_i = str2func(['rec_fun.' nam_ani{i}]);
                 sti = rec_fun_i();
-                if sti.cel_det && sti.bri
+                if (sti.cel_det && sti.bri) && sti.sta
                     app_par(sti)
                 end
             end
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo cel
-        function app_par_roi_sig_all(obj)
+        function cor_all(obj)
             nam_ani = cell(obj.n_ani, 1);
             for i = 1:obj.n_ani
                 nam_ani{i} = convertStringsToChars(obj.ani(i));
             end
             %parfor i = 1:obj.n_ani
             for i = 1:obj.n_ani
+                disp(i)
+                rec_fun_i = str2func(['rec_fun.' nam_ani{i}]);
+                sti = rec_fun_i();
+                if sti.cel_det && sti.bri
+                    cor(sti)
+                end
+            end
+        end
+        function app_par_fro_sam_all(obj)
+            sam_fil = matfile(obj.fil_pat_sam);
+            log_ani_cel = sam_fil.log_ani_cel;
+
+            nam_ani = cell(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                nam_ani{ani_num} = convertStringsToChars(obj.ani(ani_num));
+            end
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' nam_ani{ani_num}]);
+                sti = rec_fun_i();
+                if (sti.cel_det && sti.bri) && sti.sta
+                    rec_fil = matfile(sti.fil_pat_rec);
+                    log_cel = rec_fil.log_cel;
+                    log_cel.for_syn = log_ani_cel(ani_num, :)';
+                    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    save(sti.fil_pat_rec, 'log_cel', '-append')
+                end
+            end
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo cel
+        function app_axo_all(obj, sta_ani)
+            nam_ani = cell(obj.n_ani, 1);
+            for i = 1:obj.n_ani
+                nam_ani{i} = convertStringsToChars(obj.ani(i));
+            end
+            %parfor i = 1:obj.n_ani
+            for i = sta_ani:obj.n_ani
+                disp(i)
+                rec_fun_i = str2func(['rec_fun.' nam_ani{i}]);
+                sti = rec_fun_i();
+                app_axo(sti)
+            end
+        end
+        function app_par_roi_sig_all(obj)
+            nam_ani = cell(obj.n_ani, 1);
+            for i = 1:obj.n_ani
+                nam_ani{i} = convertStringsToChars(obj.ani(i));
+            end
+            parfor i = 1:obj.n_ani
+            %for i = 1:obj.n_ani
                 disp(i)
                 rec_fun_i = str2func(['rec_fun.' nam_ani{i}]);
                 sti = rec_fun_i();
@@ -3600,18 +4930,31 @@ classdef sam
                 app_log_pla_icx_row_col(tap)
             end
         end
-        function app_par_axo_onl_all(obj)
+        function app_par_axo_onl_all(obj, beg_ani)
             nam_ani = cell(obj.n_ani, 1);
             for ani_num = 1:obj.n_ani
                 nam_ani{ani_num} = convertStringsToChars(obj.ani(ani_num));
             end
 
-            %parfor i = 1:obj.n_ani
-            for ani_num = 1:obj.n_ani
+            parfor ani_num = beg_ani:obj.n_ani
+            %for ani_num = beg_ani:obj.n_ani
                 disp(ani_num)
                 rec_fun_i = str2func(['rec_fun.' nam_ani{ani_num}]);
                 sti = rec_fun_i();
                 app_par_axo_onl(sti)
+            end
+        end
+        function pri_all(obj)
+            nam_ani = cell(obj.n_ani, 1);
+            for i = 1:obj.n_ani
+                nam_ani{i} = convertStringsToChars(obj.ani(i));
+            end
+            for i = 1:obj.n_ani
+                disp(i)
+                rec_fun_i = str2func(['rec_fun.' nam_ani{i}]);
+                sti = rec_fun_i();
+                display(sti.factor_meter)
+                display(sti.iniStruct.total_z_distance_)
             end
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% cel onl
@@ -3658,14 +5001,14 @@ classdef sam
                 end
             end
         end
-        function app_par_som_all(obj)
+        function app_par_som_all(obj, beg_ani)
             nam_ani = cell(obj.n_ani, 1);
             for ani_num = 1:obj.n_ani
                 nam_ani{ani_num} = convertStringsToChars(obj.ani(ani_num));
             end
-            beg_ani = 1;
-            %parfor ani_num = beg_ani:obj.n_ani
-            for ani_num = beg_ani:obj.n_ani
+            %beg_ani = 1;
+            parfor ani_num = beg_ani:obj.n_ani
+            %for ani_num = beg_ani:obj.n_ani
                 disp(['ani ' num2str(ani_num)])
                 rec_fun_i = str2func(['rec_fun.' nam_ani{ani_num}]);
                 tap = rec_fun_i();
@@ -3826,13 +5169,12 @@ classdef sam
                 end
             end
         end
-        function app_par_tai_cel_all(obj)
+        function app_par_tai_cel_all(obj, sta_ani)
             nam_ani = cell(obj.n_ani, 1);
             for i = 1:obj.n_ani
                 nam_ani{i} = convertStringsToChars(obj.ani(i));
             end
-            %parfor i = 1:obj.n_ani
-            for i = 1:obj.n_ani
+            for i = sta_ani:obj.n_ani
                 disp(i)
                 rec_fun_i = str2func(['rec_fun.' nam_ani{i}]);
                 sti = rec_fun_i();
@@ -3956,6 +5298,49 @@ classdef sam
                 end
             end
         end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gli
+        function app_par_gli_all(obj)
+            nam_ani = cell(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                nam_ani{ani_num} = convertStringsToChars(obj.ani(ani_num));
+            end
+
+            %parfor i = 1:obj.n_ani
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' nam_ani{ani_num}]);
+                sti = rec_fun_i();
+                app_par_gli(sti)
+            end
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% spo
+        function app_spo_all(obj, sta_ani)
+            nam_ani = cell(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                nam_ani{ani_num} = convertStringsToChars(obj.ani(ani_num));
+            end
+            for ani_num = sta_ani:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' nam_ani{ani_num}]);
+                sti = rec_fun_i();
+                app_spo(sti)
+            end
+        end
+        %
+        function app_par_spo_all(obj)
+            nam_ani = cell(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                nam_ani{ani_num} = convertStringsToChars(obj.ani(ani_num));
+            end
+
+            %parfor i = 1:obj.n_ani
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' nam_ani{ani_num}]);
+                sti = rec_fun_i();
+                app_par_spo(sti)
+            end
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% figures all
         function sav_fig_neu_axo_all(obj)
             for i = 1:obj.n_ani
@@ -4054,7 +5439,8 @@ classdef sam
             for ani_num = 1:obj.n_ani
                 rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
                 tap = rec_fun_i();
-                sav_fig_ong_two(tap)
+                %sav_fig_ong_two(tap)
+                sav_fig_ong_cel(tap)
             end
         end
         function sav_fig_cor_map_exc_inh_all(obj)
@@ -4062,6 +5448,33 @@ classdef sam
                 rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
                 tap = rec_fun_i();
                 sav_fig_cor_map_exc_inh(tap)
+            end
+        end
+        function sav_fig_cor_map_ove_all(obj, sta_ani)
+            for ani_num = sta_ani:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                tap = rec_fun_i();
+                sav_fig_cor_map_ove(tap)
+            end
+        end
+        function sav_fig_cor_map_ove_spo_all(obj, sta_ani)
+            for ani_num = sta_ani:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                tap = rec_fun_i();
+                sav_fig_cor_map_ove_spo(tap)
+            end
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% cel onl
+        function sav_fig_roi_con_all(obj)
+            nam_ani = cell(obj.n_ani, 1);
+            for ani_num = 1:obj.n_ani
+                nam_ani{ani_num} = convertStringsToChars(obj.ani(ani_num));
+            end
+            for ani_num = 1:obj.n_ani
+                disp(['ani ' num2str(ani_num)])
+                rec_fun_i = str2func(['rec_fun.' nam_ani{ani_num}]);
+                tap = rec_fun_i();
+                sav_fig_roi_con(tap)
             end
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gab
@@ -4093,6 +5506,50 @@ classdef sam
                 rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
                 tap = rec_fun_i();
                 sav_fig_gab_ong(tap)
+            end
+        end
+        function sav_fig_z_sco_cel_all(obj)
+            for ani_num = 1:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                tap = rec_fun_i();
+                sav_fig_z_sco_cel(tap)
+            end
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gli
+        function sav_fig_tai_dff_all(obj)
+            for ani_num = 1:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                tap = rec_fun_i();
+                sav_fig_tai_dff(tap)
+            end
+        end
+        function sav_fig_bou_sig_all(obj)
+            for ani_num = 1:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                tap = rec_fun_i();
+                sav_fig_bou_sig(tap)
+            end
+        end
+        function sav_fig_tri_sig_all(obj)
+            for ani_num = 1:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                tap = rec_fun_i();
+                sav_fig_tri_sig(tap)
+            end
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% spo
+        function sav_fig_spo_all(obj)
+            for ani_num = 1:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                tap = rec_fun_i();
+                sav_fig_spo(tap)
+            end
+        end
+        function sav_fig_tai_qui_all(obj)
+            for ani_num = 1:obj.n_ani
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                tap = rec_fun_i();
+                sav_fig_tai_qui(tap)
             end
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% general
@@ -4328,9 +5785,12 @@ function p_cro = com_p_cro(var_con_uni)
     end
 end
 
-function [bea_par_ani_con, p_par_cro, bea_par_ani_tri] = ...
-    com_bea_par_ani_con(bea_par_ani_tri, log_nox_ani_tri)
-    global n_con n_tri_con
+function [bea_par_ani_con, p_par_cro, bea_par_ani_tri] = com_bea_par_ani_con(bea_par_ani_tri, ...
+    log_nox_ani_tri)
+    con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+    n_con = con_fil.n_con;
+    n_tri_con = con_fil.n_tri_con;
+    n_tri_con = n_tri_con.vrs;
     [n_ani, ~] = size(bea_par_ani_tri);
     bea_par_ani_con = nan(n_ani, n_con);
     bea_par_ani_tri(log_nox_ani_tri) = nan;
@@ -4338,15 +5798,16 @@ function [bea_par_ani_con, p_par_cro, bea_par_ani_tri] = ...
     for i = 1:n_ani
         for j = 1:n_con
             bea_par_ani_con(i, j) = com_sta(bea_par_ani_tri...
-                (i, (j - 1)*n_tri_con.vrs + 1:j*n_tri_con.vrs), dim);
+                (i, (j - 1)*n_tri_con + 1:j*n_tri_con), dim);
         end
     end
     n_cro = 3;
     ind_cro_con = nchoosek(1:n_con, 2);
     p_par_cro = nan(n_cro, 1);
     for i = 1:n_cro
-        if sum(~isnan(bea_par_ani_con(:, ind_cro_con(i, 1)))) > 0 && sum(~isnan(bea_par_ani_con(:, ...
-                ind_cro_con(i, 2)))) > 0
+        log_ani.one = ~isnan(bea_par_ani_con(:, ind_cro_con(i, 1)));
+        log_ani.two = ~isnan(bea_par_ani_con(:, ind_cro_con(i, 2)));
+        if sum(log_ani.one.*log_ani.two) > 0
             p_par_cro(i) = signrank(bea_par_ani_con(:, ind_cro_con(i, 1)), ...
                 bea_par_ani_con(:, ind_cro_con(i, 2)));
         end
@@ -4375,13 +5836,13 @@ n_pix_ext = 200;
     fig_hei, wid, sca_axe, n_pix_ext);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 global y_lab_ang
-global sti_ons_tri
+sti_ons_tri = con_fil.sti_ons_tri;
 hax = hax_sub(1);
 tim_fra = con_fil.tim_fra;
 ima(hax, tim_fra.ani.ses, ang_fra_ani')
 yticks(hax, 1:size(ang_fra_ani, 2))
 clim(hax, [0 0.25])
-x_lin = xline(hax, sti_ons_tri.vrs.sec, 'r');
+x_lin = xline(hax, sti_ons_tri.vrs.gli, 'r');
 ylabel(hax, 'Animal')
 col_han = colorbar(hax);
 col_han.Position(1) = col_han.Position(1) + 0.03;
@@ -5078,9 +6539,198 @@ ylabel(hax, 'Frequency')
 %%%%%%%%%%%%%%
 h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
 end
+
+function h_fig = plo_nta_win(nta_fra_sta_con)
+n_row = 1;
+n_col = 2;
+
+% gap_ver_row = 0.030*ones(n_row, 1);
+% gap_hor_col = 0.090;
+% gap_hor_row_col = repmat(gap_hor_col, n_row, n_col);
+% mar_bot = 0.070;
+% mar_top = 0.170;
+% mar_lef = 0.070;
+% mar_rig = 0.070;
+% wid = true;
+
+hei = 3.5;% ewelina -- for entire height, not per panel
+mar_top = cal_mar_top(hei);
+mar_bot = 0.035;
+mar_lef = 0.050;
+mar_rig = 0.000;
+gap_ver_row = 0.020*ones(n_row, 1);
+gap_hor_row_col = 0.010*ones(n_row, n_col);
+wid = false;
+
+asp_rat_axe = 1;
+[h_fig, wid_mon, hei_mon] = fig;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 100;
+[hax_sub, ~, ~, ~, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, gap_ver_row, gap_hor_row_col...
+    , mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, hei_mon, wid, sca_axe, n_pix_ext);
+%linkaxes(hax_sub)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+log_fra = con_fil.log_fra;
+log_fra = log_fra.tai.tri.sho;
+tim_fra = con_fil.tim_fra;
+tim_fra = tim_fra.tai.tri.sho;
+n_fra = con_fil.n_fra;
+n_fra = n_fra.tai;
+mea_poi_con = squeeze(nta_fra_sta_con(log_fra, 1, :));
+sem_poi_con = squeeze(nta_fra_sta_con(log_fra, 2, :));
+log_lin_wid = true;
+for con = 2:3% for glial recordings
+    hax = hax_sub(con - 1);
+    h_con_i = plo_sha.smo_fun(hax, tim_fra, mea_poi_con(:, con), sem_poi_con(:, con), {'k'}, n_fra.bas, n_fra.smo);
+    box(hax, "off")
+    xlabel(hax, 'Time (s)')
+    if con == 2
+        ylabel(hax, '\Delta Tail angle (rad)')
+        title(hax_sub(1), 'Light')
+    else
+        hax.YAxis.Visible = "off";
+        title(hax_sub(2), 'Vibration')
+    end
+    hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+end
+linkaxes(hax_sub)
+%%%%%%%%%%%%%%
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
+end
+
+function h_fig = plo_pro_mul(bea_lat_ani_tri)
+n_row = 1;
+n_col = 2;
+
+% gap_ver_row = 0.030*ones(n_row, 1);
+% gap_hor_col = 0.090;
+% gap_hor_row_col = repmat(gap_hor_col, n_row, n_col);
+% mar_bot = 0.070;
+% mar_top = 0.170;
+% mar_lef = 0.070;
+% mar_rig = 0.070;
+% wid = true;
+
+hei = 3.5;% ewelina -- for entire height, not per panel
+mar_top = cal_mar_top(hei);
+mar_bot = 0.035;
+mar_lef = 0.050;
+mar_rig = 0.000;
+gap_ver_row = 0.020*ones(n_row, 1);
+gap_hor_row_col = 0.005*ones(n_row, n_col);
+wid = false;
+
+asp_rat_axe = 1;
+[h_fig, wid_mon, hei_mon] = fig;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 170;
+[hax_sub, ~, ~, ~, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, gap_ver_row, gap_hor_row_col...
+    , mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, hei_mon, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%linkaxes(hax_sub)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+log_con_tri = con_fil.log_con_tri;
+fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+mil = con_fil.mil;
+min_par = min(bea_lat_ani_tri, [], 'all')/mil;
+max_par = max(bea_lat_ani_tri, [], 'all')/mil;
+log_lin_wid = true;
+for col = 1:n_col
+    hax = hax_sub(col);
+    if col == 1
+        con = 1;
+    elseif col == 2
+        con = 3;
+    end
+    bea_lat_tem_ani_tri = bea_lat_ani_tri(:, log_con_tri(con, :))/mil;
+    plo_par_map_mul(hax, bea_lat_tem_ani_tri, min_par, max_par, false)
+    box(hax, "off")
+    xlabel(hax, 'Trial #')
+    if col == 1
+        ylabel(hax, 'Animal #')
+        title(hax_sub(1), 'Light')
+    else
+        hax.YAxis.Visible = "off";
+        title(hax_sub(2), 'Vibration')
+        col_han = colorbar(hax_sub(2));
+        col_han.Position(1) = col_han.Position(1) + 0.020;
+        y_lab_lat = con_fil.y_lab_lat;
+        col_han.Label.String = y_lab_lat;
+    end
+    hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+end
+%%%%%%%%%%%%%%
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
+end
+
+function h_fig = plo_hab(per_pro_tri_con)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 2;
+% gap_ver_row = 0.050*ones(n_row, 1);
+% gap_hor_row_col = 0.050*ones(n_row, n_col);
+% mar_bot = 0.050;
+% mar_top = 0.010;
+% mar_lef = 0.050;
+% mar_rig = 0.010;
+% wid = true;
+
+hei = 3.5;% ewelina -- for entire height, not per panel
+mar_top = cal_mar_top(hei);
+mar_bot = 0.035;
+mar_lef = 0.050;
+mar_rig = 0.000;
+gap_ver_row = 0.020*ones(n_row, 1);
+gap_hor_row_col = 0.005*ones(n_row, n_col);
+wid = false;
+
+asp_rat_axe = 1*ones(n_row*n_col, 1);
+sca_axe = 1*ones(n_row*n_col, 1);
+n_pix_ext = 50;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+n_tri = 6;
+tri_num_tri = 1:n_tri;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+for col = 1:n_col
+    hax = hax_sub(col);
+    if col == 1
+        con = 1;
+    elseif col == 2
+        con = 3;
+    end
+    plot(hax, tri_num_tri', 100*per_pro_tri_con(:, con));
+    box(hax, "off")
+    if col == 1
+        ylabel(hax, '%probability')
+    elseif col == 2
+        hax.YAxis.Visible = "off";
+    end
+    xlabel(hax, 'Trial #')
+    hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+end
+linkaxes(hax_sub(1:2))
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neural
 function [n_cel_reg_ani, n_cel_reg] = ext_n_cel_reg_ani(obj)
-    global n_reg_for
+    con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+    n_reg_for = con_fil.n_reg_for;
     n_cel_reg_ani.raw = zeros(n_reg_for, obj.n_ani);
     n_cel_reg_ani.rem = zeros(n_reg_for, obj.n_ani);
     for k = 1:n_reg_for
@@ -5101,7 +6751,9 @@ end
 
 function act_reg_ani_con_fra_cel = ext_act_reg_ani_con_fra_cel(obj, var, fie_num, ...
     act_reg_ani_con_fra_cel)
-global n_reg_for n_con
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_reg_for = con_fil.n_reg_for;
+n_con = con_fil.n_con;
 var_reg_ani_con_fra_cel = cell(n_reg_for, 1);
 for k = 1:n_reg_for
     var_reg_ani_con_fra_cel{k} = cell(obj.n_ani, n_con);
@@ -5123,7 +6775,9 @@ end
 
 function [act_reg_con_fra_cel, act_reg_fra_sta_con] = ext_act_reg_con_fra_cel(obj, ...
     act_reg_ani_con_fra_cel, fie_num, act_reg_con_fra_cel, act_reg_fra_sta_con)
-global n_reg_for n_con
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_reg_for = con_fil.n_reg_for;
+n_con = con_fil.n_con;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% pooling
 var_reg_con_fra_cel = cell(n_reg_for, n_con);
 var_reg_fra_sta_con = cell(n_reg_for, 1);
@@ -5346,6 +7000,10 @@ cor_fie_fie_blo_ani.exc.dat = gen_cor_fie_fie_blo_ani(obj, {fie, 'exc', 'dat'});
 cor_fie_fie_blo_ani.exc.shu = gen_cor_fie_fie_blo_ani(obj, {fie, 'exc', 'shu'});
 cor_fie_fie_blo_ani.inh.dat = gen_cor_fie_fie_blo_ani(obj, {fie, 'inh', 'dat'});
 cor_fie_fie_blo_ani.inh.shu = gen_cor_fie_fie_blo_ani(obj, {fie, 'inh', 'shu'});
+
+
+cor_fie_fie_blo_ani.all.dat = gen_cor_fie_fie_blo_ani(obj, {fie, 'all', 'dat'});
+cor_fie_fie_blo_ani.all.shu = gen_cor_fie_fie_blo_ani(obj, {fie, 'all', 'shu'});
 end
 
 function cor_fie_fie_blo_ani = gen_cor_fie_fie_blo_ani(obj, fie_num)
@@ -5366,7 +7024,7 @@ for ani = 1:obj.n_ani
 end
 end
 
-function [cum_pro_bin_ani, r_ani, p] = gen_cum_pro_bin_ani(obj, fie)
+function [cum_pro_bin_ani, r_ani, p_xco] = gen_cum_pro_bin_ani(obj, fie)
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 cum_pro_bin_ani.exc = nan(con_fil.n_bin_cor_coe, obj.n_ani);
 cum_pro_bin_ani.inh = nan(con_fil.n_bin_cor_coe, obj.n_ani);
@@ -5383,7 +7041,498 @@ for i = 1:obj.n_ani
     r_ani.exc(i) = r.(fie).exc;
     r_ani.inh(i) = r.(fie).inh;
 end
-p = signrank(r_ani.exc, r_ani.inh);
+p_xco = com_p_xco(r_ani.exc, r_ani.inh);
+end
+
+function pro_den_bin_ani = gen_pro_den_bin_ani(obj)
+n_mod = 3;
+n_row = 2;
+n_col = 2;
+%mod_fie_num = {'tai'; 'lig'; 'tap'};
+mod_fie_num = {'non'; 'lig'; 'tap'};
+for mod_num = 1:n_mod
+    mod_fie = mod_fie_num{mod_num};
+    for ani_num = 1:obj.n_ani
+        rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+        sti = rec_fun_i();
+        rec_fil = matfile(sti.fil_pat_rec);
+        pro_den_bin = rec_fil.pro_den_bin;
+        for row = 1:n_row
+            if row == 1
+                fie = 'exc';
+            elseif row == 2
+                fie = 'inh';
+            end
+            for col = 1:n_col
+                if col == 1
+                    loc = 'dor';
+                elseif col == 2
+                    loc = 'ven';
+                end
+                pro_den_bin_ani.(mod_fie).(loc).(fie)(:, ani_num) = pro_den_bin.(mod_fie).(loc).(fie);
+            end
+        end
+    end
+end
+end
+
+function pro_den_bin_ani = gen_pro_den_bin_ani_non(obj, mod_fie)
+n_row = 2;
+n_col = 2;
+for ani_num = 1:obj.n_ani
+    rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+    sti = rec_fun_i();
+    rec_fil = matfile(sti.fil_pat_rec);
+    pro_den_bin = rec_fil.pro_den_bin;
+    for row = 1:n_row
+        if row == 1
+            fie = 'exc';
+        elseif row == 2
+            fie = 'inh';
+        end
+        for col = 1:n_col
+            if col == 1
+                loc = 'dor';
+            elseif col == 2
+                loc = 'ven';
+            end
+            pro_den_bin_ani.(loc).(fie)(:, ani_num) = pro_den_bin.(mod_fie).(loc).(fie);
+        end
+    end
+end
+end
+
+function pro_den_sid_bin_ani = gen_pro_den_sid_bin_ani(obj)
+n_mod = 3;
+n_row = 2;
+%mod_fie_num = {'tai'; 'lig'; 'tap'};
+mod_fie_num = {'non'; 'lig'; 'tap'};
+for mod_num = 1:n_mod
+    mod_fie = mod_fie_num{mod_num};
+    for ani_num = 1:obj.n_ani
+        rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+        sti = rec_fun_i();
+        rec_fil = matfile(sti.fil_pat_rec);
+        pro_den_sid_bin = rec_fil.pro_den_sid_bin;
+        for row = 1:n_row
+            if row == 1
+                fie = 'exc';
+            elseif row == 2
+                fie = 'inh';
+            end
+            pro_den_sid_bin_ani.(mod_fie).(fie)(:, ani_num) = pro_den_sid_bin.(mod_fie).(fie);
+        end
+    end
+end
+end
+
+function pro_den_sid_bin_ani = gen_pro_den_sid_bin_ani_non(obj, mod_fie)
+n_row = 2;
+for ani_num = 1:obj.n_ani
+    rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+    sti = rec_fun_i();
+    rec_fil = matfile(sti.fil_pat_rec);
+    pro_den_sid_bin = rec_fil.pro_den_sid_bin;
+    for row = 1:n_row
+        if row == 1
+            fie = 'exc';
+        elseif row == 2
+            fie = 'inh';
+        end
+        pro_den_sid_bin_ani.(fie)(:, ani_num) = pro_den_sid_bin.(mod_fie).(fie);
+    end
+end
+end
+
+function pro_den_bin = cal_pro_den_bin(pro_den_bin_ani)
+n_mod = 3;
+n_row = 2;
+n_col = 2;
+%mod_fie_num = {'tai'; 'lig'; 'tap'};
+mod_fie_num = {'non'; 'lig'; 'tap'};
+for mod_num = 1:n_mod
+    mod_fie = mod_fie_num{mod_num};
+    for row = 1:n_row
+        if row == 1
+            fie = 'exc';
+        elseif row == 2
+            fie = 'inh';
+        end
+        for col = 1:n_col
+            if col == 1
+                loc = 'dor';
+            elseif col == 2
+                loc = 'ven';
+            end
+            pro_den_bin.(mod_fie).(loc).(fie) = mean(pro_den_bin_ani.(mod_fie).(loc).(fie), 2, ...
+                "omitnan");
+        end
+    end
+end
+% pro_den_bin = dif_pro_den_bin(pro_den_bin, 'tai', 'lig');
+% pro_den_bin = dif_pro_den_bin(pro_den_bin, 'tai', 'tap');
+pro_den_bin = dif_pro_den_bin(pro_den_bin, 'non', 'lig');
+pro_den_bin = dif_pro_den_bin(pro_den_bin, 'non', 'tap');
+
+pro_den_bin = dif_pro_den_bin(pro_den_bin, 'lig', 'tap');
+end
+
+function pro_den_bin = cal_pro_den_bin_non(pro_den_bin_ani, mod_fie)
+n_row = 2;
+n_col = 2;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    for col = 1:n_col
+        if col == 1
+            loc = 'dor';
+        elseif col == 2
+            loc = 'ven';
+        end
+        pro_den_bin.(loc).(fie) = mean(pro_den_bin_ani.(mod_fie).(loc).(fie), 2, "omitnan");
+    end
+end
+end
+
+function pro_den_bin = dif_pro_den_bin(pro_den_bin, fie_one, fie_two)
+fie_dif = [fie_one '_' fie_two];
+n_row = 2;
+n_col = 2;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    for col = 1:n_col
+        if col == 1
+            loc = 'dor';
+        elseif col == 2
+            loc = 'ven';
+        end
+        pro_den_bin.(fie_dif).(loc).(fie) = pro_den_bin.(fie_one).(loc).(fie) - ...
+            pro_den_bin.(fie_two).(loc).(fie);
+    end
+end
+end
+
+function pro_den_sid_bin = cal_pro_den_sid_bin(pro_den_sid_bin_ani)
+n_mod = 3;
+n_row = 2;
+%mod_fie_num = {'tai'; 'lig'; 'tap'};
+mod_fie_num = {'non'; 'lig'; 'tap'};
+for mod_num = 1:n_mod
+    mod_fie = mod_fie_num{mod_num};
+    for row = 1:n_row
+        if row == 1
+            fie = 'exc';
+        elseif row == 2
+            fie = 'inh';
+        end
+        pro_den_sid_bin.(mod_fie).(fie) = mean(pro_den_sid_bin_ani.(mod_fie).(fie), 2, "omitnan");
+    end
+end
+% pro_den_sid_bin = dif_pro_den_sid_bin(pro_den_sid_bin, 'tai', 'lig');
+% pro_den_sid_bin = dif_pro_den_sid_bin(pro_den_sid_bin, 'tai', 'tap');
+pro_den_sid_bin = dif_pro_den_sid_bin(pro_den_sid_bin, 'non', 'lig');
+pro_den_sid_bin = dif_pro_den_sid_bin(pro_den_sid_bin, 'non', 'tap');
+
+pro_den_sid_bin = dif_pro_den_sid_bin(pro_den_sid_bin, 'lig', 'tap');
+end
+
+function pro_den_sid_bin = cal_pro_den_sid_bin_non(pro_den_sid_bin_ani, mod_fie)
+n_row = 2;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    pro_den_sid_bin.(fie) = mean(pro_den_sid_bin_ani.(mod_fie).(fie), 2, "omitnan");
+end
+end
+
+function pro_den_sid_bin = dif_pro_den_sid_bin(pro_den_sid_bin, fie_one, fie_two)
+fie_dif = [fie_one '_' fie_two];
+n_row = 2;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    pro_den_sid_bin.(fie_dif).(fie) = pro_den_sid_bin.(fie_one).(fie) - ...
+        pro_den_sid_bin.(fie_two).(fie);
+end
+end
+
+function [p_bin, log_bin] = cal_p_bin(p_bin, log_bin, pro_den_bin_ani, fie_one, fie_two)
+fie_dif = [fie_one '_' fie_two];
+n_row = 2;
+n_col = 2;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    for col = 1:n_col
+        if col == 1
+            loc = 'dor';
+        elseif col == 2
+            loc = 'ven';
+        end
+        pro_den_bin_ani_one = pro_den_bin_ani.(fie_one).(loc).(fie);
+        pro_den_bin_ani_two = pro_den_bin_ani.(fie_two).(loc).(fie);
+        n_bin = size(pro_den_bin_ani_one, 1);
+        tte_tmp = nan(n_bin,1);
+        srt_tmp = nan(n_bin,1);
+        lme_tmp = nan(n_bin,1);
+        disp([loc '_' fie])
+        parfor bin = 1:n_bin
+            p_xco = com_p_xco(pro_den_bin_ani_one(bin, :)', pro_den_bin_ani_two(bin, :)');
+            tte_tmp(bin) = p_xco.tte;
+            srt_tmp(bin) = p_xco.srt;
+            lme_tmp(bin) = p_xco.lme;
+        end
+        p_bin.(fie_dif).(loc).(fie).tte = tte_tmp;
+        p_bin.(fie_dif).(loc).(fie).srt = srt_tmp;
+        p_bin.(fie_dif).(loc).(fie).lme = lme_tmp;
+        log_bin.(fie_dif).(loc).(fie).tte = holm_bonferroni(p_bin.(fie_dif).(loc).(fie).tte);
+        log_bin.(fie_dif).(loc).(fie).srt = holm_bonferroni(p_bin.(fie_dif).(loc).(fie).srt);
+        log_bin.(fie_dif).(loc).(fie).lme = holm_bonferroni(p_bin.(fie_dif).(loc).(fie).lme);
+    end
+end
+end
+
+function log_bin = det_log_bin_dif(p_bin, log_bin, fie_one, fie_two)
+fie_dif_raw = [fie_one '_' fie_two '_raw'];
+fie_dif = [fie_one '_' fie_two];
+n_row = 2;
+n_col = 2;
+alp = 0.05;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    for col = 1:n_col
+        if col == 1
+            loc = 'dor';
+        elseif col == 2
+            loc = 'ven';
+        end
+        log_bin.(fie_dif_raw).(loc).(fie).tte = p_bin.(fie_dif).(loc).(fie).tte <= alp;
+        log_bin.(fie_dif_raw).(loc).(fie).srt = p_bin.(fie_dif).(loc).(fie).srt <= alp;
+        log_bin.(fie_dif_raw).(loc).(fie).lme = p_bin.(fie_dif).(loc).(fie).lme <= alp;
+    end
+end
+end
+
+function coo_bin_dim = ext_coo_bin_dim(x_ani_bin, y_ani_bin, log_bin, fie_num)
+n_row = 2;
+n_col = 2;
+x_bin_all = vertcat(x_ani_bin{:});
+y_bin_all = vertcat(y_ani_bin{:});
+boo_uni = getfield(log_bin, fie_num{3:end});
+log_bin.ven = ~log_bin.dor;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    for col = 1:n_col
+        if col == 1
+            bin_uni.exc = boo_uni.exc & log_bin.dor;% binary_unit
+            bin_uni.inh = boo_uni.inh & log_bin.dor;
+            loc = 'dor';
+        elseif col == 2
+            bin_uni.exc = boo_uni.exc & log_bin.ven;
+            bin_uni.inh = boo_uni.inh & log_bin.ven;
+            loc = 'ven';
+        end
+        x_bin.(loc).(fie) = x_bin_all(bin_uni.(fie));
+        y_bin.(loc).(fie) = y_bin_all(bin_uni.(fie));
+        coo_bin_dim.(loc).(fie) = [x_bin.(loc).(fie) y_bin.(loc).(fie)];
+        coo_bin_dim.(loc).(fie) = unique(coo_bin_dim.(loc).(fie), "stable", "rows");
+    end
+end
+end
+
+function coo_bin_dim = uni_coo_bin_dim(coo_bin_dim)
+n_row = 2;
+n_col = 2;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    for col = 1:n_col
+        if col == 1
+            loc = 'dor';
+        elseif col == 2
+            loc = 'ven';
+        end
+        % coo_bin_dim.uni.(loc).(fie) = union(coo_bin_dim.tai.(loc).(fie), ...
+        %     coo_bin_dim.lig.(loc).(fie), 'stable', 'rows');
+
+        coo_bin_dim.uni.(loc).(fie) = union(coo_bin_dim.non.(loc).(fie), ...
+            coo_bin_dim.lig.(loc).(fie), 'stable', 'rows');
+
+        coo_bin_dim.uni.(loc).(fie) = union(coo_bin_dim.uni.(loc).(fie), ...
+            coo_bin_dim.tap.(loc).(fie), 'stable', 'rows');
+    end
+end
+end
+
+function coo_sid_bin_dim = ext_coo_sid_bin_dim(x_ani_bin, z_ani_bin, log_bin, fie_num)
+n_row = 2;
+x_bin_all = vertcat(x_ani_bin{:});
+z_bin_all = vertcat(z_ani_bin{:});
+boo_uni = getfield(log_bin, fie_num{3:end});
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    bin_uni.exc = boo_uni.exc;% binary_unit
+    bin_uni.inh = boo_uni.inh;
+    x_bin.(fie) = x_bin_all(bin_uni.(fie));
+    z_bin.(fie) = z_bin_all(bin_uni.(fie));
+    coo_sid_bin_dim.(fie) = [x_bin.(fie) z_bin.(fie)];
+    coo_sid_bin_dim.(fie) = unique(coo_sid_bin_dim.(fie), "stable", "rows");
+end
+end
+
+function coo_sid_bin_dim = uni_coo_sid_bin_dim(coo_sid_bin_dim)
+n_row = 2;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    % coo_sid_bin_dim.uni.(fie) = union(coo_sid_bin_dim.tai.(fie), ...
+    %     coo_sid_bin_dim.lig.(fie), 'stable', 'rows');
+
+    coo_sid_bin_dim.uni.(fie) = union(coo_sid_bin_dim.non.(fie), ...
+        coo_sid_bin_dim.lig.(fie), 'stable', 'rows');
+
+    coo_sid_bin_dim.uni.(fie) = union(coo_sid_bin_dim.uni.(fie), ...
+        coo_sid_bin_dim.tap.(fie), 'stable', 'rows');
+end
+end
+
+function coo_bin_dim = rou_coo_bin_dim(coo_bin_dim)
+n_row = 2;
+n_col = 2;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    for col = 1:n_col
+        if col == 1
+            loc = 'dor';
+        elseif col == 2
+            loc = 'ven';
+        end
+        coo_bin_dim.rou.(loc).(fie) = round(coo_bin_dim.uni.(loc).(fie));
+        coo_bin_dim.rou.(loc).(fie) = unique(coo_bin_dim.rou.(loc).(fie), 'stable', 'rows');
+    end
+end
+end
+
+function coo_sid_bin_dim = rou_coo_sid_bin_dim(coo_sid_bin_dim)
+n_row = 2;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    coo_sid_bin_dim.rou.(fie) = round(coo_sid_bin_dim.uni.(fie));
+    coo_sid_bin_dim.rou.(fie) = unique(coo_sid_bin_dim.rou.(fie), 'stable', 'rows');
+end
+end
+
+function coo_bin_dim = dow_coo_bin_dim(coo_bin_dim)
+n_row = 2;
+n_col = 2;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    for col = 1:n_col
+        if col == 1
+            loc = 'dor';
+        elseif col == 2
+            loc = 'ven';
+        end
+        cox_bin_dim = coo_bin_dim.uni.(loc).(fie);
+        cox_bin_dim = [det_val_ele(cox_bin_dim(:, 1)) det_val_ele(cox_bin_dim(:, 2))];
+        coo_bin_dim.dow.(loc).(fie) = unique(cox_bin_dim, 'stable', 'rows');
+    end
+end
+end
+
+function [pcc_blo_ani, acc_epo_xre_ani, cor_coe_epo_reg_blo_ani] = cal_pcc_blo_ani(obj, fie)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_blo = con_fil.n_blo;
+pcc_blo_ani.all = nan(n_blo.xre, obj.n_ani);
+pcc_blo_ani.pos = nan(n_blo.xre, obj.n_ani);
+pcc_blo_ani.neg = nan(n_blo.xre, obj.n_ani);
+%
+n_epo = con_fil.n_epo;
+n_cro_tot = con_fil.n_cro_tot;
+n_reg_for = con_fil.n_reg_for;
+acc_epo_xre_ani = ini_cel_arr(n_epo.tot, n_cro_tot, obj.n_ani, 1);
+cor_coe_epo_reg_blo_ani.all = ini_cel_arr(n_epo.tot, n_reg_for, n_blo.wre, ...
+    obj.n_ani);
+cor_coe_epo_reg_blo_ani.pos = ini_cel_arr(n_epo.tot, n_reg_for, n_blo.wre, ...
+    obj.n_ani);
+cor_coe_epo_reg_blo_ani.neg = ini_cel_arr(n_epo.tot, n_reg_for, n_blo.wre, ...
+    obj.n_ani);
+for ani_num = 1:obj.n_ani
+    disp(ani_num)
+    rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+    sti = rec_fun_i();
+    rec_fil = matfile(sti.fil_pat_rec);
+    pcc_blo = rec_fil.pcc_blo;
+    if isfield(pcc_blo, fie)
+        pcc_blo_ani.all(:, ani_num) = pcc_blo.(fie).all;
+        pcc_blo_ani.pos(:, ani_num) = pcc_blo.(fie).pos;
+        pcc_blo_ani.neg(:, ani_num) = pcc_blo.(fie).neg;
+    end
+    %
+    for k = 1:n_epo.tot
+        for j = 1:n_reg_for
+            cor_coe_epo_reg_blo = rec_fil.cor_coe_epo_reg_blo;
+            cor_coe_epo_reg_blo_ani.all{k, j}(:, ani_num) = ...
+                cor_coe_epo_reg_blo.(fie).all{k, j};
+            cor_coe_epo_reg_blo_ani.pos{k, j}(:, ani_num) = ...
+                cor_coe_epo_reg_blo.(fie).pos{k, j};
+            cor_coe_epo_reg_blo_ani.neg{k, j}(:, ani_num) = ...
+                cor_coe_epo_reg_blo.(fie).neg{k, j};
+        end
+        for j = 1:n_cro_tot
+            acc_epo_xre = rec_fil.acc_epo_xre;
+            if isfield(acc_epo_xre, fie)
+                acc_epo_xre_ani{k, j}(ani_num) = acc_epo_xre.(fie)(k, j);
+            end
+        end
+    end
+end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% cel onl
 function [dff_cel_fra, log_fie_fie_cel, res_fie_fie_cel, fra_fie_ani] = gen_dff_cel_fra(obj)
@@ -5413,26 +7562,103 @@ fra_fie_ani.sho = gen_fra_fie_ani(obj, {'sho', 'srt'});
 fra_fie_ani.tap = gen_fra_fie_ani(obj, {'tap', 'srt'});
 end
 
-function [log_cel, res_cel] = gen_log_cel(obj, fie_num)
+function [dff_cel_fra, log_fie_fie_cel, res_fie_fie_cel, fra_fie_ani] = gen_dff_cel_fra_bou_non(obj)
+dff_cel_fra = [];
+for ani_num = 1:obj.n_ani
+    disp(ani_num)
+    rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+    sti = rec_fun_i();
+    rec_fil = matfile(sti.fil_pat_rec);
+    act_cel_fra = rec_fil.dff_cel_fra;
+    dff_cel_fra = [dff_cel_fra; act_cel_fra.bou_non];
+end
+[log_fie_fie_cel.srt, res_fie_fie_cel.srt] = gen_log_cel_gab(obj, {'bou_non', 'srt'});
+fra_fie_ani = gen_fra_fie_ani(obj, {'bou_non', 'srt'});
+end
+
+function [log_cel, res_cel, n_cel_ani] = gen_log_cel(obj, fie_num)
 log_cel.inh = [];
 log_cel.exc = [];
 log_cel.non = [];
 res_cel = [];
+n_cel_ani = nan(obj.n_ani, 1);
 for ani_num = 1:obj.n_ani
     disp(ani_num)
     rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
     sti = rec_fun_i();
     rec_fil = matfile(sti.fil_pat_rec);
     boo_cel = rec_fil.log_cel;
-    log_cel.inh = [log_cel.inh; boo_cel.(fie_num{1}).neu.(fie_num{2}).inh];
-    log_cel.exc = [log_cel.exc; boo_cel.(fie_num{1}).neu.(fie_num{2}).exc];
-    log_cel.non = [log_cel.non; boo_cel.(fie_num{1}).neu.(fie_num{2}).non];
-    res_fie_cel = rec_fil.res_fie_cel;
-    res_cel = [res_cel; res_fie_cel.(fie_num{1}).(fie_num{2})];
+    
+    % log_cel.inh = [log_cel.inh; boo_cel.(fie_num{1}).neu.(fie_num{2}).inh];
+    % log_cel.exc = [log_cel.exc; boo_cel.(fie_num{1}).neu.(fie_num{2}).exc];
+    % log_cel.non = [log_cel.non; boo_cel.(fie_num{1}).neu.(fie_num{2}).non];
+
+    log_cel.inh = [log_cel.inh; boo_cel.(fie_num{1}).(fie_num{2}).inh];
+    log_cel.exc = [log_cel.exc; boo_cel.(fie_num{1}).(fie_num{2}).exc];
+    log_cel.non = [log_cel.non; boo_cel.(fie_num{1}).(fie_num{2}).non];
+    
+    
+    
+    % res_fie_cel = rec_fil.res_fie_cel;
+    % res_cel = [res_cel; res_fie_cel.(fie_num{1}).(fie_num{2})];%!!!!!!!!!
+
+    %n_cel_ani(ani_num) = nan(obj.n_ani, 1);
 end
 log_cel.inh = logical(log_cel.inh);
 log_cel.exc = logical(log_cel.exc);
 log_cel.non = logical(log_cel.non);
+end
+
+function log_cel = gen_log_cel_sim(obj, fie)
+log_cel = [];
+for ani_num = 1:obj.n_ani
+    disp(ani_num)
+    rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+    sti = rec_fun_i();
+    rec_fil = matfile(sti.fil_pat_rec);
+    boo_cel = rec_fil.log_cel;
+    log_cel = [log_cel; boo_cel.(fie)];
+end
+log_cel = logical(log_cel);
+end
+
+function log_cel = gen_log_cel_two(obj, one, two)
+log_cel = struct;
+fie_num = {'bim'; one; two; 'non'};
+n_fie = 4;
+for fie = 1:n_fie
+    log_cel.(fie_num{fie}) = logical([]);
+    for ani_num = 1:obj.n_ani
+        disp(ani_num)
+        rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+        sti = rec_fun_i();
+        rec_fil = matfile(sti.fil_pat_rec);
+        boo_cel = rec_fil.log_cel;
+        log_cel.(fie_num{fie}) = [log_cel.(fie_num{fie}); boo_cel.([one '_' two]).(fie_num{fie})];
+    end
+end
+end
+
+function fra_mod = cal_fra_mod(log_cel, one, two)
+fie_num = {'bim'; one; two; 'non'};
+n_fie = 4;
+fra_mod = nan(n_fie, 1);
+for fie = 1:n_fie
+    n_cel = length(log_cel.(fie_num{fie}));
+    fra_mod(fie) = sum(log_cel.(fie_num{fie}))/n_cel;
+end
+end
+
+function dff_cel = gen_dff_cel(obj, fie)
+dff_cel = [];
+for ani_num = 1:obj.n_ani
+    disp(ani_num)
+    rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+    sti = rec_fun_i();
+    rec_fil = matfile(sti.fil_pat_rec);
+    dff_cel_win = rec_fil.dff_cel_win;
+    dff_cel = [dff_cel; dff_cel_win.(fie)(:, 2)];
+end
 end
 
 function [log_cel, res_cel] = gen_log_cel_gab(obj, fie_num)
@@ -5509,43 +7735,15 @@ for ani_num = 1:obj.n_ani
 end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neurobehavioral
-function [clu_cel_k, ioi_k, n_cel, dff_cel_fra] = ext_clu_cel_k(obj)
-dff_cel_fra.bou.all = [];% cells discriminated when plotting
-dff_cel_fra.bou.spo = [];
-n_cel = 0;
-for ani_num = 1:obj.n_ani
-    disp(ani_num)
-    rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
-    sti = rec_fun_i();
-    if sti.tai
-        rec_fil = matfile(sti.fil_pat_rec);
-        act_cel_fra = rec_fil.dff_cel_fra;
-        dff_cel_fra.bou.all = [dff_cel_fra.bou.all; act_cel_fra.bou.all];
-        dff_cel_fra.bou.spo = [dff_cel_fra.bou.spo; act_cel_fra.bou.spo];
-        n_cel = n_cel + size(act_cel_fra.bou.all, 1);
-    end
-end
-k_max = 5;
-clu_cel_k.bou.all = nan(n_cel, k_max);
-clu_cel_k.bou.spo = nan(n_cel, k_max);
+function clu_cel = ext_clu_cel(dff_cel_fra)
 p = gcp('nocreate');
 if isempty(p)
     parpool
 end
 options = statset('UseParallel', 1);
-ioi_k.bou.all = nan(1, k_max);
-ioi_k.bou.spo = nan(1, k_max);
-k_sta = 5;
-for k = k_sta:k_max
-    disp(k)
-    [clu_cel_k.bou.all(:, k), ~, sum_dis_clu, D] = kmeans(dff_cel_fra.bou.all, k, ...
-        'Distance', 'correlation', 'Replicates', 50, 'Options', options);
-    ioi_k.bou.all(1, k) = sum(sum_dis_clu)/mean(sum(D));
-    %
-    [clu_cel_k.bou.spo(:, k), ~, sum_dis_clu, D] = kmeans(dff_cel_fra.bou.spo, k, ...
-        'Distance', 'correlation', 'Replicates', 50, 'Options', options);
-    ioi_k.bou.spo(1, k) = sum(sum_dis_clu)/mean(sum(D));
-end
+k = 4;
+[clu_cel, ~, ~, ~] = kmeans(dff_cel_fra, k, 'Distance', 'correlation', 'Replicates', 100, ...
+    'Options', options);
 end
 
 function fra_dow_blo_ani = gen_fra_dow_blo_ani(obj, fie)
@@ -5572,33 +7770,14 @@ for ani_num = 1:obj.n_ani
 end
 end
 
-function log_bin = gen_log_bin(obj, fie_num)
-log_bin.res = [];
-log_bin.inh = [];
-log_bin.exc = [];
-for ani_num = 1:obj.n_ani
-    disp(ani_num)
-    rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
-    sti = rec_fun_i();
-    rec_fil = matfile(sti.fil_pat_rec);
-    boo_bin = rec_fil.log_bin;
-    log_bin.res = [log_bin.res; boo_bin.(fie_num{1}).(fie_num{2}).res];
-    log_bin.inh = [log_bin.inh; boo_bin.(fie_num{1}).(fie_num{2}).inh];
-    log_bin.exc = [log_bin.exc; boo_bin.(fie_num{1}).(fie_num{2}).exc];
-end
-log_bin.res = logical(log_bin.res);
-log_bin.inh = logical(log_bin.inh);
-log_bin.exc = logical(log_bin.exc);
-end
-
-function log_bin = fin_log_bin(obj, fie)
-log_bin.srt = gen_log_bin(obj, {fie, 'srt'});
-log_bin.srt_010 = gen_log_bin(obj, {fie, 'srt_010'});
-log_bin.srt_001 = gen_log_bin(obj, {fie, 'srt_001'});
+function log_bin = fin_log_bin_sen(obj, fie)
+log_bin.srt = gen_log_bin_sen(obj, {fie, 'srt'});
+%log_bin.srt_010 = gen_log_bin_sen(obj, {fie, 'srt_010'});
+%log_bin.srt_001 = gen_log_bin_sen(obj, {fie, 'srt_001'});
 end
 
 function log_bin = gen_log_bin_sen(obj, fie_num)
-log_bin.res = [];
+log_bin.non = [];
 log_bin.inh = [];
 log_bin.exc = [];
 for ani_num = 1:obj.n_ani
@@ -5607,19 +7786,13 @@ for ani_num = 1:obj.n_ani
     sti = rec_fun_i();
     rec_fil = matfile(sti.fil_pat_rec);
     boo_bin = rec_fil.log_bin;
-    log_bin.res = [log_bin.res; boo_bin.(fie_num{1}).neu.(fie_num{2}).res];
-    log_bin.inh = [log_bin.inh; boo_bin.(fie_num{1}).neu.(fie_num{2}).inh];
-    log_bin.exc = [log_bin.exc; boo_bin.(fie_num{1}).neu.(fie_num{2}).exc];
+    log_bin.non = [log_bin.non; boo_bin.(fie_num{1}).(fie_num{2}).non];
+    log_bin.inh = [log_bin.inh; boo_bin.(fie_num{1}).(fie_num{2}).inh];
+    log_bin.exc = [log_bin.exc; boo_bin.(fie_num{1}).(fie_num{2}).exc];
 end
-log_bin.res = logical(log_bin.res);
+log_bin.non = logical(log_bin.non);
 log_bin.inh = logical(log_bin.inh);
 log_bin.exc = logical(log_bin.exc);
-end
-
-function log_bin = fin_log_bin_sen(obj, fie)
-log_bin.srt = gen_log_bin_sen(obj, {fie, 'srt'});
-log_bin.srt_010 = gen_log_bin_sen(obj, {fie, 'srt_010'});
-log_bin.srt_001 = gen_log_bin_sen(obj, {fie, 'srt_001'});
 end
 
 function dff_bin_fra = gen_dff_bin_fra(obj, fie_num)
@@ -5636,8 +7809,8 @@ end
 
 function res_ani_bin = gen_res_ani_bin(obj, fie)
 res_ani_bin.srt = cell(obj.n_ani, 1);
-res_ani_bin.srt_010 = cell(obj.n_ani, 1);
-res_ani_bin.srt_001 = cell(obj.n_ani, 1);
+% res_ani_bin.srt_010 = cell(obj.n_ani, 1);
+% res_ani_bin.srt_001 = cell(obj.n_ani, 1);
 for ani_num = 1:obj.n_ani
     disp(ani_num)
     rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
@@ -5645,16 +7818,20 @@ for ani_num = 1:obj.n_ani
     rec_fil = matfile(sti.fil_pat_rec);
     res_bin = rec_fil.res_bin;
     res_ani_bin.srt{ani_num} = res_bin.(fie).srt;
-    res_ani_bin.srt_010{ani_num} = res_bin.(fie).srt_010;
-    res_ani_bin.srt_001{ani_num} = res_bin.(fie).srt_001;
+    % res_ani_bin.srt_010{ani_num} = res_bin.(fie).srt_010;
+    % res_ani_bin.srt_001{ani_num} = res_bin.(fie).srt_001;
 end
 end
 
 function r_blo_ani = gen_r_blo_ani(obj, fie)
-% for axo_onl
-con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-n_blo = con_fil.n_blo;
-n_blo = n_blo.tel;
+ani_num = 1;
+rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+sti = rec_fun_i();
+rec_fil = matfile(sti.fil_pat_rec);
+r_blo = rec_fil.r_blo;
+r_blo = r_blo.(fie).dat.all;
+n_blo = length(r_blo);
+%
 r_blo_ani.dat.all = nan(n_blo, obj.n_ani);
 r_blo_ani.dat.pos = nan(n_blo, obj.n_ani);
 r_blo_ani.dat.neg = nan(n_blo, obj.n_ani);
@@ -6887,7 +9064,7 @@ end
 ent_gen(pos_axe, tit)
 end
 
-function h_fig = plo_clu_map_cel(dff_cel_fra, clu_cel, bou_dur_ani, piv_col_pcx, n_pla_str, fie_num)
+function h_fig = plo_clu_map_cel(dff_fie_cel_fra, clu_cel, piv_col_pcx, n_pla_str, fie_num)
 [h_fig, fig_wid, fig_hei] = fig;
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 n_row = 2;
@@ -6914,10 +9091,15 @@ y_lab = con_fil.y_lab;
 n_clu = max(clu_cel);
 hax = hax_sub(1);
 [~, str_met] = gen_str(fie_num);
+%dff_cel_fra = dff_fie_cel_fra.(str_met);
+dff_cel_fra = dff_fie_cel_fra;
+%piv_col_pcx = piv_col_pcx.(str_met);
+
 clu_cel = arrayfun(@(clu) map_vec.(str_met)(clu), clu_cel);% SORTING BASED ON GROUP
-[clu_cel, ind_cel] = sort(clu_cel);
-dff_fra_cel = smo_sam_poi_var(dff_cel_fra(ind_cel, :)', n_fra.dff.(n_pla_str));
-ima(hax, tim_fra.cal.(n_pla_str).tri.dff, dff_fra_cel')% sorted and smoothed
+[clu_cel, ind_cel] = sort(clu_cel);% SORTING BASED ON GROUP
+dff_fra_cel = smo_sam_poi_var(dff_cel_fra(ind_cel, :)', n_fra.dff.(n_pla_str).bas, n_fra.dff.eig.smo);
+ima(hax, tim_fra.cal.(n_pla_str).tri.dff, dff_fra_cel')% sorted and smoothed,
+% ima doesn't sort, no sorting within cluster.
 hax.YAxis.Visible = 'off';
 caxis(hax, col_lim)
 colormap(hax, jet)
@@ -6926,13 +9108,13 @@ hax_sig = hax_sub(2);
 for clu = 1:n_clu
     log_cel = clu_cel == clu;
     [h_plo, ind_var_pea] = plo_sha.smo_tri(hax_sig, tim_fra.cal.(n_pla_str).tri.dff, dff_fra_cel(:, ...
-        log_cel), piv_col_pcx(clu, :), n_fra.dff.(n_pla_str));
+        log_cel), piv_col_pcx(clu, :), n_fra.dff.(n_pla_str).bas, n_fra.dff.eig.smo);
     hold(hax_sig, "on")
 end
 lin_wid = con_fil.lin_wid;
 h = yline(hax_sig, 0, 'LineWidth', lin_wid.two);
 h = xline(hax_sig, 0, 'Color', 'g', 'LineWidth', lin_wid.two);
-h = xline(hax_sig, mean(bou_dur_ani, "omitnan"), 'Color', 'r', 'LineWidth', lin_wid.two);
+%h = xline(hax_sig, mean(bou_dur_ani, "omitnan"), 'Color', 'r', 'LineWidth', lin_wid.two);
 
 col = colorbar(hax);
 col.Units = "pixels";
@@ -6950,6 +9132,89 @@ for col_num = 1:n_col
     hax.YAxis.Visible = 'off';
     hax.Colormap = piv_col_pcx;
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_clu_loc_sig(dff_fie_cel_fra, clu_cel, n_pla_str, fie_num, x_cel, ...
+    y_cel, z_cel)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 2;
+n_col = 1;
+gap_ver_row = 0.005*ones(n_row, 1);
+gap_hor_row_col = 0.005*ones(n_row, n_col);
+hei = 8.2988;%3.5
+mar_top = cal_mar_top(hei);
+mar_bot = 0.030;
+mar_lef = 0.020;
+mar_rig = 0.000;
+asp_rat_axe = [1*ones(n_col, 1); 1*ones(n_col, 1)];
+wid = false;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 200;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+tim_fra = con_fil.tim_fra;
+n_fra = con_fil.n_fra;
+[~, str_met] = gen_str(fie_num);
+dff_fra_cel = dff_fie_cel_fra.(str_met)';
+clu_cel = clu_cel.(str_met);
+
+hax = hax_sub(1);
+mar_siz = 5;
+tra = 0.7;
+scatter3(hax, x_cel, y_cel, z_cel, mar_siz, clu_cel, 'filled', 'MarkerEdgeAlpha', tra, ...
+    'MarkerFaceAlpha', tra)
+asp_rat = con_fil.asp_rat;
+hax.PlotBoxAspectRatio = [1 asp_rat.cal.ori 1];
+piv_col_pcx = con_fil.piv_col_pcx;
+colormap(hax, piv_col_pcx.fou.ong)
+axis(hax, 'equal')
+vie_ang_dir = [-120 30];
+view(hax, vie_ang_dir(1), vie_ang_dir(2))
+hax.XAxis.Visible = 'off';
+hax.YAxis.Visible = 'off';
+hax.ZAxis.Visible = 'off';
+hax.XGrid = 'off';
+hax.YGrid = 'off';
+hax.ZGrid = 'off';
+hold(hax, "on")
+xc = 0;
+yc = 0;
+zc = 0;
+w = 50;
+hl = scalebar_3d(hax, xc,yc,zc, w);
+lin_wid = con_fil.lin_wid;
+hl.LineWidth = lin_wid.one;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hax_sig = hax_sub(2);
+n_clu = max(clu_cel);
+for clu = 1:n_clu
+    log_cel = clu_cel == clu;
+    [h_plo, ind_var_pea] = plo_sha.smo_tri(hax_sig, tim_fra.cal.(n_pla_str).tri.dff, dff_fra_cel(:, ...
+        log_cel), piv_col_pcx.fou.ong(clu, :), n_fra.dff.(n_pla_str).bas, n_fra.dff.eig.smo);
+    hold(hax_sig, "on")
+end
+hax_sig.YLim = [-10 10];
+h = yline(hax_sig, 0, 'Color', [0.5 0.5 0.5], 'LineWidth', lin_wid.two, 'LineStyle', '--');
+h = xline(hax_sig, 0, 'Color', [0.5 0.5 0.5], 'LineWidth', lin_wid.two, 'LineStyle', '--');
+x_lab = con_fil.x_lab;
+y_lab = con_fil.y_lab;
+hax_sig.XLabel.String = x_lab.tim;
+hax_sig.YLabel.String = y_lab.dff;
+
+fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+hax_sig = adj_hax(hax_sig, fon_siz.pub, mar_siz.pub, log_lin_wid);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(h_fig.Children, 'Units', 'pixels')
 h_fig.Position(3) = las_pix;
@@ -7086,9 +9351,7 @@ siz = 20;
 %h_plo = plo_var_var.one_sam(hax, tac_tri, act_tri, siz);
 
 
-[tac_poi, act_poi, r_squ] = com_dat_poi_slr(tac_tri, act_tri);
-
-[cor_coe, p_val] = corr(tac_tri, act_tri);
+[tac_poi, act_poi, r_squ, cor_coe, p_val] = com_dat_poi_slr(tac_tri, act_tri);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 mar = 'o';
 y_sam = [0.950; 0.900];
@@ -7098,6 +9361,7 @@ hold(hax, 'on')
 plot(hax, tac_poi, act_poi)
 text(hax, 0.010, y_sam(1), tex_pri{1}, 'units', 'normalized');
 text(hax, 0.010, y_sam(2), tex_pri{2}, 'units', 'normalized');
+hax.YLim = [-20 20];
 box(hax, 'off')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(h_fig.Children, 'Units', 'pixels')
@@ -7144,59 +9408,6 @@ for i = n_con
     h = plo_ver_lin(hax, 0, 'k', lin_wid, '-');
     xlabel(hax, 'Time (s)')
     ylabel(hax, y_lab.dff)
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-set(h_fig.Children, 'Units', 'pixels')
-h_fig.Position(3) = las_pix;
-h_fig.Renderer = 'painters';
-h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
-h_fig.PaperUnits = 'normalized';
-h_fig.PaperPosition = [0 0 1 1];
-end
-
-function h_fig = plo_cor_map(ani, sta_ani, log_ani_pla_icx_row_col, r_ani_pla_icx_row_col)
-[h_fig, fig_wid, fig_hei] = fig;
-n_ani = length(ani);
-n_row = n_ani;
-con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-n_pla = con_fil.n_pla;
-n_col = n_pla.neu.fun;
-gap_ver_row = 0.010*ones(n_row, 1);
-gap_hor_row_col = 0.010*ones(n_row, n_col);
-mar_bot = 0.010;
-mar_top = 0.010;
-mar_lef = 0.010;
-mar_rig = 0.035;
-asp_rat = con_fil.asp_rat;
-asp_rat_axe = asp_rat.cal.ori*ones(1, n_row*n_col);
-wid = false;
-sca_axe = 1;
-n_pix_ext = 70;
-[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
-    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
-    fig_hei, wid, sca_axe, n_pix_ext);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-r_lim = con_fil.r_lim;
-lim_r = con_fil.lim_r;
-centeredmap = centered;
-fun_pla = con_fil.fun_pla;
-for i = 1:n_row
-    ind_ani = sta_ani - 1 + i;
-    for j = 1:n_col
-        hax = hax_sub((i - 1)*n_col + j);
-        pla_num = fun_pla.plo(1, j);
-        piv_row_col_pcx = ext_piv_row_col_pcx(r_ani_pla_icx_row_col{ind_ani}{pla_num, 1}, r_lim, ...
-            centeredmap);
-        piv_row_col_pcx.abs(repmat(log_ani_pla_icx_row_col{ind_ani}{pla_num, con_fil.icx_num}, ...
-            [1, 1, 3])) = 0;
-        ima = sho_ima.rgb(hax, piv_row_col_pcx);
-    end
-    hax.Colormap = centeredmap;
-    col = colorbar(hax);
-    col.Ticks = [0 0.5 1];
-    col.TickLabels = [-lim_r 0 lim_r];
-    col.Units = "pixels";
-    col.Position(1) = las_pix - 70;
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(h_fig.Children, 'Units', 'pixels')
@@ -7287,7 +9498,7 @@ n_col = 1;
 % mar_lef = 0.100;
 % mar_rig = 0.035;
 
-hei = 2.5;% percy
+hei = 3.7122;
 mar_top = cal_mar_top(hei);
 mar_bot = 0.030;
 mar_lef = 0.020;
@@ -7311,7 +9522,9 @@ yline(0.5)
 xlabel(hax, 'corr')
 ylabel(hax, 'cum. probability')
 fon_siz = con_fil.fon_siz;
-hax = adj_hax(hax, fon_siz.pub);
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(h_fig.Children, 'Units', 'pixels')
 h_fig.Position(3) = las_pix;
@@ -7547,9 +9760,78 @@ hax.YAxis.Visible = 'off';
 hax.ZAxis.Visible = 'off';
 end
 
-function h_fig = plo_clu_map_ani_spl(x_ani_pix, y_ani_pix, z_ani_pix, piv_col_pcx, clu_ani_pix, ...
-    mar_siz, vie_ang_dir)
+function h_fig = plo_clu_map_ani_spl(x_ani_pix, y_ani_pix, z_ani_pix, clu_pix, mar_siz, vie_ang_dir...
+    , tra, sca_bar)
 % fie .srt !!!
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 2;
+n_col = 1;
+gap_ver_row = 0.000*ones(n_row, 1);
+gap_hor = 0.000;
+gap_hor_row_col = gap_hor*ones(n_row, n_col);
+mar_bot = 0.000;
+mar_top = 0.000;
+mar_lef = 0.000;
+mar_rig = 0.000;
+asp_rat = con_fil.asp_rat;
+asp_rat_axe = ones(n_row*n_col, 1);
+wid = false;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 0;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, ...
+    n_col, gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, ...
+    asp_rat_axe, fig_wid, fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+piv_col_pcx = con_fil.piv_col_pcx;
+piv_col_pcx = piv_col_pcx.div;
+x_pix = vertcat(x_ani_pix{:});
+y_pix = vertcat(y_ani_pix{:});
+z_pix = vertcat(z_ani_pix{:});
+%clu_pix = vertcat(clu_ani_pix{:});
+
+x_lim = [min(x_pix) max(x_pix)];
+y_lim = [min(y_pix) max(y_pix)];
+z_lim = [min(z_pix) max(z_pix)];
+
+log_gre = clu_pix == 2;
+x_pix(log_gre) = [];
+y_pix(log_gre) = [];
+z_pix(log_gre) = [];
+clu_pix(log_gre) = [];
+%tra = 0.1;
+ind_hax = 0;
+%sca_bar = 100;
+xc = x_lim(1) + sca_bar;
+yc = y_lim(1) + sca_bar;
+zc = z_lim(1);
+for clu = [3 1]
+    ind_hax = ind_hax + 1;
+    hax = hax_sub(ind_hax);
+    log_inh = clu_pix == clu;
+    scatter3(hax, x_pix(log_inh), y_pix(log_inh), z_pix(log_inh), mar_siz, piv_col_pcx(clu, :), ...
+        'filled', 'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
+    hax.PlotBoxAspectRatio = [1 asp_rat.cal.ori 1];
+    colormap(hax, piv_col_pcx)
+    axis(hax, 'equal')
+    hax.XLim = x_lim;
+    hax.YLim = y_lim;
+    hax.ZLim = z_lim;
+    view(hax, vie_ang_dir(1), vie_ang_dir(2))
+    hax.XAxis.Visible = 'off';
+    hax.YAxis.Visible = 'off';
+    hax.ZAxis.Visible = 'off';
+    hax.XGrid = 'off';
+    hax.YGrid = 'off';
+    hax.ZGrid = 'off';
+    hl = scalebar_3d(hax, xc,yc,zc, sca_bar);
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
+end
+
+function h_fig = plo_clu_map_ani_hab(x_ani_pix, y_ani_pix, z_ani_pix, piv_col_pcx, clu_ani_pix, ...
+    mar_siz, vie_ang_dir)
 [h_fig, fig_wid, fig_hei] = fig;
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 n_row = 2;
@@ -7584,9 +9866,9 @@ x_pix(log_gre) = [];
 y_pix(log_gre) = [];
 z_pix(log_gre) = [];
 clu_pix(log_gre) = [];
-tra = 0.1;
+tra = 1;
 ind_hax = 0;
-w = 100;
+w = 0;
 xc = x_lim(1) + w;
 yc = y_lim(1) + w;
 zc = z_lim(1);
@@ -7613,72 +9895,6 @@ for clu = [3 1]
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
-end
-
-function h_fig = plo_spa_den_axo(x_ani_uni, y_ani_uni, log_uni, mar_siz)
-[h_fig, fig_wid, fig_hei] = fig;
-con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-n_row = 1;
-n_col = 2;
-gap_ver_row = 0.000*ones(n_row, 1);
-gap_hor = 0.000;
-gap_hor_row_col = gap_hor*ones(n_row, n_col);
-mar_bot = 0.000;
-mar_top = 0.000;
-mar_lef = 0.000;
-mar_rig = 0.000;
-asp_rat = con_fil.asp_rat;
-asp_rat_axe = asp_rat.cal.ori*ones(n_row*n_col, 1);
-wid = false;
-sca_axe = ones(n_row*n_col, 1);
-n_pix_ext = 0;
-[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, ...
-    n_col, gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, ...
-    asp_rat_axe, fig_wid, fig_hei, wid, sca_axe, n_pix_ext);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-x_uni.all = vertcat(x_ani_uni{:});
-y_uni.all = vertcat(y_ani_uni{:});
-x_lim = [min(x_uni.all) max(x_uni.all)];
-y_lim = [min(y_uni.all) max(y_uni.all)];
-
-for col = 1:n_col
-    if col == 1
-        fie = 'inh';
-    elseif col == 2
-        fie = 'exc';
-    end
-    x_uni.(fie) = x_uni.all(log_uni.(fie));
-    y_uni.(fie) = y_uni.all(log_uni.(fie));
-    pro_den_uni.(fie) = ksdensity([x_uni.(fie) y_uni.(fie)], [x_uni.(fie) y_uni.(fie)]);
-    % just for coloring
-
-    min_den.(fie) = min(pro_den_uni.(fie));
-    max_den.(fie) = max(pro_den_uni.(fie));
-end
-
-min_den = max(min_den.inh, min_den.exc);
-max_den = min(max_den.inh, max_den.exc);
-
-for col = 1:n_col
-    hax = hax_sub(col);
-    if col == 1
-        fie = 'inh';
-    elseif col == 2
-        fie = 'exc';
-    end
-    pro_den_uni.(fie)(pro_den_uni.(fie) < min_den) = min_den;
-    pro_den_uni.(fie)(pro_den_uni.(fie) > max_den) = max_den;
-    h = scatter(hax, x_uni.(fie), y_uni.(fie), mar_siz, pro_den_uni.(fie), 'filled');
-
-    hax.PlotBoxAspectRatio = [1 asp_rat.cal.ori 1];
-    view(hax, -120, 30)
-    axis(hax, 'equal')
-
-    hax.XAxis.Visible = 'off';
-    hax.YAxis.Visible = 'off';
-    hax.XLim = x_lim;
-    hax.YLim = y_lim;
-end
 end
 
 function h_fig = plo_clu_map_ani_cle(x_ani_pix, y_ani_pix, z_ani_pix, piv_col_pcx, clu_ani_pix, ...
@@ -7733,6 +9949,293 @@ for ani = 1:n_ani
         hax.ZAxis.Visible = 'off';
     end
 end
+end
+
+function h_fig = plo_dif_spa_den(x_ani_bin, y_ani_bin, vie_ang_dir, pro_den_bin)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 2;
+n_col = 2;
+gap_ver_row = 0.005*ones(n_row, 1);
+gap_hor = 0.000;
+gap_hor_row_col = gap_hor*ones(n_row, n_col);
+mar_bot = 0.000;
+mar_top = 0.000;
+mar_lef = 0.000;
+mar_rig = 0.000;
+asp_rat = con_fil.asp_rat;
+n_sub = n_row*n_col;
+asp_rat_axe = ones(n_sub, 1);% make acc image, and set gap_hor!
+wid = false;
+sca_axe = ones(n_sub, 1);
+n_pix_ext = 0;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, ...
+    n_col, gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, ...
+    asp_rat_axe, fig_wid, fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+x_bin.all = vertcat(x_ani_bin{:});
+y_bin.all = vertcat(y_ani_bin{:});
+x_lim = [min(x_bin.all) max(x_bin.all)];
+y_lim = [min(y_bin.all) max(y_bin.all)];
+max_den = 0.0001;%axo
+min_den = -max_den;
+mar_siz = 7*(200/50);
+map = con_fil.map;
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    for col = 1:n_col
+        if col == 1
+            loc = 'dor';
+        elseif col == 2
+            loc = 'ven';
+        end
+        log_bin.non = pro_den_bin.(loc).(fie) ~= 0;
+        x_bin.(loc).(fie) = x_bin.all(log_bin.non);
+        y_bin.(loc).(fie) = y_bin.all(log_bin.non);
+        pro_den_bin.(loc).(fie) = pro_den_bin.(loc).(fie)(log_bin.non);
+        hax = hax_sub(n_col*(row - 1) + col);
+        h = scatter(hax, x_bin.(loc).(fie), y_bin.(loc).(fie), mar_siz, pro_den_bin.(loc).(fie), ...
+            'filled');
+        hax.Colormap = map.sym;
+        hax.CLim = [min_den max_den];
+        hax.PlotBoxAspectRatio = [1 asp_rat.cal.ori 1];
+        view(hax, vie_ang_dir(1), vie_ang_dir(2))
+        axis(hax, 'equal')
+    
+        hax.XAxis.Visible = 'off';
+        hax.YAxis.Visible = 'off';
+        hax.XLim = x_lim;
+        hax.YLim = y_lim;
+
+        grid(hax, 'on')
+        hax.GridLineWidth = 0.5;
+    end
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
+end
+
+function h_fig = plo_dsd(pro_den_bin, x_lim, y_lim, max_den, log_bin)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 2;
+n_col = 2;
+gap_ver_row = 0.005*ones(n_row, 1);
+gap_hor = 0.000;
+gap_hor_row_col = gap_hor*ones(n_row, n_col);
+mar_bot = 0.000;
+mar_top = 0.000;
+mar_lef = 0.000;
+mar_rig = 0.000;
+asp_rat = con_fil.asp_rat;
+n_sub = n_row*n_col;
+asp_rat_axe = ones(n_sub, 1);% make acc image, and set gap_hor!
+wid = false;
+sca_axe = ones(n_sub, 1);
+n_pix_ext = 0;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, ...
+    n_col, gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, ...
+    asp_rat_axe, fig_wid, fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+coo_bin_dim = con_fil.coo_bin_dim;
+coo_bin_dim = coo_bin_dim.uni;
+min_den = -max_den;
+mar_siz = 7*(200/50);
+map = con_fil.map;
+vie_ang_dir = [-90 90];
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    for col = 1:n_col
+        if col == 1
+            loc = 'dor';
+        elseif col == 2
+            loc = 'ven';
+        end
+        x_bin.(loc).(fie) = coo_bin_dim.(loc).(fie)(:, 1);
+        y_bin.(loc).(fie) = coo_bin_dim.(loc).(fie)(:, 2);
+
+        if ~isempty(log_bin)
+            log_tem_bin = log_bin.(loc).(fie).srt;
+            x_bin.(loc).(fie) = x_bin.(loc).(fie)(log_tem_bin);
+            y_bin.(loc).(fie) = y_bin.(loc).(fie)(log_tem_bin);
+            pro_den_bin.(loc).(fie) = pro_den_bin.(loc).(fie)(log_tem_bin);
+        end
+
+        [pro_den_bin.(loc).(fie), ind_bin] = sort(pro_den_bin.(loc).(fie));
+        x_bin.(loc).(fie) = x_bin.(loc).(fie)(ind_bin);
+        y_bin.(loc).(fie) = y_bin.(loc).(fie)(ind_bin);
+        
+        hax = hax_sub(n_col*(row - 1) + col);
+        h = scatter(hax, x_bin.(loc).(fie), y_bin.(loc).(fie), mar_siz, pro_den_bin.(loc).(fie), ...
+            'filled');
+        hax.Colormap = map.sym;
+        hax.CLim = [min_den max_den];
+        hax.PlotBoxAspectRatio = [1 asp_rat.cal.ori 1];
+        view(hax, vie_ang_dir(1), vie_ang_dir(2))
+        axis(hax, 'equal')
+    
+        hax.XAxis.Visible = 'off';
+        hax.YAxis.Visible = 'off';
+        hax.XLim = x_lim;
+        hax.YLim = y_lim;
+
+        grid(hax, 'on')
+        hax.GridLineWidth = 0.5;
+    end
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
+end
+
+function h_fig = plo_dsd_sid(pro_den_sid_bin, x_lim, z_lim, max_den, log_bin)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 2;
+n_col = 1;
+gap_ver_row = 0.005*ones(n_row, 1);
+gap_hor = 0.000;
+gap_hor_row_col = gap_hor*ones(n_row, n_col);
+mar_bot = 0.000;
+mar_top = 0.000;
+mar_lef = 0.000;
+mar_rig = 0.000;
+n_sub = n_row*n_col;
+asp_rat_axe = ones(n_sub, 1);% make acc image, and set gap_hor!
+wid = false;
+sca_axe = ones(n_sub, 1);
+n_pix_ext = 0;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, ...
+    n_col, gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, ...
+    asp_rat_axe, fig_wid, fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+coo_sid_bin_dim = con_fil.coo_sid_bin_dim;
+coo_sid_bin_dim = coo_sid_bin_dim.uni;
+min_den = -max_den;
+mar_siz = 7*(200/50);
+map = con_fil.map;
+asp_rat = diff(x_lim)/diff(z_lim);
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    x_bin.(fie) = coo_sid_bin_dim.(fie)(:, 1);
+    y_bin.(fie) = coo_sid_bin_dim.(fie)(:, 2);
+
+    if ~isempty(log_bin)
+        log_tem_bin = log_bin.(fie).srt;
+        x_bin.(fie) = x_bin.(fie)(log_tem_bin);
+        y_bin.(fie) = y_bin.(fie)(log_tem_bin);
+        pro_den_sid_bin.(fie) = pro_den_sid_bin.(fie)(log_tem_bin);
+    end
+
+    [pro_den_sid_bin.(fie), ind_bin] = sort(pro_den_sid_bin.(fie));
+    x_bin.(fie) = x_bin.(fie)(ind_bin);
+    y_bin.(fie) = y_bin.(fie)(ind_bin);
+    
+    hax = hax_sub(row);
+    h = scatter(hax, x_bin.(fie), y_bin.(fie), mar_siz, pro_den_sid_bin.(fie), 'filled');
+    hax.Colormap = map.sym;
+    hax.CLim = [min_den max_den];
+    hax.PlotBoxAspectRatio = [asp_rat 1 1];
+    axis(hax, 'equal')
+    hax.XDir = 'reverse';
+    hax.XAxis.Visible = 'off';
+    hax.YAxis.Visible = 'off';
+    hax.XLim = x_lim;
+    hax.YLim = z_lim;
+
+    grid(hax, 'on')
+    hax.GridLineWidth = 0.5;
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
+end
+
+function h_fig = plo_sda(coo_bix_dim, vie_ang_dir, pro_den_bin, max_den)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 2;
+n_col = 2;
+gap_ver_row = 0.005*ones(n_row, 1);
+gap_hor = 0.000;
+gap_hor_row_col = gap_hor*ones(n_row, n_col);
+mar_bot = 0.000;
+mar_top = 0.000;
+mar_lef = 0.000;
+mar_rig = 0.000;
+asp_rat = con_fil.asp_rat;
+n_sub = n_row*n_col;
+asp_rat_axe = ones(n_sub, 1);% make acc image, and set gap_hor!
+wid = false;
+sca_axe = ones(n_sub, 1);
+n_pix_ext = 0;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, ...
+    n_col, gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, ...
+    asp_rat_axe, fig_wid, fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+coo_bix_dim.all = [coo_bix_dim.dor; coo_bix_dim.ven];
+x_bix.all = coo_bix_dim.all(:, 1);
+y_bix.all = coo_bix_dim.all(:, 2);
+x_lim = [min(x_bix.all) max(x_bix.all)];% [44.21 411.63]
+y_lim = [min(y_bix.all) max(y_bix.all)];% [0.239 227.864]
+x_bix.dor = coo_bix_dim.dor(:, 1);
+y_bix.dor = coo_bix_dim.dor(:, 2);
+x_bix.ven = coo_bix_dim.ven(:, 1);
+y_bix.ven = coo_bix_dim.ven(:, 2);
+
+%max_den = 10^(-4);%axo
+min_den = 0;
+mar_siz = 7*(200/50);
+for row = 1:n_row
+    if row == 1
+        fie = 'exc';
+    elseif row == 2
+        fie = 'inh';
+    end
+    for col = 1:n_col
+        if col == 1
+            loc = 'dor';
+        elseif col == 2
+            loc = 'ven';
+        end
+        log_bin.non = pro_den_bin.(loc).(fie) ~= 0;
+        x_bin.(loc).(fie) = x_bix.(loc)(log_bin.non);
+        y_bin.(loc).(fie) = y_bix.(loc)(log_bin.non);
+        pro_den_bin.(loc).(fie) = pro_den_bin.(loc).(fie)(log_bin.non);
+        
+        [pro_den_bin.(loc).(fie), ind_bin] = sort(pro_den_bin.(loc).(fie));
+        x_bin.(loc).(fie) = x_bin.(loc).(fie)(ind_bin);
+        y_bin.(loc).(fie) = y_bin.(loc).(fie)(ind_bin);
+
+        hax = hax_sub(n_col*(row - 1) + col);
+        h = scatter(hax, x_bin.(loc).(fie), y_bin.(loc).(fie), mar_siz, pro_den_bin.(loc).(fie), ...
+            'filled');% overlap possible due to z
+        hax.CLim = [min_den max_den];
+        hax.PlotBoxAspectRatio = [1 asp_rat.cal.ori 1];
+        view(hax, vie_ang_dir(1), vie_ang_dir(2))
+        axis(hax, 'equal')
+    
+        hax.XAxis.Visible = 'off';
+        hax.YAxis.Visible = 'off';
+        hax.XLim = x_lim;
+        hax.YLim = y_lim;
+
+        grid(hax, 'on')
+        hax.GridLineWidth = 0.5;
+    end
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gab
 function h_fig = plo_clu_sel(clu_sel_ani_k, k)
@@ -7851,8 +10354,7 @@ mou = 0.030;
 sep = off_non + mou + 0.040;
 ext_hei = -(sep + mou);
 fon_siz = con_fil.fon_siz;
-%
-hax = hax_sub(1);
+
 y_lim_pre = ylim(hax);
 [H, y_lim] = sigstar_lim(hax, groups, fon_siz.non, off_non, y_lim_pre, sep, mou, ext_hei, ...
     p_xco.lme);
@@ -7864,6 +10366,95 @@ y_lab = con_fil.y_lab;
 ylabel(hax, y_lab.pai_cor)
 hax.XTick = [1 2];
 hax.XTickLabel = {'GxG','GxN'};
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_clu_sel_pai_cor(clu_sel_ani_k, k, acc, xcc)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 1;
+n_col = 2;
+hei = 3;
+mar_top = cal_mar_top(hei);
+mar_bot = 0.035;
+mar_lef = 0.020;
+mar_rig = 0.000;
+gap_ver_row = 0.005*ones(n_row, 1);
+gap_hor_row_col = 0.020*ones(n_row, n_col);
+asp_rat_axe = 0.5;
+wid = false;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 200;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hax = hax_sub(1);
+var_win_con_sam_uni{1, 1}{1} = clu_sel_ani_k.gab(:, k);
+var_win_con_sam_uni{1, 2}{1} = clu_sel_ani_k.ran(:, k);
+ind_win = 1;
+ind_sin_sam = 1;
+mar_siz = con_fil.mar_siz;
+col_sam_con{1, 1} = [1 0 1];
+col_sam_con{1, 2} = [0 0 0];
+h_plo = plo_dat_err_xco(hax, var_win_con_sam_uni, ind_win, ind_sin_sam, mar_siz.pre, col_sam_con);
+p_xco = com_p_xco(clu_sel_ani_k.gab(:, k), clu_sel_ani_k.ran(:, k));
+
+groups = {[1, 2]};
+off_non = 0.070;
+mou = 0.030;
+sep = off_non + mou + 0.040;
+ext_hei = -(sep + mou);
+fon_siz = con_fil.fon_siz;
+
+y_lim_pre = ylim(hax);
+[H, y_lim] = sigstar_lim(hax, groups, fon_siz.non, off_non, y_lim_pre, sep, mou, ext_hei, ...
+    p_xco.srt);
+y_min = inf;
+y_max = -inf;
+[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+y_lab = con_fil.y_lab;
+ylabel(hax, y_lab.clu_sel)
+hax.XTick = [1 2];
+hax.XTickLabel = {'GAD1','Shuffled'};
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hax = hax_sub(2);
+var_win_con_sam_uni{1, 1}{1} = acc;
+var_win_con_sam_uni{1, 2}{1} = xcc;
+ind_win = 1;
+ind_sin_sam = 1;
+mar_siz = con_fil.mar_siz;
+h_plo = plo_dat_err_xco(hax, var_win_con_sam_uni, ind_win, ind_sin_sam, mar_siz.pre, col_sam_con);
+p_xco = com_p_xco(acc, xcc);
+
+groups = {[1, 2]};
+off_non = 0.070;
+mou = 0.030;
+sep = off_non + mou + 0.040;
+ext_hei = -(sep + mou);
+fon_siz = con_fil.fon_siz;
+
+y_lim_pre = ylim(hax);
+[H, y_lim] = sigstar_lim(hax, groups, fon_siz.non, off_non, y_lim_pre, sep, mou, ext_hei, ...
+    p_xco.lme);
+y_min = inf;
+y_max = -inf;
+[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+y_lab = con_fil.y_lab;
+ylabel(hax, y_lab.pai_cor)
+hax.XTick = [1 2];
+hax.XTickLabel = {[['\color[rgb]{1, 0, 1}', 'G'] ['\color[rgb]{0, 0, 0}', ' x '] ...
+    ['\color[rgb]{1, 0, 1}', 'G']], [['\color[rgb]{1, 0, 1}', 'G'] ['\color[rgb]{0, 0, 0}', ' x N']]};
 log_lin_wid = true;
 hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -7928,7 +10519,7 @@ fon_siz = con_fil.fon_siz;
 hax.FontSize = fon_siz.pre;
 xticks(hax, [1, 2])
 %xticklabels(hax, {'gad1', 'non-gad1'})
-xticklabels(hax, {'G', 'N'})
+xticklabels(hax, {['\color[rgb]{1, 0, 1}', 'G'], 'N'})
 %y_lab = 'tail-modulated cells in DRN (%)';
 y_lab = 'tail-modulated cells (%)';
 ylabel(hax, y_lab)
@@ -7959,13 +10550,13 @@ y_lim_pre = ylim(hax);
 [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
 %set(H(1, 2), 'Position', [1.5 73 0])
 xticks(hax, [1, 2])
-xticklabels(hax, {'G', 'N'})
+xticklabels(hax, {['\color[rgb]{1, 0, 1}', 'G'], 'N'})
 hax.YAxis.Visible = 'off';
 log_lin_wid = true;
 adj_hax(hax_sub(1), fon_siz.pub, mar_siz.pub, log_lin_wid);
 hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
 end
 
 function h_fig = plo_inh_exc_ros_cau(dis_blo, fra_blo_ani)
@@ -8126,12 +10717,13 @@ tra = 0.1;
 scatter3(hax, x_pix(log_cel_non), y_pix(log_cel_non), z_pix(log_cel_non), mar_siz, [gre gre gre], ...
     'filled', 'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
 hold(hax, "on")
-log_cel_exc = log_cel.(fie).srt.exc;
 tra = 0.7;
+log_cel_exc = log_cel.(fie).srt.exc;
 scatter3(hax, x_pix(log_cel_exc), y_pix(log_cel_exc), z_pix(log_cel_exc), mar_siz, 'r', 'filled', ...
     'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
 hold(hax, "on")
 log_cel_inh = log_cel.(fie).srt.inh;
+tra = 1;
 scatter3(hax, x_pix(log_cel_inh), y_pix(log_cel_inh), z_pix(log_cel_inh), mar_siz, 'b', 'filled', ...
     'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
 asp_rat = con_fil.asp_rat;
@@ -8167,6 +10759,126 @@ hax.XGrid = 'off';
 hax.YGrid = 'off';
 hax.ZGrid = 'off';
 hl = scalebar_3d(hax, xc,yc,zc, w);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_gab_clu_onl(x_pix, y_pix, z_pix, log_cel, fie)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 1;
+n_col = 1;
+gap_ver_row = 0.000*ones(n_row, 1);
+gap_hor_row_col = 0.000*ones(n_row, n_col);
+mar = 0.000;
+mar_bot = mar;
+mar_top = mar;
+mar_lef = mar;
+mar_rig = mar;
+asp_rat_axe = 1;
+%wid = true;
+wid = false;
+sca_axe = 1;
+n_pix_ext = 0;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+mar_siz = 200;
+%
+hax = hax_sub(1);
+log_cel_non = log_cel.(fie).srt.non | log_cel.non;
+gre = 0.1;
+tra = 0.1;
+scatter3(hax, x_pix(log_cel_non), y_pix(log_cel_non), z_pix(log_cel_non), mar_siz, [gre gre gre], ...
+    'filled', 'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
+hold(hax, "on")
+tra = 0.7;
+log_cel_exc = log_cel.(fie).srt.exc & log_cel.gab;
+scatter3(hax, x_pix(log_cel_exc), y_pix(log_cel_exc), z_pix(log_cel_exc), mar_siz, 'r', 'filled', ...
+    'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
+hold(hax, "on")
+log_cel_inh = log_cel.(fie).srt.inh & log_cel.gab;
+tra = 1;
+scatter3(hax, x_pix(log_cel_inh), y_pix(log_cel_inh), z_pix(log_cel_inh), mar_siz, 'b', 'filled', ...
+    'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
+asp_rat = con_fil.asp_rat;
+hax.PlotBoxAspectRatio = [1 asp_rat.cal.ori 1];
+view(hax, -120, 30)
+hax.XAxis.Visible = 'off';
+hax.YAxis.Visible = 'off';
+hax.ZAxis.Visible = 'off';
+axis(hax, 'equal')
+hax.XGrid = 'off';
+hax.YGrid = 'off';
+hax.ZGrid = 'off';
+xc = 0;
+yc = 0;
+zc = 0;
+w = 50;
+hl = scalebar_3d(hax, xc,yc,zc, w);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_num_gab(n_cel_ani)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 1;
+n_col = 1;
+gap_ver_row = 0.000*ones(n_row, 1);
+gap_hor_row_col = 0.000*ones(n_row, n_col);
+mar_bot = 0.010;
+hei = 4.126;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.020;
+mar_rig = 0;
+asp_rat_axe = 0.25;
+wid = false;
+sca_axe = 1;
+n_pix_ext = 0;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hax = hax_sub(1);
+% var_win_con_sam_uni{1, 1}{1} = n_cel_ani.gab*100;
+
+% var_win_con_sam_uni{1, 1}{1} = n_cel_ani;
+mar_siz = con_fil.mar_siz;
+% ind_win = 1;
+ind_sin_sam = 1;
+col_sam_con{1, 1} = [0 0 0];
+% h_plo = plo_dat_err_xco(hax, var_win_con_sam_uni, ind_win, ind_sin_sam, mar_siz.pre, col_sam_con);
+
+gra = con_fil.gra;
+gra = gra.nor;
+n_ani = length(n_cel_ani);
+ide_ani = ones(n_ani, 1);
+swarmchart(hax, ide_ani, n_cel_ani, 'filled', 'MarkerEdgeColor', gra, 'MarkerFaceColor', gra)
+hold(hax, "on")
+[mea_con, sta_dev_con, sem_con] = com_sta(n_cel_ani, 1);
+plo_err_col(hax, mea_con, sem_con, 0.5*mar_siz.pre, col_sam_con, ind_sin_sam)
+
+
+hax.XAxis.Visible = "off";
+hax.YAxis.Limits(1) = 0;
+%hax.YAxis.Label.String = "Ratio of GAD1 neurons (%)";
+%hax.YAxis.Label.String = "Number of neurons";
+hax.YAxis.Label.String = "Variance explained (%)";
+fon_siz = con_fil.fon_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(h_fig.Children, 'Units', 'pixels')
 h_fig.Position(3) = las_pix;
@@ -8238,13 +10950,14 @@ linkaxes([hax_sub(2) hax_sub(4)], 'x')
 h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
 end
 
-function h_fig = plo_inh_exc_spa_all(dis_blo, fra_blo_ani)
+function [h_fig, p_row_col] = plo_inh_exc_spa_all(dis_blo, fra_blo_ani, fie_num)
 n_dir = 2;
 n_dim = 2;
 n_row = n_dir;
-fie_num = {'lig', 'tap', 'tai'};
+%fie_num = {'lig', 'tap', 'tai'};
 n_fie = length(fie_num);
 n_col = n_dim*n_fie;
+p_row_col = nan(n_row, n_col);
 
 % gap_ver_row = 0.040*ones(n_row, 1);
 % gap_hor_ave = 0.020;
@@ -8282,6 +10995,8 @@ y_lab.exc = 'Exc. neurons (%)';
 y_lab.inh = 'Inh. neurons (%)';
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
 for row = 1:n_row
     for col = 1:n_col
         sub = (row - 1)*n_col + col;
@@ -8295,9 +11010,15 @@ for row = 1:n_row
             x_lab = {'V', 'D'};
         end
         fra_bin_ani = fra_blo_ani.(fie_num{num_fie}).(x_dim).(dir_num{row});
-        fra_ani.low = mean(fra_bin_ani(1:2, :), 1);
-        fra_ani.hig = mean(fra_bin_ani(end - 1:end, :), 1);
-        p = signrank(fra_ani.low, fra_ani.hig);
+        fra_ani.low = mean(fra_bin_ani(1:2, :), 1)';
+        fra_ani.hig = mean(fra_bin_ani(end - 1:end, :), 1)';
+        %p_row_col(row, col) = signrank(fra_ani.low, fra_ani.hig);
+
+        p_xco = com_p_xco(fra_ani.low, fra_ani.hig);
+        %p_row_col(row, col) = p_xco.lme;
+        %p_row_col(row, col) = p_xco.tte;
+        p_row_col(row, col) = p_xco.srt;
+
         plo_sha.raw(hax, dis_blo.(x_dim), fra_bin_ani, 'k')
         xlim(hax, [0 100])
         ylim(hax, [0 100])
@@ -8312,17 +11033,16 @@ for row = 1:n_row
         else
             hax.YLabel.String = y_lab.(dir_num{row});
         end
-        adj_hax(hax, fon_siz.pub)
+        adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid)
     end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
 end
 
 function h_fig = plo_res(x_ani_pix, y_ani_pix, z_ani_pix, clu_pix, vie_ang_dir)
 % fie .srt !!!
-[h_fig, fig_wid, fig_hei] = fig_mac;
-%[h_fig, fig_wid, fig_hei] = fig;
+[h_fig, fig_wid, fig_hei] = fig;
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 n_row = 1;
 n_col = 1;
@@ -8347,21 +11067,15 @@ x_pix = vertcat(x_ani_pix{:});
 y_pix = vertcat(y_ani_pix{:});
 z_pix = vertcat(z_ani_pix{:});
 
-% x_lim = [min(x_pix) max(x_pix)];
-% y_lim = [min(y_pix) max(y_pix)];
-% z_lim = [min(z_pix) max(z_pix)];
-
 log_gre = clu_pix == 2;
 hax = hax_sub(1);
-%mar_siz = con_fil.mar_siz;
-%mar_siz = mar_siz.cel;
 mar_siz = 100;
 gre = 0.1;
 tra = 0.1;
 scatter3(hax, x_pix(log_gre), y_pix(log_gre), z_pix(log_gre), mar_siz, [gre gre gre], 'filled', ...
     'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
-
 hold(hax, "on")
+%
 x_pix(log_gre) = [];
 y_pix(log_gre) = [];
 z_pix(log_gre) = [];
@@ -8372,9 +11086,6 @@ scatter3(hax, x_pix, y_pix, z_pix, mar_siz, clu_pix, 'filled', 'MarkerEdgeAlpha'
 hax.PlotBoxAspectRatio = [1 asp_rat.cal.ori 1];
 colormap(hax, piv_col_pcx.div)
 axis(hax, 'equal')
-% hax.XLim = x_lim;
-% hax.YLim = y_lim;
-% hax.ZLim = z_lim;
 view(hax, vie_ang_dir(1), vie_ang_dir(2))
 hax.XAxis.Visible = 'off';
 hax.YAxis.Visible = 'off';
@@ -8389,7 +11100,7 @@ zc = 0;
 w = 50;
 hl = scalebar_3d(hax, xc,yc,zc, w);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
 end
 
 function h_fig = plo_clu(ioi_kxx_ani, ioi_shu_kxx_ani, del_ioi_kxx_ani)
@@ -8519,7 +11230,7 @@ fon_siz = con_fil.fon_siz;
 hax = hax_sub(1);
 y_lim_pre = ylim(hax);
 [H, y_lim] = sigstar_lim(hax, groups, fon_siz.non, off_non, y_lim_pre, sep, mou, ext_hei, ...
-    p_xco.srt);
+    p_xco.lme);
 y_min = inf;
 y_max = -inf;
 [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
@@ -8537,19 +11248,23 @@ h_fig.PaperUnits = 'normalized';
 h_fig.PaperPosition = [0 0 1 1];
 end
 
-function h_fig = plo_cor_cor(r_pai)
+function h_fig = plo_cor_cor_den(r_pai, fie)
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 n_row = 1;
 n_col = 1;
-gap_ver = 0.050;
+gap_ver = 0.000;
 gap_ver_row = gap_ver*ones(n_row, 1);
-gap_hor_ave = 0.025;
+gap_hor_ave = 0.000;
 gap_hor_col = gap_hor_ave*ones(1, n_col);
 gap_hor_row_col = repmat(gap_hor_col, n_row, n_col);
+
+mar_lef = 0.070;
 mar_bot = 0.070;
-mar_top = 0.070;
-mar_lef = 0.055;
-mar_rig = 0.003;
+
+% mar_lef = 0.000;
+% mar_bot = 0.000;
+mar_top = 0.000;
+mar_rig = 0.000;
 asp_rat_bar = 1;
 asp_rat_axe = asp_rat_bar;
 [h_fig, wid_mon, hei_mon] = fig;
@@ -8562,16 +11277,38 @@ n_pix_ext = 10;
     hei_mon, wid, sca_axe, n_pix_ext);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 hax = hax_sub(1);
-h_plo = scatter(hax, r_pai.two.shu, r_pai.one.shu, 'Marker', 'o', 'MarkerEdgeColor', con_fil.gre, ...
-    'MarkerFaceColor', con_fil.gre);
-hold(hax, 'on')
-h_plo = scatter(hax, r_pai.two.dat, r_pai.one.dat, 'Marker', 'o', 'MarkerEdgeColor', 'k', ...
-    'MarkerFaceColor', 'k');
-hax.XAxis.Visible = false;
-hax.YAxis.Visible = false;
+% h_plo = scatter(hax, r_pai.two.shu, r_pai.one.shu, 'Marker', 'o', 'MarkerEdgeColor', con_fil.gre, ...
+%     'MarkerFaceColor', con_fil.gre);% .dat
+mar_siz = con_fil.mar_siz;
+h_plo = plo_spa_den(hax, r_pai.two.(fie), r_pai.one.(fie), mar_siz.pre);
+h_plo.Marker = 'o';
+hax.XLim = [-1 1];
+hax.YLim = [-1 1];
+plotZeroAxes_dia(hax)
+min_den = 0;
+max_den = 1;%cel_onl
+hax.CLim = [min_den max_den];
+hax.XTick = [-1 0 1];
+hax.YTick = [-1 0 1];
+hax.XTickLabel = [];
+hax.YTickLabel = [];
+
+%hax.XAxis.Visible = false;
+%hax.YAxis.Visible = false;
+
+fon_siz = con_fil.fon_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pre, log_lin_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
 end
 
-function h_fig = plo_cor_cor_den(r_pai)
+function h_fig = plo_res_acc_mod(log_cel, dff_cel)
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 n_row = 1;
 n_col = 1;
@@ -8580,14 +11317,17 @@ gap_ver_row = gap_ver*ones(n_row, 1);
 gap_hor_ave = 0.000;
 gap_hor_col = gap_hor_ave*ones(1, n_col);
 gap_hor_row_col = repmat(gap_hor_col, n_row, n_col);
-mar_bot = 0.000;
+
+mar_lef = 0.070;
+mar_bot = 0.070;
+
+% mar_lef = 0.000;
+% mar_bot = 0.000;
 mar_top = 0.000;
-mar_lef = 0.000;
 mar_rig = 0.000;
 asp_rat_bar = 1;
 asp_rat_axe = asp_rat_bar;
-% [h_fig, wid_mon, hei_mon] = fig;
-[h_fig, wid_mon, hei_mon] = fig_mac;
+[h_fig, wid_mon, hei_mon] = fig;
 wid = false;
 sca_axe = ones(1, n_row*n_col);
 n_pix_ext = 10;
@@ -8597,17 +11337,1092 @@ n_pix_ext = 10;
     hei_mon, wid, sca_axe, n_pix_ext);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 hax = hax_sub(1);
-h_plo = scatter(hax, r_pai.two.shu, r_pai.one.shu, 'Marker', 'o', 'MarkerEdgeColor', con_fil.gre, ...
-    'MarkerFaceColor', con_fil.gre);
+siz = 15;
+tra = 0.4;
+lox_cel = log_cel.uni_tai;
+col = con_fil.col;
+scatter3(hax, dff_cel.tai(lox_cel), dff_cel.lig(lox_cel), dff_cel.tap(lox_cel), siz, col.tai, ...
+    'filled', 'MarkerFaceAlpha', tra)
 hold(hax, 'on')
-% h_plo = scatter(hax, r_pai.two.dat, r_pai.one.dat, 'Marker', 'o', 'MarkerEdgeColor', 'k', ...
-%     'MarkerFaceColor', 'k');
+%
+lox_cel = log_cel.uni_lig;
+scatter3(hax, dff_cel.tai(lox_cel), dff_cel.lig(lox_cel), dff_cel.tap(lox_cel), siz, col.lig, ...
+    'filled', 'MarkerFaceAlpha', tra)
+hold(hax, 'on')
+%
+lox_cel = log_cel.uni_tap;
+scatter3(hax, dff_cel.tai(lox_cel), dff_cel.lig(lox_cel), dff_cel.tap(lox_cel), siz, col.tap, ...
+    'filled', 'MarkerFaceAlpha', tra)
+hold(hax, 'on')
+%
+lox_cel = log_cel.mul_all;
+scatter3(hax, dff_cel.tai(lox_cel), dff_cel.lig(lox_cel), dff_cel.tap(lox_cel), siz, col.mul, ...
+    'filled', 'MarkerFaceAlpha', tra)
+xlabel(hax, 'Tail (\DeltaF/F)')
+ylabel(hax, 'Light (\DeltaF/F)')
+zlabel(hax, 'Vibration (\DeltaF/F)')
+end
+
+function h_fig = plo_mod_loc(x_cel, y_cel, z_cel, log_cel)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 1;
+n_col = 1;
+gap_ver_row = 0.005*ones(n_row, 1);
+gap_hor_row_col = 0.005*ones(n_row, n_col);
+hei = 8.2988;%3.5
+mar_top = cal_mar_top(hei);
+mar_bot = 0.030;
+mar_lef = 0.020;
+mar_rig = 0.000;
+asp_rat_axe = [1*ones(n_col, 1); 1*ones(n_col, 1)];
+wid = false;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 200;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hax = hax_sub(1);
+mar_siz = 5;
+tra = 0.7;
+
+
+lox_cel = log_cel.uni_tai;
+col = con_fil.col;
+scatter3(hax, x_cel(lox_cel), y_cel(lox_cel), z_cel(lox_cel), mar_siz, col.tai, ...
+    'filled', 'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
+hold(hax, 'on')
+%
+lox_cel = log_cel.uni_lig;
+scatter3(hax, x_cel(lox_cel), y_cel(lox_cel), z_cel(lox_cel), mar_siz, col.lig, ...
+    'filled', 'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
+hold(hax, 'on')
+%
+lox_cel = log_cel.uni_tap;
+scatter3(hax, x_cel(lox_cel), y_cel(lox_cel), z_cel(lox_cel), mar_siz, col.tap, ...
+    'filled', 'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
+hold(hax, 'on')
+%
+lox_cel = log_cel.mul_all;
+scatter3(hax, x_cel(lox_cel), y_cel(lox_cel), z_cel(lox_cel), mar_siz, col.mul, ...
+    'filled', 'MarkerEdgeAlpha', tra, 'MarkerFaceAlpha', tra)
+
+
+
+
+
+
+% scatter3(hax, x_cel, y_cel, z_cel, mar_siz, mod_cel, 'filled', 'MarkerEdgeAlpha', tra, ...
+%     'MarkerFaceAlpha', tra)
+% piv_col_pcx = con_fil.piv_col_pcx;
+% colormap(hax, piv_col_pcx.fou.ong)
+
+asp_rat = con_fil.asp_rat;
+hax.PlotBoxAspectRatio = [1 asp_rat.cal.ori 1];
+axis(hax, 'equal')
+vie_ang_dir = [-120 30];
+view(hax, vie_ang_dir(1), vie_ang_dir(2))
+hax.XAxis.Visible = 'off';
+hax.YAxis.Visible = 'off';
+hax.ZAxis.Visible = 'off';
+hax.XGrid = 'off';
+hax.YGrid = 'off';
+hax.ZGrid = 'off';
+hold(hax, "on")
+xc = 0;
+yc = 0;
+zc = 0;
+w = 50;
+hl = scalebar_3d(hax, xc,yc,zc, w);
+lin_wid = con_fil.lin_wid;
+hl.LineWidth = lin_wid.one;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_pai_mod(log_cel, dff_cel)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 1;
+n_col = 3;
+gap_ver = 0.000;
+gap_ver_row = gap_ver*ones(n_row, 1);
+gap_hor = 0.070;
+gap_hor_row_col = gap_hor*ones(n_row, n_col);
+mar_lef = 0.070;
+mar_bot = 0.070;
+mar_top = 0.070;
+mar_rig = 0.070;
+asp_rat_bar = 1;
+asp_rat_axe = asp_rat_bar;
+[h_fig, wid_mon, hei_mon] = fig;
+wid = true;
+sca_axe = ones(1, n_row*n_col);
+n_pix_ext = 10;
+[hax_sub, pos_axe, axh, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen...
+    (n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, ...
+    hei_mon, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+siz = 30;
+col = con_fil.col;
+col.tap = 'g';
+tra = 0.4;
+mod_num = con_fil.mod_num;
+for cro = 1:n_col
+    hax = hax_sub(cro);
+    if cro == 1
+        fie_x = 'lig';
+        fie_y = 'tai';
+        x_lab = mod_num(2);
+        y_lab = mod_num(1);
+    elseif cro == 2
+        fie_x = 'tap';
+        fie_y = 'tai';
+        x_lab = mod_num(3);
+        y_lab = mod_num(1);
+    elseif cro == 3
+        fie_x = 'tap';
+        fie_y = 'lig';
+        x_lab = mod_num(3);
+        y_lab = mod_num(2);
+    end
+    scatter(hax, dff_cel.(fie_x)(log_cel.non_all), dff_cel.(fie_y)(log_cel.non_all), siz, col.non, ...
+        'filled', 'MarkerFaceAlpha', tra)
+    hold(hax, 'on')
+    scatter(hax, dff_cel.(fie_x)(log_cel.(['uni_' fie_x])), ...
+        dff_cel.(fie_y)(log_cel.(['uni_' fie_x])), siz, col.(fie_x), 'filled', 'MarkerFaceAlpha', tra)
+    hold(hax, 'on')
+    scatter(hax, dff_cel.(fie_x)(log_cel.(['uni_' fie_y])), ...
+        dff_cel.(fie_y)(log_cel.(['uni_' fie_y])), siz, col.(fie_y), 'filled', 'MarkerFaceAlpha', tra)
+    hold(hax, 'on')
+    scatter(hax, dff_cel.(fie_x)(log_cel.mul_all), dff_cel.(fie_y)(log_cel.mul_all), siz, ...
+        col.mul, 'filled', 'MarkerFaceAlpha', tra)
+    xlabel(hax, x_lab)
+    ylabel(hax, y_lab)
+end
+linkaxes(hax_sub)
+end
+
+function h_fig = plo_per_pai_mod(log_cel, dff_cel, fra_mod)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 2;
+n_col = 3;
+
+% gap_hor = 0.070;
+% gap_hor_row_col = gap_hor*ones(n_row, n_col);
+% mar_lef = 0.070;
+% mar_bot = 0.070;
+% wid = true;
+% mar_top = 0.040;
+% mar_rig = 0.070;
+% gap_ver = 0.100;
+% gap_ver_row = gap_ver*ones(n_row, 1);
+
+
+wid = false;
+hei = 8;
+mar_top = cal_mar_top(hei);
+mar_rig = 0.070;
+gap_ver = 0.020;
+gap_ver_row = gap_ver*ones(n_row, 1);
+gap_hor = 0.030;
+gap_hor_row_col = gap_hor*ones(n_row, n_col);
+mar_lef = 0.025;
+mar_bot = 0.000;
+
+asp_rat_bar = 1;
+asp_rat_axe = asp_rat_bar;
+[h_fig, wid_mon, hei_mon] = fig;
+sca_axe = ones(1, n_row*n_col);
+n_pix_ext = 50;
+[hax_sub, pos_axe, axh, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen...
+    (n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, ...
+    hei_mon, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+siz = 30;
+col = con_fil.col;
+col.lig = [0 0 1];
+col.tap = [0 1 0];
+col.bou_non = col.tai;
+tra = 0.4;
+mod_num = con_fil.mod_num;
+
+fon_siz = con_fil.fon_siz;
 mar_siz = con_fil.mar_siz;
-mar_siz = mar_siz.pre;
-h_plo = plo_spa_den(hax, r_pai.two.dat, r_pai.one.dat, mar_siz);
-h_plo.Marker = 'o';
-hax.XLim = [-1 1];
-hax.YLim = [-1 1];
-hax.XAxis.Visible = false;
-hax.YAxis.Visible = false;
+log_lin_wid = true;
+for cro = 1:n_col
+    hax = hax_sub(cro);
+    if cro == 1
+        fie_x = 'lig';
+        fie_y = 'bou_non';
+        x_lab = mod_num(2);
+        y_lab = mod_num(1);
+        one = 'tai';
+        two = 'lig';
+    elseif cro == 2
+        fie_x = 'tap';
+        fie_y = 'bou_non';
+        x_lab = mod_num(3);
+        y_lab = mod_num(1);
+        one = 'tai';
+        two = 'tap';
+    elseif cro == 3
+        fie_x = 'tap';
+        fie_y = 'lig';
+        x_lab = mod_num(3);
+        y_lab = mod_num(2);
+        one = 'lig';
+        two = 'tap';
+    end
+    boo_cel = log_cel.([one '_' two]);
+
+    scatter(hax, dff_cel.(fie_x)(boo_cel.non), dff_cel.(fie_y)(boo_cel.non), siz, col.non, ...
+        'filled', 'MarkerFaceAlpha', tra)
+    hold(hax, 'on')
+    
+    scatter(hax, dff_cel.(fie_x)(boo_cel.(two)), ...
+        dff_cel.(fie_y)(boo_cel.(two)), siz, col.(fie_x), 'filled', 'MarkerFaceAlpha', tra)
+    hold(hax, 'on')
+    
+    scatter(hax, dff_cel.(fie_x)(boo_cel.(one)), ...
+        dff_cel.(fie_y)(boo_cel.(one)), siz, col.(fie_y), 'filled', 'MarkerFaceAlpha', tra)
+    hold(hax, 'on')
+    
+    scatter(hax, dff_cel.(fie_x)(boo_cel.bim), dff_cel.(fie_y)(boo_cel.bim), siz, ...
+        col.mul, 'filled', 'MarkerFaceAlpha', tra)
+    xlabel(hax, x_lab)
+    ylabel(hax, y_lab)
+
+    lin_axe_sym(hax)
+    plotZeroAxes_dia(hax)
+
+    hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+end
+linkaxes(hax_sub(1:n_col))
+delete(hax_sub(1 + n_col:end))
+sca_fac = 0.5;
+for cro = 1:n_col
+    if cro == 1
+        fie_x = 'lig';
+        fie_y = 'bou_non';
+        one = 'tai';
+        two = 'lig';
+        x_lab = mod_num(2);
+        y_lab = mod_num(1);
+    elseif cro == 2
+        fie_x = 'tap';
+        fie_y = 'bou_non';
+        one = 'tai';
+        two = 'tap';
+        x_lab = mod_num(3);
+        y_lab = mod_num(1);
+    elseif cro == 3
+        fie_x = 'tap';
+        fie_y = 'lig';
+        one = 'lig';
+        two = 'tap';
+        x_lab = mod_num(3);
+        y_lab = mod_num(2);
+    end
+    pro_mod = fra_mod.([one '_' two]);
+    pro_mod = round(pro_mod*100);
+
+    y_lab = extractBefore(y_lab, strlength(y_lab) - 11);
+    x_lab = extractBefore(x_lab, strlength(x_lab) - 11);
+
+    %cat_num = ["Bimodal", y_lab, x_lab, "Nonresponsive"];
+    cat_num = ["Bimodal", y_lab, x_lab, "Non-resp."];
+    ind_axe = n_col + cro;
+    pie_pos = pos_axe{ind_axe};
+    
+    pie_pos(3) = sca_fac*pie_pos(3);
+    pie_pos(4) = sca_fac*pie_pos(4);
+    pie_pos(1) = pie_pos(1) + sca_fac*pie_pos(3);
+    pie_pos(2) = pie_pos(2) + sca_fac*pie_pos(4);
+
+    pie_cha = piechart(h_fig, pro_mod, cat_num, 'Position', pie_pos, 'FontSize', fon_siz.pub);
+    piv_col_pcx = [1 0 1; col.(fie_y); col.(fie_x); col.non];
+    pie_cha.ColorOrder = piv_col_pcx;
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_tap_tai_not(fra_ani)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 2;
+n_col = 1;
+
+% gap_ver_row = 0.050*ones(n_row, 1);
+% gap_hor_row_col = 0.030*ones(n_row, n_col);
+% mar_bot = 0.050;
+% mar_top = 0.040;
+% mar_lef = 0.050;
+% mar_rig = 0.000;
+
+hei = 2*3.5;% ewelina -- for entire height, not per panel
+mar_top = cal_mar_top(hei);
+mar_bot = 0.035;
+mar_lef = 0.050;
+mar_rig = 0.000;
+gap_ver_row = 0.020*ones(n_row, 1);
+gap_hor_row_col = 0.030*ones(n_row, n_col);
+
+asp_rat_axe = 0.5;
+wid = false;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 200;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+y_lab.exc = 'Excited neurons (%)';
+y_lab.inh = 'Inhibited neurons (%)';
+hax = hax_sub(1);
+var_win_con_sam_uni{1, 1}{1} = 100*fra_ani.tap_tai.exc;
+var_win_con_sam_uni{1, 2}{1} = 100*fra_ani.tap_not.exc;
+ind_win = 1;
+ind_sin_sam = 1;
+mar_siz = con_fil.mar_siz;
+mar_siz = mar_siz.pub;
+col_sam_con{1, 1} = [0 0 0];
+col_sam_con{1, 2} = [0 0 0];
+h_plo = plo_dat_err_xco(hax, var_win_con_sam_uni, ind_win, ind_sin_sam, mar_siz, col_sam_con);
+p_xco.exc = com_p_xco(var_win_con_sam_uni{1, 1}{1}, var_win_con_sam_uni{1, 2}{1});
+%
+hax = hax_sub(2);
+var_win_con_sam_uni{1, 1}{1} = 100*fra_ani.tap_tai.inh;
+var_win_con_sam_uni{1, 2}{1} = 100*fra_ani.tap_not.inh;
+ind_win = 1;
+ind_sin_sam = 1;
+col_sam_con{1, 1} = [0 0 0];
+col_sam_con{1, 2} = [0 0 0];
+h_plo = plo_dat_err_xco(hax, var_win_con_sam_uni, ind_win, ind_sin_sam, mar_siz, col_sam_con);
+p_xco.inh = com_p_xco(var_win_con_sam_uni{1, 1}{1}, var_win_con_sam_uni{1, 2}{1});
+linkaxes(hax_sub)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+groups = {[1, 2]};
+off_non = 0.070;
+mou = 0.030;
+sep = off_non + mou + 0.040;
+ext_hei = -(sep + mou);
+fon_siz = con_fil.fon_siz;
+%
+hax = hax_sub(1);
+y_lim_pre = ylim(hax);
+[H, y_lim] = sigstar_lim(hax, groups, fon_siz.non, off_non, y_lim_pre, sep, mou, ext_hei, ...
+    p_xco.exc.lme);
+y_min = inf;
+y_max = -inf;
+[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+%hax.XTick = [1 2];
+%hax.XTickLabel = {'tail','no tail'};
+hax.XAxis.Visible = "off";
+ylabel(hax, y_lab.exc)
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz, log_lin_wid);
+%
+hax = hax_sub(2);
+y_lim_pre = ylim(hax);
+[H, y_lim] = sigstar_lim(hax, groups, fon_siz.non, off_non, y_lim_pre, sep, mou, ext_hei, ...
+    p_xco.inh.lme);
+[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+hax.XTick = [1 2];
+hax.XTickLabel = {'tail','no tail'};
+ylabel(hax, y_lab.inh)
+hax = adj_hax(hax, fon_siz.pub, mar_siz, log_lin_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_ttn_sca(log_cel, dff_cel)
+n_row = 1;
+n_col = 1;
+gap_ver = 0.000;
+gap_ver_row = gap_ver*ones(n_row, 1);
+gap_hor = 0.070;
+gap_hor_row_col = gap_hor*ones(n_row, n_col);
+mar_lef = 0.070;
+mar_bot = 0.100;
+mar_top = 0.070;
+mar_rig = 0.070;
+asp_rat_bar = 1;
+asp_rat_axe = asp_rat_bar;
+[h_fig, wid_mon, hei_mon] = fig;
+wid = false;
+sca_axe = ones(1, n_row*n_col);
+n_pix_ext = 10;
+[hax_sub, pos_axe, axh, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen...
+    (n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, ...
+    hei_mon, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+siz = 30;
+tra = 1;
+for cro = 1:n_col
+    hax = hax_sub(cro);
+    if cro == 1
+        fie_x = 'tap_not';
+        fie_y = 'tap_tai';
+        x_lab = 'Vibration, Quiescence (\DeltaF/F)';
+        y_lab = 'Vibration, Tail (\DeltaF/F)';
+    end
+    scatter(hax, dff_cel.(fie_x)(log_cel), dff_cel.(fie_y)(log_cel), siz, 'k', ...
+        'filled', 'MarkerFaceAlpha', tra)
+    xlabel(hax, x_lab)
+    ylabel(hax, y_lab)
+
+    display(corr(dff_cel.(fie_x)(log_cel), dff_cel.(fie_y)(log_cel), 'Rows', 'pairwise'))
+end
+lin_axe(hax)
+plotZeroAxes(hax)
+end
+
+function h_fig = plo_ttn_sca_all(log_cel, dff_cel)
+n_row = 1;
+n_col = 1;
+% gap_ver = 0.000;
+% gap_hor = 0.070;
+% gap_ver_row = gap_ver*ones(n_row, 1);
+% gap_hor_row_col = gap_hor*ones(n_row, n_col);
+% mar_lef = 0.070;
+% mar_bot = 0.100;
+% mar_top = 0.070;
+% mar_rig = 0.070;
+
+hei = 6;% ewelina -- for entire height, not per panel
+mar_top = cal_mar_top(hei);
+mar_bot = 0.035;
+mar_lef = 0.050;
+mar_rig = 0.000;
+gap_ver_row = 0.020*ones(n_row, 1);
+gap_hor_row_col = 0.005*ones(n_row, n_col);
+
+asp_rat_bar = 1;
+asp_rat_axe = asp_rat_bar;
+[h_fig, wid_mon, hei_mon] = fig;
+wid = false;
+sca_axe = ones(1, n_row*n_col);
+n_pix_ext = 10;
+[hax_sub, pos_axe, axh, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen...
+    (n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, ...
+    hei_mon, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+siz = 30;
+tra = 1;
+
+hax = hax_sub(1);
+
+fie_x = 'tap_not';
+fie_y = 'tap_tai';
+x_lab = 'Vibration, Quiescence (\DeltaF/F)';
+y_lab = 'Vibration, Tail (\DeltaF/F)';
+
+% scatter(hax, dff_cel.(fie_x)(log_cel.tap.srt.non), dff_cel.(fie_y)(log_cel.tap.srt.non), siz, ...
+%     [0.5 0.5 0.5], 'filled', 'MarkerFaceAlpha', tra)
+% hold(hax, "on")
+% scatter(hax, dff_cel.(fie_x)(log_cel.tap.srt.exc), dff_cel.(fie_y)(log_cel.tap.srt.exc), siz, ...
+%     'r', 'filled', 'MarkerFaceAlpha', tra)
+% hold(hax, "on")
+% scatter(hax, dff_cel.(fie_x)(log_cel.tap.srt.inh), dff_cel.(fie_y)(log_cel.tap.srt.inh), siz, ...
+%     'b', 'filled', 'MarkerFaceAlpha', tra)
+
+scatter(hax, dff_cel.(fie_x), dff_cel.(fie_y), siz, 'k', 'filled', 'MarkerFaceAlpha', tra)
+
+xlabel(hax, x_lab)
+ylabel(hax, y_lab)
+
+lin_axe_sym(hax)
+plotZeroAxes_dia(hax)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_per_sat_pix(per_sat_pix_ani)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 1;
+
+gap_ver_row = 0.050*ones(n_row, 1);
+gap_hor_row_col = 0.030*ones(n_row, n_col);
+mar_bot = 0.050;
+mar_top = 0.040;
+mar_lef = 0.100;
+mar_rig = 0.000;
+
+% hei = 2*3.5;% ewelina -- for entire height, not per panel
+% mar_top = cal_mar_top(hei);
+% mar_bot = 0.035;
+% mar_lef = 0.050;
+% mar_rig = 0.000;
+% gap_ver_row = 0.020*ones(n_row, 1);
+% gap_hor_row_col = 0.030*ones(n_row, n_col);
+
+asp_rat_axe = 1;
+wid = false;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 200;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+y_lab.inh = 'Saturated pixels (%)';
+hax = hax_sub(1);
+h_plo = plot(hax, 1:length(per_sat_pix_ani), per_sat_pix_ani, 'x');
+ylabel(hax, y_lab.inh)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_pve_cel(pve_cel)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 1;
+n_col = 1;
+gap_ver_row = 0.000*ones(n_row, 1);
+gap_hor_row_col = 0.000*ones(n_row, n_col);
+mar_bot = 0.010;
+%hei = 4.126;
+hei = 3;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.020;
+mar_rig = 0;
+asp_rat_axe = 0.25;
+wid = false;
+sca_axe = 1;
+n_pix_ext = 0;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hax = hax_sub(1);
+mar_siz = con_fil.mar_siz;
+ind_sin_sam = 1;
+col_sam_con{1, 1} = [0 0 0];
+gra = con_fil.gra;
+gra = gra.nor;
+n_ani = length(pve_cel);
+ide_ani = ones(n_ani, 1);
+
+pro_den_cel = ksdensity(pve_cel, pve_cel);
+min_den = 0;
+max_den = max(pro_den_cel);
+
+swarmchart(hax, ide_ani, pve_cel, mar_siz.pre, pro_den_cel, 'filled');
+
+hax.CLim = [min_den max_den];
+
+hold(hax, "on")
+[mea_con, ~, sem_con] = com_sta(pve_cel, 1);
+plo_err_col(hax, mea_con, sem_con, 0.5*mar_siz.pre, col_sam_con, ind_sin_sam)
+hax.XAxis.Visible = "off";
+hax.YAxis.Limits(1) = 0;
+hax.YAxis.Label.String = "Variance explained (%)";
+fon_siz = con_fil.fon_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_pve_cel_tau(pve_cel_tau)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 1;
+n_tau = size(pve_cel_tau, 2);
+n_col = n_tau;
+gap_ver_row = 0.000*ones(n_row, 1);
+gap_hor_row_col = 0.020*ones(n_row, n_col);
+mar_bot = 0.010;
+hei = 4.126;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.020;
+mar_rig = 0;
+asp_rat_axe = 0.25*ones(n_row*n_col, 1);
+wid = false;
+sca_axe = 1*ones(n_row*n_col, 1);
+n_pix_ext = 50;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+mar_siz = con_fil.mar_siz;
+ind_sin_sam = 1;
+col_sam_con{1, 1} = [0 0 0];
+n_cel = size(pve_cel_tau, 1);
+ide_cel = ones(n_cel, 1);
+min_den = 0;
+%max_den = 0.1;
+max_den = 0.07;
+for col = 1:n_col
+    hax = hax_sub(col);
+    pve_cel = pve_cel_tau(:, col);
+    pro_den_cel = ksdensity(pve_cel, pve_cel);
+    swarmchart(hax, ide_cel, pve_cel, mar_siz.pre, pro_den_cel, 'filled');
+    hax.CLim = [min_den max_den];
+    hold(hax, "on")
+    [mea_con, ~, sem_con] = com_sta(pve_cel, 1);
+    plo_err_col(hax, mea_con, sem_con, 0.5*mar_siz.pre, col_sam_con, ind_sin_sam)
+    hax.XAxis.Visible = "off";
+    hax.YAxis.Limits(1) = 0;
+    hax.YAxis.Label.String = "Variance explained (%)";
+    fon_siz = con_fil.fon_siz;
+    log_lin_wid = true;
+    hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+end
+linkaxes(hax_sub)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function [h_fig, p_row_col] = plo_rep_sup(dff_tri_cel, log_cel)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 2;
+n_col = 2;
+% gap_ver_row = 0.050*ones(n_row, 1);
+% gap_hor_row_col = 0.050*ones(n_row, n_col);
+% mar_bot = 0.050;
+% mar_top = 0.010;
+% mar_lef = 0.050;
+% mar_rig = 0;
+
+hei = 2*3.5;% ewelina -- for entire height, not per panel
+mar_top = cal_mar_top(hei);
+mar_bot = 0.035;
+mar_lef = 0.050;
+mar_rig = 0.000;
+gap_ver_row = 0.020*ones(n_row, 1);
+gap_hor_row_col = 0.005*ones(n_row, n_col);
+
+asp_rat_axe = 1*ones(n_row*n_col, 1);
+wid = false;
+sca_axe = 1*ones(n_row*n_col, 1);
+n_pix_ext = 50;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+n_tri = 6;
+tri_num_tri = 1:n_tri;
+p_row_col = nan(n_row, n_col);
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+y_lab = con_fil.y_lab;
+for row = 1:n_row
+    if row == 1
+        dir_fie = 'exc';
+    else
+        dir_fie = 'inh';
+    end
+    for col = 1:n_col
+        hax = hax_sub(n_col*(row - 1) + col);
+        if col == 1
+            mod_fie = 'lig';
+        else
+            mod_fie = 'tap';
+            hax.YAxis.Visible = "off";
+        end
+        boo_cel = log_cel.(mod_fie).srt.(dir_fie);
+        act_tri_cel = dff_tri_cel.(mod_fie)(:, boo_cel);
+        [h_plo, ind_var_pea] = plo_sha.raw(hax, tri_num_tri', act_tri_cel, 'k');
+        p_row_col(row, col) = analyzeTrialEffectRepeated(act_tri_cel');
+
+        if row == 1
+            hax.XAxis.Visible = "off";
+        elseif row == 2
+            xlabel(hax, 'Trial #')
+        end
+        if col == 1
+            ylabel(hax, y_lab.dff)
+        elseif col == 2
+            hax.YAxis.Visible = "off";
+        end
+        hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+    end
+end
+linkaxes(hax_sub(1:2))
+linkaxes(hax_sub(3:4))
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gli
+function h_fig = plo_bou_sig_tri(dff_fra_bou, dur_bou)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 2;
+n_col = 1;
+gap_ver_row = 0.005*ones(n_row, 1);
+gap_hor_row_col = 0.005*ones(n_row, n_col);
+mar_bot = 0.040;
+mar_top = 0.040;
+mar_lef = 0.040;
+mar_rig = 0.000;
+asp_rat_axe = [1*ones(n_col, 1); 1*ones(n_col, 1)];
+wid = false;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 200;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+[dur_bou, ind_bou] = sort(dur_bou, 'ascend');
+tim_fra = con_fil.tim_fra;
+tim_fra = tim_fra.cal.eig.tri.dff;
+col_han_pos = [0.31 0.380 0.005 0.150];
+hax = hax_sub(1);
+dff_bou_fra = dff_fra_bou(:, ind_bou)';
+
+dur_bou(end - 5:end) = [];
+dff_bou_fra(end - 5:end, :) = [];
+log_fra = tim_fra < 20;
+tim_fra = tim_fra(log_fra);
+dff_bou_fra = dff_bou_fra(:, log_fra);
+
+n_fra = con_fil.n_fra;
+dff_fra_bou = smo_sam_poi_uni(dff_bou_fra', n_fra.dff.eig.bas, n_fra.dff.eig.smo);
+
+lim = 10;
+col_lim = [-lim lim];
+map = con_fil.map;
+map = map.sym;
+piv_row_col_pcx = ext_piv_row_col_pcx(dff_fra_bou', col_lim, map);
+fra_bou = fin_ind_bou(tim_fra, dur_bou);
+n_bou = length(fra_bou);
+n_fra = length(tim_fra);
+log_row_col = false(n_bou, n_fra);
+for bou = 1:n_bou
+    if dur_bou(bou) <= tim_fra(end)
+        log_row_col(bou, fra_bou(bou)) = true;
+    end
+end
+log_row_col_pcx.axo = repmat(log_row_col, 1, 1, 3);
+piv_row_col_pcx.abs(log_row_col_pcx.axo) = eps;
+ima = sho_ima.rgb(hax, piv_row_col_pcx);
+ima.XData = tim_fra;
+hax.XLim = [tim_fra(1) tim_fra(end)];
+hax.DataAspectRatio = [0.15 1 1];
+yticks(hax, [1 n_bou])
+hax.YAxis.Visible = 'on';
+lin_wid = con_fil.lin_wid;
+h = xline(hax, 0, '--k', 'LineWidth', lin_wid.two);
+caxis(hax, col_lim)
+hax.Colormap = map;
+col_han = colorbar('Ticks', col_lim);
+col_han.Position = col_han_pos;
+col_cod = '\DeltaF/F (%)';
+col_han.Label.String = col_cod;
+col_han.Label.Units = 'normalized';
+col_han.Label.Position(1) = 1.5;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
+hax = hax_sub(2);
+n_fra = con_fil.n_fra;
+[h_plo, ind_var_pea] = plo_sha.smo_tri(hax, tim_fra, dff_bou_fra', [0 1 0], n_fra.dff.eig.bas, ...
+    n_fra.dff.eig.smo);
+h = xline(hax, 0, '--k', 'LineWidth', lin_wid.two);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_tri_sig(dff_fra_tri)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+asp_rat = con_fil.asp_rat;
+n_row = 1;
+n_col = 1;
+gap_ver_row = 0.050*ones(n_row, 1);
+gap_hor_row_col = 0.030*ones(n_row, n_col);
+            % mar_bot = 0.100;
+            % mar_top = 0.030;
+            % mar_lef = 0.070;
+            % mar_rig = 0.001;
+
+hei = 4.126;
+mar_top = cal_mar_top(hei);
+mar_bot = 0.030;
+mar_lef = 0.020;
+mar_rig = 0.000;
+
+asp_rat_axe = asp_rat.bar*ones(n_row*n_col, 1);
+wid = false;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 30;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, ...
+    n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, ...
+    fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hax = hax_sub(1);
+tim_fra = con_fil.tim_fra;
+tim_fra = tim_fra.cal.eig.tri.dff;
+col = 'g';
+%plo_sha.raw(hax, tim_fra, dff_fra_tri, col)
+
+log_fra = tim_fra < 10;
+tim_fra = tim_fra(log_fra);
+dff_fra_tri = dff_fra_tri(log_fra, :);
+
+n_fra = con_fil.n_fra;
+[h_plo, ind_var_pea] = plo_sha.smo_tri(hax, tim_fra, dff_fra_tri, col, n_fra.dff.eig.bas, ...
+    n_fra.dff.eig.smo);
+
+lin_wid = con_fil.lin_wid;
+%h = yline(hax, 0, 'LineWidth', lin_wid.two);
+h = xline(hax, 0, '--k', 'LineWidth', lin_wid.two);
+
+% hax.XAxis.Visible = 'off';
+% scalebarLength = 5;  % scalebar will be 10 micrometer long
+% h_bar = scalebar(hax, 'x', scalebarLength, ' s', 'Location', 'southwestoutside');
+% hax.YAxis.Visible = 'off';
+% scalebarLength = 1;  % scalebar will be 10 micrometer long
+% h_bar = scalebar(hax, 'y', scalebarLength, '%', 'Location', 'southwestoutside');
+%
+hax.XTickLabelMode = 'auto';
+hax.Box = 'off';
+fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+mar_siz = mar_siz.pub;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz, log_lin_wid);
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
+end
+
+function [h_fig, p] = plo_var_uni(var_ani_con)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 1;
+n_col = 1;
+gap_ver_row = 0.000*ones(n_row, 1);
+gap_hor_row_col = 0.000*ones(n_row, n_col);
+mar_bot = 0.040;
+hei = 4.126;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.020;
+mar_rig = 0;
+%asp_rat_axe = 0.25;
+asp_rat_axe = 0.5;
+wid = false;
+sca_axe = 1;
+n_pix_ext = 0;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hax = hax_sub(1);
+%p = signrank(var_ani_con);
+p = nan;
+mar_siz = con_fil.mar_siz;
+
+% var_win_con_sam_uni{1, 1}{1} = var_ani;
+% ind_win = 1;
+% ind_sin_sam = 1;
+% col_sam_con{1, 1} = [0 0 0];
+% h_plo = plo_dat_err_xco(hax, var_win_con_sam_uni, ind_win, ind_sin_sam, mar_siz.pre, col_sam_con);
+
+var_win_con_sam_uni{1, 1}{1} = var_ani_con(:, 1);
+var_win_con_sam_uni{2, 1}{1} = var_ani_con(:, 2);
+ind_sin_sam = 1;
+col_sam_win{1, 1} = [0 1 0];
+col_sam_win{1, 2} = [0 1 0];
+%h_plo = plo_dat_err_xwi(hax, var_win_con_sam_uni, ind_sin_sam, mar_siz.pre, col_sam_win);
+
+boxplot(hax, var_ani_con, [1 2], 'BoxStyle','filled', 'Symbol','', 'Colors','gg')
+
+xticklabels(hax, {'Light', 'Vibration'})
+xruler = hax.XRuler;
+xruler.Axle.Visible = 'off';
+hax.XAxis.TickLength = [0 0];
+
+ylim(hax, [-5 5])
+text(hax, 2, 5, '***', 'HorizontalAlignment', 'center', 'VerticalAlignment', 'bottom')
+
+y_lab = con_fil.y_lab;
+ylabel(hax, y_lab.dff)
+fon_siz = con_fil.fon_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function [h_fig, p] = plo_bou_com(dff_bou_win)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 1;
+n_col = 1;
+gap_ver_row = 0.000*ones(n_row, 1);
+gap_hor_row_col = 0.000*ones(n_row, n_col);
+mar_bot = 0.040;
+hei = 4.126;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.020;
+mar_rig = 0;
+asp_rat_axe = 0.5;
+wid = false;
+sca_axe = 1;
+n_pix_ext = 0;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hax = hax_sub(1);
+var_win_con_sam_uni{1, 1}{1} = dff_bou_win(:, 2);
+var_win_con_sam_uni{2, 1}{1} = dff_bou_win(:, 3);
+p = signrank(dff_bou_win(:, 2), dff_bou_win(:, 3));
+mar_siz = con_fil.mar_siz;
+ind_sin_sam = 1;
+col_sam_win{1, 1} = [1 0 0];
+col_sam_win{1, 2} = [0 0 1];
+%h_plo = plo_dat_err_xwi(hax, var_win_con_sam_uni, ind_sin_sam, mar_siz.pre, col_sam_win);
+
+boxplot(hax, dff_bou_win(:, 2:3), [1 2], 'BoxStyle','filled', 'Symbol','', 'Colors','rb')
+
+xticklabels(hax, {'AC', 'PC'})
+xruler = hax.XRuler;
+xruler.Axle.Visible = 'off';
+hax.XAxis.TickLength = [0 0];
+
+ylim(hax, [-5 11])
+text(hax, 1.5, 11, '***', 'HorizontalAlignment', 'center', 'VerticalAlignment', 'bottom')
+
+fon_siz = con_fil.fon_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% spo
+function h_fig = plo_ofr(ofr_ani_win)
+[h_fig, fig_wid, fig_hei] = fig;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_row = 1;
+n_col = 1;
+gap_ver_row = 0.005*ones(n_row, 1);
+gap_hor_row_col = 0.030*ones(n_row, n_col);
+
+% mar_bot = 0.040;
+% mar_top = 0.040;
+% mar_lef = 0.040;
+% mar_rig = 0.000;
+
+mar_bot = 0.050;
+hei = 3.5;% ewelina
+mar_top = cal_mar_top(hei);
+mar_lef = 0.030;
+mar_rig = 0.000;
+
+asp_rat_axe = 0.5;
+wid = false;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 200;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hax = hax_sub(1);
+var_win_con_sam_uni{1, 1}{1} = ofr_ani_win(:, 1);
+var_win_con_sam_uni{1, 2}{1} = ofr_ani_win(:, 2);
+ind_win = 1;
+ind_sin_sam = 1;
+mar_siz = con_fil.mar_siz;
+col_sam_con{1, 1} = [0 0 0];
+col_sam_con{1, 2} = [0 0 0];
+h_plo = plo_dat_err_xco(hax, var_win_con_sam_uni, ind_win, ind_sin_sam, mar_siz.pre, col_sam_con);
+p_xco = com_p_xco(ofr_ani_win(:, 1), ofr_ani_win(:, 2));
+
+groups = {[1, 2]};
+%off_non = 0.070;
+off_non = 0.12;
+mou = 0.030;
+sep = off_non + mou + 0.040;
+ext_hei = -(sep + mou);
+fon_siz = con_fil.fon_siz;
+%
+hax = hax_sub(1);
+y_lim_pre = ylim(hax);
+[H, y_lim] = sigstar_lim(hax, groups, fon_siz.non, off_non, y_lim_pre, sep, mou, ext_hei, ...
+    p_xco.lme);
+y_min = inf;
+y_max = -inf;
+[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+hax.XTick = [1 2];
+hax.YLim(1) = 0;
+hax.XTickLabel = {'Tail', 'Quiescence'};
+y_lab_ong_eve_rat = con_fil.y_lab_ong_eve_rat;
+ylabel(hax, y_lab_ong_eve_rat)
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
 end

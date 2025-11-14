@@ -199,7 +199,6 @@ classdef mul_sam
         log_sam_ani
         log_tai_sam_ani
         ind_sam
-        %col_sam
         col_sam_con
         % freely moving
         fil_pat_fig_ntt
@@ -232,6 +231,9 @@ classdef mul_sam
         fil_pat_fig_tai
         fil_pat_fig_hig_com
         fil_pat_fig_abs_cor_xsa
+        %
+        xtl_sam
+        col_sam
     end
     methods
         function obj = spe(obj)
@@ -517,9 +519,10 @@ classdef mul_sam
             save(obj.fil_pat_mul_sam, 'obj', '-v7.3')
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% data
+        
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% freely-moving
         function app_fre_dat(obj)
-            ric_fil = matfile("X:\kadiram\from\ricarda\variables_1sec_bin.mat");
+            ric_fil = matfile("W:\kadir\from\ricarda\variables_1sec_bin.mat");
             %%%%%%%%%%%%%%%%%%%%%%%%%% ntt
             tim_ntt_bin = (1:1800)';
             dur = 4;
@@ -528,86 +531,297 @@ classdef mul_sam
                 p_foc_ntt_win, p_foc_ntt_rst_win] = ext_ntt_dat(...
                 ric_fil.y_position_nacre_tph2_NTT, ric_fil.heatmaps_nacre_tph2_NTT, dur);
             %%%%%%%%%%%%%%%%%%%%%%%%% tap
-            off = 8;
-            tim_tap_bin = (1750:3360)';
+            dis_tap_gro = ric_fil.y_position_nacre_tph2_taps;
+            % time course, tax: trial-averaged, nta: normalized(1) trial-
+            % averaged(2)
+            [tax_dis_sam_tim_ani, nta_dis_sam_tim_ani, nta_dis_sam_ani] = cal_tax_dis_sam_tim_ani(...
+                dis_tap_gro);
+            % scatter
             [mea_dis_tap_tim_gro, sem_dis_tap_tim_gro, ave_dis_tap_win_cox_sam_ani, p_dis_tap_win] ...
-                = ext_fre_tap_dat(ric_fil.y_position_nacre_tph2_taps, off, tim_tap_bin);
-            %%%%%
+                = ext_fre_tap_dat(dis_tap_gro, end_poi, siz_win);
+            %%%%% heatmaps, 4 windows: bas + low, med, hig
             [~, ~, ~, ~, ~, ~, pro_tap_sam_win_row_col, foc_tap_win_cox_sam_ani, p_foc_tap_win] = ...
                 read_behaviour_EY_heatmaps_2_taps_km(ric_fil.heatmaps_nacre_tph2_taps);
+            % input directly heatmap data, no x,y ...
+
+            % spe
+            spe_tap_gro = ric_fil.velocity_nacre_tph2_taps;
+            tax_spe_sam_tim_ani = cal_tax_dis_sam_tim_ani(spe_tap_gro);
+            [~, ~, ave_spe_tap_win_cox_sam_ani, p_spe_tap_win] = ext_fre_tap_dat(spe_tap_gro);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_mul_sam, 'tim_ntt_bin', 'mea_dis_ntt_tim_gro', 'sem_dis_ntt_tim_gro', ...
                 'ave_dis_ntt_win_cox_sam_ani', 'p_dis_ntt_win', ...
                 'pro_ntt_sam_win_row_col', 'foc_ntt_win_cox_sam_ani', 'p_foc_ntt_win', ...
                 'p_dis_ntt_rst_win', 'p_foc_ntt_rst_win', ...%
-                'tim_tap_bin', 'mea_dis_tap_tim_gro', 'sem_dis_tap_tim_gro', ...
+                'mea_dis_tap_tim_gro', 'sem_dis_tap_tim_gro', ...
                 'ave_dis_tap_win_cox_sam_ani', 'p_dis_tap_win', ...
                 'pro_tap_sam_win_row_col', 'foc_tap_win_cox_sam_ani', 'p_foc_tap_win', ...%
-                '-append')
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% zan
-        function app_zan_dat(obj)
-            mat_fil_obj = matfile("X:\kadiram\Data\Pooled\zan\Tph2_Vibration_2022_data.mat");
-            [y_pos_bas_sam_fra_ani, y_pos_bas_sam_ani, p_y_pos_bas_xsa, ...
-                y_pos_con_sam_fra_ani, y_pos_win_con_sam_ani, p_y_pos_win_con_xsa, ...
-                bas_spe_sam_bin_ani, p_bas_spe_xsa, spe_con_sam_bin_ani, p_spe_win_con_xsa, ...
-                pro_sam_epo_row_col, foc_epo_cox_sam_ani, p_foc_epo] = ext_zan_dat...
-                (mat_fil_obj.all_fish);
+                'tax_dis_sam_tim_ani', 'tax_spe_sam_tim_ani', 'ave_spe_tap_win_cox_sam_ani', ...
+                'p_spe_tap_win', 'nta_dis_sam_tim_ani', 'nta_dis_sam_ani', '-append')
+
+            ric_fil = matfile("W:\kadir\from\ricarda\variables_1sec_bin.mat");
+            dis_tap_gro = ric_fil.y_position_nacre_tph2_taps;
+            [dis_tap_nac_tim_ani, dis_tap_tph_tim_ani] = ext_dis(dis_tap_gro);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_mul_sam, 'y_pos_bas_sam_fra_ani', 'y_pos_bas_sam_ani', ...
-                'p_y_pos_bas_xsa', 'y_pos_con_sam_fra_ani', 'y_pos_win_con_sam_ani', ...
-                'p_y_pos_win_con_xsa', 'bas_spe_sam_bin_ani', 'p_bas_spe_xsa', ...
-                'spe_con_sam_bin_ani', 'p_spe_win_con_xsa', 'pro_sam_epo_row_col', ...
-                'foc_epo_cox_sam_ani', 'p_foc_epo', '-append')
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% nov
-        function app_nov_dat(obj)
-            mat_fil = matfile("X:\kadiram\Data\Pooled\nov\Tph2_NT_Vibration_2022_data.mat");
-            [mea_y_pos_tim_gro, sem_y_pos_tim_gro, y_pos_win_cox_sam_ani, p_y_pos_win, ...
-                mea_spe_tim_gro, sem_spe_tim_gro, spe_win_cox_sam_ani, p_spe_win, ypc_sam_fra_ani, ...
-                ypc_wix_con_sam_ani, p_ypc_wix_con_xsa, p_ypc_xsa, ypc_sam_ani, spe_sam_fra_ani] = ...
-                ext_nov_dat...
-                (mat_fil.all_fish, mat_fil.x_values, mat_fil.change_yposition_1, ...
-                mat_fil.change_yposition_2);
+            save(obj.fil_pat_mul_sam, 'dis_tap_nac_tim_ani', 'dis_tap_tph_tim_ani', '-append')
+
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            dis_tap_nac_tim_ani = mat_fil.dis_tap_nac_tim_ani;
+            dis_tap_tph_tim_ani = mat_fil.dis_tap_tph_tim_ani;
+            ypc_ani.nac = cal_ypc_ani(dis_tap_nac_tim_ani);
+            ypc_ani.tph = cal_ypc_ani(dis_tap_tph_tim_ani);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_mul_sam, 'mea_y_pos_tim_gro', 'sem_y_pos_tim_gro', ...
-                'y_pos_win_cox_sam_ani', 'p_y_pos_win', 'mea_spe_tim_gro', 'sem_spe_tim_gro', ...
-                'spe_win_cox_sam_ani', 'p_spe_win', 'ypc_sam_fra_ani', 'ypc_wix_con_sam_ani', ...
-                'p_ypc_wix_con_xsa', 'p_ypc_xsa', 'ypc_sam_ani', '-append')
+            save(obj.fil_pat_mul_sam, 'ypc_ani', '-append')
+
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            tax_dis_sam_tim_ani = mat_fil.tax_dis_sam_tim_ani;
+            tau_ani.nac = cal_tau_ani(tax_dis_sam_tim_ani{1});
+            tau_ani.tph = cal_tau_ani(tax_dis_sam_tim_ani{2});
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'tau_ani', '-append')
+
+            nor_ypc_sam_tim_ani = cell(obj.n_sam, 1);
+            nor_ypc_sam_ani = cell(obj.n_sam, 1);
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            dis_tap_nac_tim_ani = mat_fil.dis_tap_nac_tim_ani;
+            [~, ypc_tim_ani_tri, dis_tim_ani_tri] = cal_ypc_ani(dis_tap_nac_tim_ani);
+            [nor_ypc_sam_tim_ani{1}, nor_ypc_sam_ani{1}] = cal_nor_ypc_fra_ani(ypc_tim_ani_tri, ...
+                dis_tim_ani_tri);% ypc_tim_ani_tri 3D array
+            dis_tap_tph_tim_ani = mat_fil.dis_tap_tph_tim_ani;
+            [~, ypc_tim_ani_tri, dis_tim_ani_tri] = cal_ypc_ani(dis_tap_tph_tim_ani);
+            [nor_ypc_sam_tim_ani{2}, nor_ypc_sam_ani{2}] = cal_nor_ypc_fra_ani(ypc_tim_ani_tri, ...
+                dis_tim_ani_tri);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'nor_ypc_sam_tim_ani', 'nor_ypc_sam_ani', '-append')
+
+            ypc_sam_tri_ani = cell(obj.n_sam, 1);
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            dis_tap_nac_tim_ani = mat_fil.dis_tap_nac_tim_ani;
+            [~, ~, ~, ypc_sam_tri_ani{1}] = cal_ypc_ani(dis_tap_nac_tim_ani);
+            dis_tap_tph_tim_ani = mat_fil.dis_tap_tph_tim_ani;
+            [~, ~, ~, ypc_sam_tri_ani{2}] = cal_ypc_ani(dis_tap_tph_tim_ani);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'ypc_sam_tri_ani', '-append')
+
+            ypc_sam_tim_ani = cell(obj.n_sam, 1);
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            dis_tap_nac_tim_ani = mat_fil.dis_tap_nac_tim_ani;
+            [~, ~, ~, ~, ypc_sam_tim_ani{1}] = cal_ypc_ani(dis_tap_nac_tim_ani);
+            dis_tap_tph_tim_ani = mat_fil.dis_tap_tph_tim_ani;
+            [~, ~, ~, ~, ypc_sam_tim_ani{2}] = cal_ypc_ani(dis_tap_tph_tim_ani);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'ypc_sam_tim_ani', '-append')
+
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            tax_dis_sam_tim_ani = mat_fil.tax_dis_sam_tim_ani;
+            [~, coe_det_ani.nac] = cal_tau_ani(tax_dis_sam_tim_ani{1});
+            [~, coe_det_ani.tph] = cal_tau_ani(tax_dis_sam_tim_ani{2});
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'coe_det_ani', '-append')
+
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            dis_tap_nac_tim_ani = mat_fil.dis_tap_nac_tim_ani;
+            dis_tap_tph_tim_ani = mat_fil.dis_tap_tph_tim_ani;
+            sta_poi_win = (-5:49)';
+            n_win = length(sta_poi_win);
+            end_poi_win = sta_poi_win + 5;
+            n_tri_tak = 6;
+            p_win = nan(n_win, 1);
+            for win = 1:n_win
+                [~, p_dis_tap_win] = cal_ave_dis(dis_tap_nac_tim_ani, dis_tap_tph_tim_ani, ...
+                    end_poi_win(win), sta_poi_win(win), n_tri_tak);
+                p_win(win) = round(p_dis_tap_win(2), 2);
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'sta_poi_win', 'p_win', '-append')
+
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            ypc_sam_tim_ani.two = mat_fil.ypc_sam_tim_ani;
+            ypc_sam_tim_ani.six = cell(obj.n_sam, 1);
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            dis_tap_nac_tim_ani = mat_fil.dis_tap_nac_tim_ani;
+            [~, ~, ~, ~, ypc_sam_tim_ani.six{1}] = cal_ypc_ani(dis_tap_nac_tim_ani);
+            dis_tap_tph_tim_ani = mat_fil.dis_tap_tph_tim_ani;
+            [~, ~, ~, ~, ypc_sam_tim_ani.six{2}] = cal_ypc_ani(dis_tap_tph_tim_ani);
+            %
+            p_win.dis_six = mat_fil.p_win;
+            p_win.ypc_two = cal_p_win(ypc_sam_tim_ani.two);
+            p_win.ypc_six = cal_p_win(ypc_sam_tim_ani.six);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'ypc_sam_tim_ani', 'p_win', '-append')
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% two
+        % un
+        function app_par_fre(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            dis_tap_nac_tim_ani = mat_fil.dis_tap_nac_tim_ani;
+            dis_tap_tph_tim_ani = mat_fil.dis_tap_tph_tim_ani;
+            
+            ypc_sam_tri_ani.twe_thi = mat_fil.ypc_sam_tri_ani;
+            sta_poi = 0;
+            end_poi = 30;
+
+            ypc_sam_tri_ani.zer_thi = cell(obj.n_sam, 1);
+            [~, ~, ~, ypc_sam_tri_ani.zer_thi{1}] = cal_ypc_ani(dis_tap_nac_tim_ani, sta_poi, end_poi);
+            [~, ~, ~, ypc_sam_tri_ani.zer_thi{2}] = cal_ypc_ani(dis_tap_tph_tim_ani, sta_poi, end_poi);
+            %
+            end_poi = 40;
+            ypc_sam_tri_ani.zer_for = cell(obj.n_sam, 1);
+            [~, ~, ~, ypc_sam_tri_ani.zer_for{1}] = cal_ypc_ani(dis_tap_nac_tim_ani, sta_poi, end_poi);
+            [~, ~, ~, ypc_sam_tri_ani.zer_for{2}] = cal_ypc_ani(dis_tap_tph_tim_ani, sta_poi, end_poi);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'ypc_sam_tri_ani', '-append')
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% two
         function app_two_dat(obj)
-            mat_fil = matfile("X:\kadiram\Data\Pooled\two\Tph2_NTT_VibrAdapt_2022_data.mat");
+            two_fil = matfile("X:\kadiram\Data\Pooled\two\Tph2_NTT_VibrAdapt_2022_data.mat");
             num_sam = [2 1 3];
-            pro_sam_row_col_win_ani = mat_fil.pro_sam_row_col_win_ani;
+            pro_sam_row_col_win_ani = two_fil.pro_sam_row_col_win_ani;
+            all_fish = two_fil.all_fish;
             [mea_y_pos_tim_gro, sem_y_pos_tim_gro, y_pos_win_cox_sam_ani, p_y_pos_win_cox_xsa, ...
                 p_ypc_xsa, ypc_sam_ani, tim_fra, ...
                 p_y_pos_xsa, y_pos_sam_ani, ypc_sam_ani_tri, p_abs_ypc_xsa, abs_ypc_sam_ani, ...
                 abs_ypc_sam_ani_tri, foc_win_cox_sam_ani, p_foc_win_cox_xsa, p_spx_win_cox_xsa, ...
                 spx_win_cox_sam_ani, spx_win_cox_sam_ani_tri] = ext_two_dat(...
-                mat_fil.all_fish, mat_fil.x_values, mat_fil.change_yposition_1, ...
-                mat_fil.change_yposition_2, mat_fil.change_yposition_3, mat_fil.yposition_1, ...
-                mat_fil.yposition_2, mat_fil.yposition_3, pro_sam_row_col_win_ani(num_sam'), ...
-                mat_fil.x_values_velo, mat_fil.change_velo_1, mat_fil.change_velo_2, ...
-                mat_fil.change_velo_3);
-            sti_ons_tri = mat_fil.stim_times;
-            pro_win_sam_row_col = mat_fil.pro_win_sam_row_col;
+                all_fish, two_fil.x_values, two_fil.change_yposition_1, ...
+                two_fil.change_yposition_2, two_fil.change_yposition_3, two_fil.yposition_1, ...
+                two_fil.yposition_2, two_fil.yposition_3, pro_sam_row_col_win_ani(num_sam'), ...
+                two_fil.x_values_velo, two_fil.change_velo_1, two_fil.change_velo_2, ...
+                two_fil.change_velo_3);
+            sti_ons_tri = two_fil.stim_times;
+            pro_win_sam_row_col = two_fil.pro_win_sam_row_col;
             pro_win_sam_row_col = pro_win_sam_row_col(:, num_sam);
+            [~, ~, spe_win_cox_sam_ani, p_spe_win_cox_xsa] = ext_spe_dat(all_fish);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_mul_sam, 'mea_y_pos_tim_gro', 'sem_y_pos_tim_gro', ...
                 'y_pos_win_cox_sam_ani', 'p_y_pos_win_cox_xsa', 'p_ypc_xsa', ...
                 'ypc_sam_ani', 'tim_fra', 'sti_ons_tri', 'p_y_pos_xsa', 'y_pos_sam_ani', ...
                 'ypc_sam_ani_tri', 'p_abs_ypc_xsa', 'abs_ypc_sam_ani', 'abs_ypc_sam_ani_tri', ...
                 'pro_win_sam_row_col', 'foc_win_cox_sam_ani', 'p_foc_win_cox_xsa', ...
-                'p_spx_win_cox_xsa', 'spx_win_cox_sam_ani', 'spx_win_cox_sam_ani_tri', '-append')
+                'p_spx_win_cox_xsa', 'spx_win_cox_sam_ani', 'spx_win_cox_sam_ani_tri', ...
+                'spe_win_cox_sam_ani', 'p_spe_win_cox_xsa', '-append')
         end
-        %
+        % in
         function app_par_two_dat(obj)
             mat_fil = matfile("X:\kadiram\Data\Pooled\two\Tph2_NTT_VibrAdapt_2022_data.mat");
             all_fish = mat_fil.all_fish;
             [~, ~, spe_win_cox_sam_ani, p_spe_win_cox_xsa] = ext_spe_dat(all_fish);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_mul_sam, 'spe_win_cox_sam_ani', 'p_spe_win_cox_xsa', '-append')
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ika
+        function app_ika_dat(obj)
+            ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
+            % data file from ik
+            all_fish = ika_fil.all_fish;
+            x_values = ika_fil.x_values;
+            change_yposition_1 = ika_fil.change_yposition_1;
+            change_yposition_2 = ika_fil.change_yposition_2;
+            change_yposition_3 = ika_fil.change_yposition_3;
+            [p_ypc_xsa, ypc_sam_ani, ypc_sam_ani_tri, ypc_sam_fra_tri] = ext_ika_dat(all_fish, ...
+                x_values, change_yposition_1, change_yposition_2, change_yposition_3);% 2s?,yes-ika
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'p_ypc_xsa', 'ypc_sam_ani', 'ypc_sam_ani_tri', ...
+                'ypc_sam_fra_tri', '-append')
+
+            ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
+            x_values = ika_fil.x_values;
+            all_fish = ika_fil.all_fish;
+            %win_lim = [35 60];% only sha diff | no diff
+            %win_lim = [40 50];% no diff | no diff
+            %win_lim = [45 50];% only mtz diff | only mtz diff
+            %win_lim = [35 50];% only sha diff | only sha diff
+            %win_lim = [35 45];% only sha diff | only sha diff
+            %win_lim = [35 55];% only sha diff | no diff
+            %win_lim = [40 55];% only mtz diff | only mtz diff
+            %win_lim = [40 60];% no diff | no diff
+            win_lim = [45 60];% no diff | only mtz diff
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            [ypc_sam_ani, p_ypc_xsa] = cal_ypc_sam_ani(win_lim, x_values, mat_fil.ypc_sam_fra_ani, ...
+                all_fish);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'p_ypc_xsa', 'ypc_sam_ani', '-append')
+
+            win_len_bas = 5;
+            [~, ~, ypc_sam_fra_tri] = cal_ypc_sam_fra_ani(win_len_bas);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'ypc_sam_fra_tri', '-append')
+
+            win_len_bas = 2;
+            win_lim = [30 35];
+            ypc_sam_ani_tri.two.ini = cal_ypc_sam_ani_tri(win_len_bas, win_lim);
+            win_lim = [35 60];
+            ypc_sam_ani_tri.two.rec = cal_ypc_sam_ani_tri(win_len_bas, win_lim);
+
+            win_len_bas = 5;
+            win_lim = [30 35];
+            ypc_sam_ani_tri.fiv.ini = cal_ypc_sam_ani_tri(win_len_bas, win_lim);
+            win_lim = [35 60];
+            ypc_sam_ani_tri.fiv.rec = cal_ypc_sam_ani_tri(win_len_bas, win_lim);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'ypc_sam_ani_tri', '-append')
+
+            win_len_bas = 2;
+            [ypc_sam_fra_ani, ypc_sam_fra_ani_tri] = cal_ypc_sam_fra_ani(win_len_bas);
+            ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
+            all_fish = ika_fil.all_fish;
+            x_values = ika_fil.x_values;
+            ypc_sam_ani_epo = cal_ypc_sam_ani_epo(x_values, all_fish, ypc_sam_fra_ani_tri);
+            %
+            win_len_bas = 5;
+            [~, ~, ~, ypo_sam_fra_ani_tri] = cal_ypc_sam_fra_ani(win_len_bas);
+            %
+            hei = 115;
+            dis_sam_fra_ani_tri = cellfun(@(x) hei + x, ypo_sam_fra_ani_tri, 'UniformOutput', false);
+            %
+            [nor_ypc_sam_fra_ani, nor_ypc_sam_ani] = cal_nor_ypc_sam_fra_ani(ypc_sam_fra_ani_tri, ...
+                dis_sam_fra_ani_tri, all_fish);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'ypc_sam_fra_ani', 'ypc_sam_fra_ani_tri', ...
+                'ypc_sam_ani_epo', 'ypo_sam_fra_ani_tri', 'dis_sam_fra_ani_tri', ...
+                'nor_ypc_sam_fra_ani', 'nor_ypc_sam_ani', '-append')
+
+            [pro_sam_row_col, foc_sam_ani] = cal_pro_sam_row_col;
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'pro_sam_row_col', 'foc_sam_ani', '-append')
+
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            nor_ypc_sam_fra_ani = mat_fil.nor_ypc_sam_fra_ani;
+            win_ons_win = (5:20)';
+            n_win = length(win_ons_win);
+            n_cro = 3;
+            p_win_cro = nan(n_win, n_cro);
+            for win = 1:n_win
+                p_cro = cal_p_cro(nor_ypc_sam_fra_ani, win_ons_win(win));
+                p_win_cro(win, :) = p_cro.lme';
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'p_win_cro', '-append')
+
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            nor_ypc_sam_fra_ani = mat_fil.nor_ypc_sam_fra_ani;
+            win_ons_win = (0:25)';
+            n_win = length(win_ons_win);
+            n_cro = 3;
+            p_win_cro = nan(n_win, n_cro);
+            for win = 1:n_win
+                p_cro = cal_p_cro(nor_ypc_sam_fra_ani, win_ons_win(win));
+                p_win_cro(win, :) = p_cro.lme';
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'p_win_cro', '-append')
+        end
+        % un
+        function app_par_ika_dat(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            ypc_sam_fra_ani_tri = mat_fil.ypc_sam_fra_ani_tri;
+            dis_sam_fra_ani_tri = mat_fil.dis_sam_fra_ani_tri;
+            ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
+            all_fish = ika_fil.all_fish;
+            n_tri = 2;
+            [nor_ypc_sam_fra_ani, nor_ypc_sam_ani] = cal_nor_ypc_sam_fra_ani(ypc_sam_fra_ani_tri, ...
+                dis_sam_fra_ani_tri, all_fish, n_tri);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'nor_ypc_sam_fra_ani', 'nor_ypc_sam_ani', '-append')
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% behavioral
         function app_tai_dat_omn(obj)
@@ -632,9 +846,7 @@ classdef mul_sam
             p_lat_sam_cro = cell(obj.n_sam, 1);
             p_ang_sam_cro = cell(obj.n_sam, 1);
             %
-            ang_sam_fra_sta_con = cell(obj.n_sam, 1);
             nta_sam_fra_sta_con = cell(obj.n_sam, 1);
-            spe_sam_fra_sta_con = cell(obj.n_sam, 1);
             %%%%%%%%%%%%%%%%%%%
             p_nta_sam_con_xwi = cell(obj.n_sam, 1);
             p_nta_sam_win_xco = cell(obj.n_sam, 1);
@@ -652,11 +864,8 @@ classdef mul_sam
                 p_ang_sam_cro{i} = sam_fil.p_ang_cro;
                 %
                 abs_sam_ani{i} = sam_fil.abs_ani;
-                ang_fra_sta_con = sam_fil.ang_fra_sta_con;
-                ang_sam_fra_sta_con{i} = ang_fra_sta_con;
                 nta_fra_sta_con = sam_fil.nta_fra_sta_con;
                 nta_sam_fra_sta_con{i} = nta_fra_sta_con;
-                spe_sam_fra_sta_con{i} = sam_fil.spe_fra_sta_con;
                 %%%%
                 p_nta_sam_con_xwi{i} = sam_fil.p_nta_con_xwi;
                 p_nta_sam_win_xco{i} = sam_fil.p_nta_win_xco;
@@ -698,10 +907,17 @@ classdef mul_sam
             p_lat_win_con_xsa = com_p_var_win_con_xsa(lat_win_con_sam_ani);
             p_ang_win_con_xsa = com_p_var_win_con_xsa(ang_win_con_sam_ani);
             p_nta_win_con_xsa = com_p_var_win_con_xsa(nta_win_con_sam_ani);
+            %
+            tac_sam_tri_win = cell(obj.n_sam, 1);
+            for sam_num = 1:obj.n_sam
+                sam_fil = matfile(obj.fil_pat_sam(sam_num));
+                tac_tri_win = sam_fil.tac_tri_win;
+                tac_sam_tri_win{sam_num} = tac_tri_win;
+            end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_mul_sam, 'bea_lat_sam_ani_tri', ...
                 'per_pro_shu_sam_ani', 'p_sam_cro', ...
-                'p_lat_sam_cro', 'ang_sam_fra_sta_con', 'spe_sam_fra_sta_con', ...
+                'p_lat_sam_cro', ...
                 'bea_ang_sam_ani_tri', ...
                 'p_ang_sam_cro', ... % should be related to beat angle
                 'nta_sam_fra_sta_con', 'nta_win_con_sam_ani', ...
@@ -710,9 +926,9 @@ classdef mul_sam
                 'pro_win_con_sam_ani', 'lat_win_con_sam_ani', 'ang_win_con_sam_ani', ...
                 'p_pro_win_con_xsa', 'p_lat_win_con_xsa', 'p_ang_win_con_xsa', ...
                 'ave_ang_epo_sam_ani', 'p_ave_ang_sam_xep', 'p_ave_ang_epo_xsa', ...
-                '-append')
+                'tac_sam_tri_win', '-append')
         end
-        % unincorporated
+        % incorporated
         function app_par_tai(obj)
             tac_sam_tri_win = cell(obj.n_sam, 1);
             for sam_num = 1:obj.n_sam
@@ -759,13 +975,10 @@ classdef mul_sam
                 {'dff'; 'raw'; 'tri'; 'inh'}; ...
                 {'dff'; 'raw'; 'tri'; 'exc'}};
             [act_reg_sam_con_fra_cel, act_reg_sam_fra_sta_con] = ext_act_reg_sam_con_fra_cel(obj, ...
-                fie_cas_num);
+                fie_cas_num);% act_reg_sam_con_fra_cel not used
             %%%%%%%%%%% - work on this!
             act_reg_win_con_sam_uni.dff.raw.tri.cel = cell(n_reg_for, 1);
             p_act_reg_win_con_xsa.dff.raw.tri.cel = cell(n_reg_for, 1);
-            %
-            act_reg_win_con_sam_uni.dff.raw.tri.ani = cell(n_reg_for, 1);
-            p_act_reg_win_con_xsa.dff.raw.tri.ani = cell(n_reg_for, 1);
             for l = 1:n_reg_for
                 for k = 1:n_win.tri
                     for i = 1:n_con
@@ -775,19 +988,13 @@ classdef mul_sam
                             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                             act_reg_win_con_sam_uni.dff.raw.tri.cel{l}{k, i}{j} = ...
                                 act_reg_con_win_uni.dff.raw.tri.cel{l}{i, k};
-                            %
-                            act_reg_win_con_sam_uni.dff.raw.tri.ani{l}{k, i}{j} = ...
-                                act_reg_con_win_uni.dff.raw.tri.ani{l}{i, k};
                         end
                     end
                 end
                 p_act_reg_win_con_xsa.dff.raw.tri.cel{l} = ...
                     com_p_var_win_con_xsa(act_reg_win_con_sam_uni.dff.raw.tri.cel{l});
-                %
-                p_act_reg_win_con_xsa.dff.raw.tri.ani{l} = ...
-                    com_p_var_win_con_xsa(act_reg_win_con_sam_uni.dff.raw.tri.ani{l});
             end
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             fra_reg_con_sam_ani.dff.raw.tri.inh = cell(n_reg_for, n_con);
             fra_reg_con_sam_ani.dff.raw.tri.exc = cell(n_reg_for, n_con);
             for k = 1:n_reg_for
@@ -1044,9 +1251,8 @@ classdef mul_sam
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_mul_sam, 'log_sam_cel_con', '-append')
-        end
-        %%%%%%%%%%%%%%%% unincorporated
-        function app_par(obj)
+
+            %%%%%%%%%% Fig. 6B !!!!!!!!!!!!!!!
             pcc_sam_blo_ani.all = cell(obj.n_sam, 1);
             pcc_sam_blo_ani.pos = cell(obj.n_sam, 1);
             pcc_sam_blo_ani.neg = cell(obj.n_sam, 1);
@@ -1057,11 +1263,252 @@ classdef mul_sam
                 pcc_sam_blo_ani.pos{i} = pcc_blo_ani.pos;
                 pcc_sam_blo_ani.neg{i} = pcc_blo_ani.neg;
             end
-            p_ent_fac.all = cal_p_fac(pcc_sam_blo_ani.all);
-            p_ent_fac.pos = cal_p_fac(pcc_sam_blo_ani.pos);
-            p_ent_fac.neg = cal_p_fac(pcc_sam_blo_ani.neg);
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            dis_blo = con_fil.dis_blo;
+            dis_blo = dis_blo.xre;
+            p_ent_fac.all = cal_p_fac(dis_blo, pcc_sam_blo_ani.all);
+            p_ent_fac.pos = cal_p_fac(dis_blo, pcc_sam_blo_ani.pos);
+            p_ent_fac.neg = cal_p_fac(dis_blo, pcc_sam_blo_ani.neg);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_mul_sam, 'pcc_sam_blo_ani', 'p_ent_fac', '-append')
+
+            %%%% RESPONSE VIS !!!!!!!!!!!!!!!!!
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg_for = con_fil.n_reg_for;
+            n_con = con_fil.n_con;
+            n_win = con_fil.n_win;
+            res_reg_win_con_sam_uni.dff.raw.tri.cel = cell(n_reg_for, 1);
+            for l = 1:n_reg_for
+                for k = 1:n_win.tri
+                    for i = 1:n_con
+                        for j = 1:obj.n_sam
+                            sam_fil = matfile(obj.fil_pat_sam(j));
+                            act_reg_con_win_uni = sam_fil.res_reg_con_win_uni;
+                            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            res_reg_win_con_sam_uni.dff.raw.tri.cel{l}{k, i}{j} = ...
+                                act_reg_con_win_uni.dff.raw.tri.cel{l}{i, k};
+                        end
+                    end
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'res_reg_win_con_sam_uni', '-append')
+
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            x_sam_cel = mul_fil.x_sam_cel;
+            y_sam_cel = mul_fil.y_sam_cel;
+            x_sam_cel.res_all = cell(obj.n_sam, 1);
+            y_sam_cel.res_all = cell(obj.n_sam, 1);
+            for sam_num = 1:obj.n_sam
+                sam_fil = matfile(obj.fil_pat_sam(sam_num));
+                if sam_num == 1
+                    coo_cel = sam_fil.x_cel;
+                    x_sam_cel.res_all{sam_num} = coo_cel.res;
+                    coo_cel = sam_fil.y_cel;
+                    y_sam_cel.res_all{sam_num} = coo_cel.res;
+                else
+                    coo_cel = sam_fil.x_cel;
+                    x_sam_cel.res_all{sam_num} = coo_cel.res_all;
+                    coo_cel = sam_fil.y_cel;
+                    y_sam_cel.res_all{sam_num} = coo_cel.res_all;
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'x_sam_cel', 'y_sam_cel', '-append')
+
+            bas_flu_sam_ani = cell(obj.n_sam, 1);
+            for sam_num = 1:obj.n_sam
+                sam_fil = matfile(obj.fil_pat_sam(sam_num));
+                bas_flu_sam_ani{sam_num} = sam_fil.bas_flu_ani;
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'bas_flu_sam_ani', '-append')
+
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg = con_fil.n_reg_for_cro;
+            slo_reg_sam_cel = cell(n_reg, 1);
+            for reg = 1:n_reg
+                slo_reg_sam_cel{reg} = cell(obj.n_sam, 1);
+                for sam_num = 1:obj.n_sam
+                    sam_fil = matfile(obj.fil_pat_sam(sam_num));
+                    slo_reg_cel = sam_fil.slo_reg_cel;
+                    slo_reg_sam_cel{reg}{sam_num} = slo_reg_cel{reg};
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'slo_reg_sam_cel', '-append')
+            % densities
+            tac_sam_tri_cel = cell(obj.n_sam, 1);
+            act_sam_tri_cel = cell(obj.n_sam, 1);
+            log_sam_cel_reg = cell(obj.n_sam, 1);
+            for sam_num = 1:obj.n_sam
+                sam_fil = matfile(obj.fil_pat_sam(sam_num));
+                tac_sam_tri_cel{sam_num} = sam_fil.tac_tri_cel;
+                act_sam_tri_cel{sam_num} = sam_fil.act_tri_cel;
+                log_sam_cel_reg{sam_num} = sam_fil.log_cel_reg;
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'tac_sam_tri_cel', 'act_sam_tri_cel', 'log_sam_cel_reg', ...
+                '-append')
+            % lines
+            tac_sam_sam_ani = cell(obj.n_sam, 1);
+            act_sam_reg_ani_sam_cel = cell(obj.n_sam, 1);
+            for sam_num = 1:obj.n_sam
+                sam_fil = matfile(obj.fil_pat_sam(sam_num));
+                tac_sam_ani = sam_fil.tac_sam_ani;
+                tac_sam_sam_ani{sam_num} = tac_sam_ani;
+                act_sam_reg_ani_sam_cel{sam_num} = sam_fil.act_reg_ani_sam_cel;
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'tac_sam_sam_ani', 'act_sam_reg_ani_sam_cel', '-append')
+
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            pcc_sam_blo_ani.all_cel = mul_fil.pcc_sam_blo_ani;
+            p_ent_fac.all_cel = mul_fil.p_ent_fac;
+            pcc_sam_blo_ani.thr_cel.all = cell(obj.n_sam, 1);
+            pcc_sam_blo_ani.thr_cel.pos = cell(obj.n_sam, 1);
+            pcc_sam_blo_ani.thr_cel.neg = cell(obj.n_sam, 1);
+            for i = 1:obj.n_sam
+                sam_fil = matfile(obj.fil_pat_sam(i));
+                pcc_blo_ani = sam_fil.pcc_blo_ani;
+                pcc_sam_blo_ani.thr_cel.all{i} = pcc_blo_ani.thr_cel.all;
+                pcc_sam_blo_ani.thr_cel.pos{i} = pcc_blo_ani.thr_cel.pos;
+                pcc_sam_blo_ani.thr_cel.neg{i} = pcc_blo_ani.thr_cel.neg;
+            end
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            dis_blo = con_fil.dis_blo;
+            dis_blo = dis_blo.xre;
+            p_ent_fac.thr_cel.all = cal_p_fac(dis_blo, pcc_sam_blo_ani.thr_cel.all);
+            p_ent_fac.thr_cel.pos = cal_p_fac(dis_blo, pcc_sam_blo_ani.thr_cel.pos);
+            p_ent_fac.thr_cel.neg = cal_p_fac(dis_blo, pcc_sam_blo_ani.thr_cel.neg);
+            %
+            cor_coe_epo_reg_sam_blo_ani = mul_fil.cor_coe_epo_reg_sam_blo_ani;
+            p_epo_reg_fac = mul_fil.p_epo_reg_fac;
+            p_acc_epo_xre_xsa = mul_fil.p_acc_epo_xre_xsa;
+            dif_acc_epo_xre_sam = mul_fil.dif_acc_epo_xre_sam;
+            [cor_coe_epo_reg_sam_blo_ani.thr_cel, p_epo_reg_fac.thr_cel, p_acc_epo_xre_xsa.thr_cel,...
+                dif_acc_epo_xre_sam.thr_cel] = gen_cor_coe_epo_reg_sam_blo_ani(obj, 'thr_cel');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'pcc_sam_blo_ani', 'p_ent_fac', 'cor_coe_epo_reg_sam_blo_ani'...
+                , 'p_epo_reg_fac', 'p_acc_epo_xre_xsa', 'dif_acc_epo_xre_sam', '-append')
+
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            pcc_sam_blo_ani = mul_fil.pcc_sam_blo_ani;
+            p_ent_fac = mul_fil.p_ent_fac;
+            cor_coe_epo_reg_sam_blo_ani = mul_fil.cor_coe_epo_reg_sam_blo_ani;
+            p_epo_reg_fac = mul_fil.p_epo_reg_fac;
+            p_acc_epo_xre_xsa = mul_fil.p_acc_epo_xre_xsa;
+            dif_acc_epo_xre_sam = mul_fil.dif_acc_epo_xre_sam;
+            [pcc_sam_blo_ani.thr_one, p_ent_fac.thr_one, cor_coe_epo_reg_sam_blo_ani.thr_one, ...
+                p_epo_reg_fac.thr_one, p_acc_epo_xre_xsa.thr_one, dif_acc_epo_xre_sam.thr_one] = ...
+                cal_pcc_sam_blo_ani(obj, 'thr_one');
+            [pcc_sam_blo_ani.thr_two, p_ent_fac.thr_two, cor_coe_epo_reg_sam_blo_ani.thr_two, ...
+                p_epo_reg_fac.thr_two, p_acc_epo_xre_xsa.thr_two, dif_acc_epo_xre_sam.thr_two] = ...
+                cal_pcc_sam_blo_ani(obj, 'thr_two');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'pcc_sam_blo_ani', 'p_ent_fac', 'cor_coe_epo_reg_sam_blo_ani'...
+                , 'p_epo_reg_fac', 'p_acc_epo_xre_xsa', 'dif_acc_epo_xre_sam', '-append')
+
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg = con_fil.n_reg_for_cro;
+            coe_det_reg_sam_cel = cell(n_reg, 1);
+            for reg = 1:n_reg
+                coe_det_reg_sam_cel{reg} = cell(obj.n_sam, 1);
+                for sam_num = 1:obj.n_sam
+                    sam_fil = matfile(obj.fil_pat_sam(sam_num));
+                    coe_det_reg_cel = sam_fil.coe_det_reg_cel;
+                    coe_det_reg_sam_cel{reg}{sam_num} = coe_det_reg_cel{reg};
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'coe_det_reg_sam_cel', '-append')
+
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            cor_coe_epo_reg_sam_blo_ani = mul_fil.cor_coe_epo_reg_sam_blo_ani;
+            p_epo_reg_fac = mul_fil.p_epo_reg_fac;
+            [cor_coe_epo_reg_sam_blo_ani.lon_spo, p_epo_reg_fac.lon_spo, ~, ~] = ...
+                gen_cor_coe_epo_reg_sam_blo_ani(obj, 'lon_spo');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'cor_coe_epo_reg_sam_blo_ani', 'p_epo_reg_fac', '-append')
+
+            log_gro_cel = cell(2, 1);
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            res_reg_win_con_sam_uni = mul_fil.res_reg_win_con_sam_uni;
+            res_reg_win_con_sam_uni = res_reg_win_con_sam_uni.dff.raw.tri.cel;
+            res_gro_uni = res_reg_win_con_sam_uni{1}{2, 3};
+            alpha = 0.05;
+            testType = 'ranksum';
+            [~, ~, log_gro_cel{1}, log_gro_cel{2}] = balanceSamples(res_gro_uni{1}, res_gro_uni{2}...
+                , alpha, testType);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'log_gro_cel', '-append')
+
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            pcc_sam_blo_ani = mul_fil.pcc_sam_blo_ani;
+            p_ent_fac = mul_fil.p_ent_fac;
+            cor_coe_epo_reg_sam_blo_ani = mul_fil.cor_coe_epo_reg_sam_blo_ani;
+            p_epo_reg_fac = mul_fil.p_epo_reg_fac;
+            p_acc_epo_xre_xsa = mul_fil.p_acc_epo_xre_xsa;
+            dif_acc_epo_xre_sam = mul_fil.dif_acc_epo_xre_sam;
+            [pcc_sam_blo_ani.for_syn, p_ent_fac.for_syn, cor_coe_epo_reg_sam_blo_ani.for_syn, ...
+                p_epo_reg_fac.for_syn, p_acc_epo_xre_xsa.for_syn, dif_acc_epo_xre_sam.for_syn] = ...
+                cal_pcc_sam_blo_ani(obj, 'for_syn');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'pcc_sam_blo_ani', 'p_ent_fac', 'cor_coe_epo_reg_sam_blo_ani'...
+                , 'p_epo_reg_fac', 'p_acc_epo_xre_xsa', 'dif_acc_epo_xre_sam', '-append')
+
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            slo_reg_sam_cel.hig_tri = mul_fil.slo_reg_sam_cel;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg = con_fil.n_reg_for_cro;
+            slo_reg_sam_cel.all_tri = cell(n_reg, 1);
+            for reg = 1:n_reg
+                slo_reg_sam_cel.all_tri{reg} = cell(obj.n_sam, 1);
+                for sam_num = 1:obj.n_sam
+                    sam_fil = matfile(obj.fil_pat_sam(sam_num));
+                    slo_reg_cel = sam_fil.slo_reg_cel;
+                    slo_reg_cel = slo_reg_cel.all_tri;
+                    slo_reg_sam_cel.all_tri{reg}{sam_num} = slo_reg_cel{reg};
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'slo_reg_sam_cel', '-append')
+
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            slo_reg_sam_cel = mul_fil.slo_reg_sam_cel;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg = con_fil.n_reg_for_cro;
+            slo_reg_sam_cel.lhx_tri = cell(n_reg, 1);
+            for reg = 1:n_reg
+                slo_reg_sam_cel.lhx_tri{reg} = cell(obj.n_sam, 1);
+                for sam_num = 1:obj.n_sam
+                    sam_fil = matfile(obj.fil_pat_sam(sam_num));
+                    slo_reg_cel = sam_fil.slo_reg_cel;
+                    slo_reg_cel = slo_reg_cel.lhx_tri;
+                    slo_reg_sam_cel.lhx_tri{reg}{sam_num} = slo_reg_cel{reg};
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'slo_reg_sam_cel', '-append')
+        end
+        %%%%%%%%%%%%%%%% in
+        function app_par(obj)
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            slo_reg_sam_cel = mul_fil.slo_reg_sam_cel;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_reg = con_fil.n_reg_for_cro;
+            slo_reg_sam_cel.lhx_tri = cell(n_reg, 1);
+            for reg = 1:n_reg
+                slo_reg_sam_cel.lhx_tri{reg} = cell(obj.n_sam, 1);
+                for sam_num = 1:obj.n_sam
+                    sam_fil = matfile(obj.fil_pat_sam(sam_num));
+                    slo_reg_cel = sam_fil.slo_reg_cel;
+                    slo_reg_cel = slo_reg_cel.lhx_tri;
+                    slo_reg_sam_cel.lhx_tri{reg}{sam_num} = slo_reg_cel{reg};
+                end
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'slo_reg_sam_cel', '-append')
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neurobeh
         function app_neu_beh(obj)
@@ -1126,8 +1573,19 @@ classdef mul_sam
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_mul_sam, 'dff_reg_sam_fra_cel', 'dff_reg_win_sam_cel', ...
                 'p_dff_reg_win_xsa', '-append')
+
+            log_sam_cel.bou_spo.srt.exc = cell(obj.n_sam, 1);
+            log_sam_cel.bou_spo.srt.inh = cell(obj.n_sam, 1);
+            for sam_num = 1:obj.n_sam
+                sam_fil = matfile(obj.fil_pat_sam(sam_num));
+                log_cel = sam_fil.log_cel;
+                log_sam_cel.bou_spo.srt.exc{sam_num} = log_cel.bou_spo.srt.exc;
+                log_sam_cel.bou_spo.srt.inh{sam_num} = log_cel.bou_spo.srt.inh;
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_mul_sam, 'log_sam_cel', '-append')
         end
-        % unincorporated
+        % incorporated
         function app_par_neu_beh(obj)
             log_sam_cel.bou_spo.srt.exc = cell(obj.n_sam, 1);
             log_sam_cel.bou_spo.srt.inh = cell(obj.n_sam, 1);
@@ -1172,39 +1630,79 @@ classdef mul_sam
             mat_mul_sam = matfile(obj.fil_pat_mul_sam);
             h_fig = plo_foc_fre(mat_mul_sam.foc_tap_win_cox_sam_ani, mat_mul_sam.p_foc_tap_win);
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%% zan
-        function h_fig = plo_y_pos_met(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            h_fig = plo_y_pos(mat_fil.y_pos_bas_sam_fra_ani, ...
-                mat_fil.p_y_pos_bas_xsa, mat_fil.y_pos_con_sam_fra_ani, mat_fil.p_y_pos_win_con_xsa, ...
-                mat_fil.bas_spe_sam_bin_ani, mat_fil.p_bas_spe_xsa, mat_fil.spe_con_sam_bin_ani, ...
-                mat_fil.p_spe_win_con_xsa);
+        function h_fig = plo_tax_met(obj, end_poi, sta_poi)
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            n_tri_tak = 2;
+            h_fig = plo_tax(mul_sam_fil.dis_tap_nac_tim_ani, mul_sam_fil.dis_tap_tph_tim_ani, ...
+                end_poi, sta_poi, n_tri_tak);
         end
-        function h_fig = plo_occ_map_met(obj)
+        function h_fig = plo_dis_foc_sca_met(obj)
             mat_fil = matfile(obj.fil_pat_mul_sam);
-            h_fig = plo_occ_map(mat_fil.pro_sam_epo_row_col, mat_fil.foc_epo_cox_sam_ani, ...
-                mat_fil.p_foc_epo);
+            h_fig = plo_dis_foc_sca(mat_fil.ave_dis_tap_win_cox_sam_ani, mat_fil.p_dis_tap_win, ...
+                mat_fil.foc_tap_win_cox_sam_ani, mat_fil.p_foc_tap_win);
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%% nov
-        function h_fig = plo_ses_met(obj)
+        %
+        function h_fig = plo_tax_spe_met(obj)
+            mat_mul_sam = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_tax(mat_mul_sam.tax_spe_sam_tim_ani);
+        end
+        function h_fig = plo_spe_sca_ric_met(obj)
             mat_fil = matfile(obj.fil_pat_mul_sam);
-            y_lab = 'y position (mm)';
-            h_fig = plo_ses(mat_fil.tim_fra, mat_fil.mea_y_pos_tim_gro, mat_fil.sem_y_pos_tim_gro, ...
-                y_lab, mat_fil.sti_ons_tri, obj.tit_sho_sam);
+            h_fig = plo_spe_sca_ric(mat_fil.ave_spe_tap_win_cox_sam_ani, mat_fil.p_spe_tap_win);
+        end
+        %
+        function h_fig = plo_nta_met(obj)
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_tax(mul_sam_fil.nta_dis_sam_tim_ani);
+        end
+        function h_fig = plo_nta_sca_met(obj)
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_nta_sca(mul_sam_fil.nta_dis_sam_ani);
+        end
+        function h_fig = plo_hab_ric_met(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            ypc_ani = mat_fil.ypc_ani;
+            h_fig = plo_hab_ric(ypc_ani);
+        end
+        function [h_fig, p_xsa] = plo_tau_com_met(obj, thr)
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            tau_ani = mul_sam_fil.tau_ani;
+            coe_det_ani = mul_sam_fil.coe_det_ani;
+            %thr = 0.1;
+            nta_dis_sam_ani = {tau_ani.nac(coe_det_ani.nac > thr); tau_ani.tph(coe_det_ani.tph > thr)};
+            [h_fig, p_xsa] = plo_nta_sca(nta_dis_sam_ani, 'tau (s)');
+        end
+        function h_fig = plo_vib_res_ric_met(obj)
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            nor_ypc_sam_tim_ani = mul_sam_fil.nor_ypc_sam_tim_ani;
+            h_fig = plo_vib_res_ric(nor_ypc_sam_tim_ani);
+        end
+        function h_fig = plo_p_win_met(obj)
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            sta_poi_win = mul_sam_fil.sta_poi_win;
+            p_win = mul_sam_fil.p_win;
+            h_fig = plo_p_win(sta_poi_win, p_win);
+        end
+        function h_fig = plo_hab_dyn_ric_met(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            ypc_sam_tri_ani = mat_fil.ypc_sam_tri_ani;
+            ypc_sam_ani_tri = cellfun(@transpose, ypc_sam_tri_ani, 'UniformOutput', false);
+            h_fig = plo_hab_dyn(ypc_sam_ani_tri);
+        end
+        function h_fig = plo_tau_exa_met(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            tax_dis_sam_tim_ani = mat_fil.tax_dis_sam_tim_ani;
+            h_fig = plo_tau_exa(tax_dis_sam_tim_ani);
+        end
+        function h_fig = plo_tax_hea_met(obj)
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            sta_poi_win = mul_sam_fil.sta_poi_win;
+            p_win = mul_sam_fil.p_win;
+            h_fig = plo_tax_hea(mul_sam_fil.tax_dis_sam_tim_ani, sta_poi_win, p_win.dis_six);
         end
         function h_fig = plo_ypc_met(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            h_fig = plo_ypc(mat_fil.ypc_wix_con_sam_ani, mat_fil.p_ypc_wix_con_xsa);
-        end
-        function h_fig = plo_ypc_tog_met(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            y_lab = 'y position change (mm)';
-            h_fig = plo_ypc_tog(mat_fil.ypc_sam_ani, mat_fil.p_ypc_xsa, obj.ind_sam, y_lab);
-        end
-        function h_fig = plo_y_pos_tog_met(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            y_lab = 'y position (mm)';
-            h_fig = plo_ypc_tog(mat_fil.y_pos_sam_ani, mat_fil.p_y_pos_xsa, obj.ind_sam, y_lab);
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_ypc(mul_sam_fil.ypc_sam_tim_ani, mul_sam_fil.ypc_ani);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%% two
         function h_fig = plo_abs_ypc_tog_met(obj)
@@ -1249,7 +1747,7 @@ classdef mul_sam
             h_fig = plo_ntt_occ(mat_fil.pro_win_sam_row_col, mat_fil.foc_win_cox_sam_ani, ...
                 mat_fil.p_foc_win_cox_xsa);
         end
-        function h_fig = plo_ntt_occ_hea_met(obj)
+        function h_fig = plo_ntt_occ_hea_met(obj)% only heatmap
             mat_fil = matfile(obj.fil_pat_mul_sam);
             h_fig = plo_ntt_occ_hea(mat_fil.pro_win_sam_row_col);
         end
@@ -1267,147 +1765,84 @@ classdef mul_sam
             p_spe_win_cox_xsa = mat_fil.p_spe_win_cox_xsa;% ind_win = 2; after the novelty effect
             h_fig = plo_bas_spe(mat_fil.spe_win_cox_sam_ani, p_spe_win_cox_xsa.lme);
         end
+        function h_fig = plo_ntt_tim_spe_met(obj)
+            % timecourse
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            mea_y_pos_tim_gro = mat_fil.mea_y_pos_tim_gro;
+            sem_y_pos_tim_gro = mat_fil.sem_y_pos_tim_gro;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            tim_fra = con_fil.tim_fra;
+            log_fra = con_fil.log_fra;
+            len_win = con_fil.len_win;
+            h_fig = plo_ntt_tim_spe(tim_fra.two.ses(log_fra.two.ntt), mea_y_pos_tim_gro...
+                (log_fra.two.ntt, :), sem_y_pos_tim_gro(log_fra.two.ntt, :), len_win.ntt.sec);
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%% ika
+        function h_fig = plo_tri_hea_met(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_tri_hea(mat_fil.ypc_sam_fra_tri);
+        end
+        function h_fig = plo_vib_res_met(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_vib_res(mat_fil.ypc_sam_fra_ani);
+        end
+        function h_fig = plo_vib_sca_met(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            p_ypc_xsa = mat_fil.p_ypc_xsa;
+            h_fig = plo_vib_sca(mat_fil.ypc_sam_ani, p_ypc_xsa.lme);
+        end
+        function h_fig = plo_hab_met(obj, fie)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            ypc_sam_ani_epo = mat_fil.ypc_sam_ani_epo;
+            h_fig = plo_hab(ypc_sam_ani_epo.(fie));
+        end
+        function h_fig = plo_hab_dyn_met(obj, fie_num)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            ypc_sam_ani_tri = mat_fil.ypc_sam_ani_tri;
+            h_fig = plo_hab_dyn(ypc_sam_ani_tri.(fie_num{1}).(fie_num{2}));
+        end
+        function h_fig = plo_nor_vib_res_met(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_vib_res(mat_fil.nor_ypc_sam_fra_ani);
+        end
+        function h_fig = plo_nor_vib_sca_met(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_vib_sca(mat_fil.nor_ypc_sam_ani, obj.xtl_sam, obj.col_sam);
+        end
+        function h_fig = plo_tap_occ_met(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_tap_occ(mat_fil.pro_sam_row_col, mat_fil.foc_sam_ani);
+        end
+        function h_fig = plo_p_win_cro_met(obj)
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            p_win_cro = mul_sam_fil.p_win_cro;
+            h_fig = plo_p_win_cro(p_win_cro);
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% behavioral
         function h_fig = plo_abs_met(obj)
-            mat_mul_sam = matfile(obj.fil_pat_mul_sam);
-            h_fig = plo_abs({mat_mul_sam.abs_sam_ani}, obj.tit_sam_cha, obj.n_sam, ...
-                mat_mul_sam.p_abs_cro, obj.ind_sam);
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_abs({mul_sam_fil.abs_sam_ani}, obj.tit_sam_cha, obj.n_sam, ...
+                mul_sam_fil.p_abs_cro, obj.ind_sam);
         end
-        %
-        function plo_ave_ang_xep_met(obj)
-            mat_mul_sam = matfile(obj.fil_pat_mul_sam);
-            plo_ave_ang_xep(mat_mul_sam.ave_ang_epo_sam_ani, obj.tit_n_sam, obj.n_sam, ...
-                mat_mul_sam.p_ave_ang_sam_xep, obj.ind_sam, obj.col_sam)
-        end
-        function plo_ave_ang_xsa_met(obj)
-            mat_fil_mul_sam = matfile(obj.fil_pat_mul_sam);
-            nta_sam_fra_sta_con = mat_fil_mul_sam.nta_sam_fra_sta_con;
-            %
-            %global y_lab_nta log_fra
+        function h_fig = plo_ave_ang_xsa_met(obj)
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            nta_sam_fra_sta_con = mul_sam_fil.nta_sam_fra_sta_con;
             global y_lab_nta tim_fra win_len
-            log_fra = tim_fra.ani.tri > -win_len.tai.sec & tim_fra.ani.tri < 15;
+            log_fra = tim_fra.ani.tri > -win_len.tai & tim_fra.ani.tri < 15;
             %
             mat_fil_obj_raw = matfile("X:\kadiram\Data\Raw\esp090\tap.mat");
             n_con = mat_fil_obj_raw.n_con;
             %
-            p_nta_win_con_xsa = mat_fil_mul_sam.p_nta_win_con_xsa;
+            p_nta_win_con_xsa = mul_sam_fil.p_nta_win_con_xsa;
             h_fig = plo_ave_ang_xsa(nta_sam_fra_sta_con, y_lab_nta, obj.n_sam, n_con, ...
-                p_nta_win_con_xsa, obj.ind_sam, obj.col_sam_con, log_fra);
-        end
-        %
-        function plo_nta_num_met(obj)
-            mat_fil_obj_pro = matfile("X:\kadiram\Data\Processed\esp090\tap.mat");
-            tim_tri_uni_fra = mat_fil_obj_pro.tim_tri_uni_fra;
-            %
-            mat_fil_obj_mul_sam = matfile(obj.fil_pat_mul_sam);
-            nta_sam_fra_sta_con = mat_fil_obj_mul_sam.nta_sam_fra_sta_con;
-            %
-            col_tai_sig_con = ["red"; "black"; "blue"];
-            fon_siz = 20;
-            col_sti_cro = 'green';
-            global con_int
-            global y_lab_nta
-            global y_lab_ave_nor_ang
-            %
-            mat_fil_obj_raw = matfile("X:\kadiram\Data\Raw\esp090\tap.mat");
-            n_con = mat_fil_obj_raw.n_con;
-            %
-            nta_sam_con_ani_win = mat_fil_obj_mul_sam.nta_sam_con_ani_win;
-            p_nta_win_con_cro = mat_fil_obj_mul_sam.p_nta_win_con_cro;
-            global dur_tai
-            pri = false;
-            tit = 'Tail angle comparison across the groups';
-            pre = true;
-            ton = false;
-            plo_nta_num(fon_siz, obj.n_sam, n_con, nta_sam_con_ani_win, y_lab_ave_nor_ang)
-        end% animal number, for debugging
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function plo_tai_wit_met(obj)% probability, latency
-            mat_mul_sam = matfile(obj.fil_pat_mul_sam);
-            p_lat_sam_cro = mat_mul_sam.p_lat_sam_cro;
-            per_pro_shu_sam_ani = mat_mul_sam.per_pro_shu_sam_ani;
-            p_sam_cro = mat_mul_sam.p_sam_cro;
-            pre = true;
-            plo_tai_wit(mat_mul_sam.bea_lat_sam_ani_tri, mat_mul_sam.lat_win_con_sam_ani, ...
-                obj.tit_sam, obj.n_sam, ...
-                p_lat_sam_cro, mat_mul_sam.pro_win_con_sam_ani, per_pro_shu_sam_ani, p_sam_cro, ...
-                pre, obj.log_tai_sam_ani, obj.ind_sam, obj.col_sam_con)
-        end
-        function plo_tai_cro_met(obj)
-            mat_mul_sam = matfile(obj.fil_pat_mul_sam);
-            bea_lat_sam_ani_tri = mat_mul_sam.bea_lat_sam_ani_tri;
-            pre = true;
-            plo_tai_cro(bea_lat_sam_ani_tri, mat_mul_sam.lat_win_con_sam_ani, ...
-                obj.tit_sho_sam, obj.n_sam, mat_mul_sam.p_lat_win_con_xsa, ...
-                mat_mul_sam.pro_win_con_sam_ani, obj.ind_sam, ...
-                mat_mul_sam.p_pro_win_con_xsa, pre, obj.log_tai_sam_ani, obj.col_sam_con)
-        end
-        %
-        function plo_bea_ang_met(obj)
-            mat_mul_sam = matfile(obj.fil_pat_mul_sam);
-            bea_ang_sam_ani_tri = mat_mul_sam.bea_ang_sam_ani_tri;
-            bea_ang_sam_ani_con = mat_mul_sam.bea_ang_sam_ani_con;
-            p_ang_sam_cro = mat_mul_sam.p_ang_sam_cro;
-            p_ang_con_cro = mat_mul_sam.p_ang_con_cro;
-            global y_lab_ang
-            plo_beh_mod(bea_ang_sam_ani_tri, bea_ang_sam_ani_con, obj.tit_sam, ...
-                obj.n_ani_sam, obj.n_sam, p_ang_sam_cro, p_ang_con_cro, y_lab_ang)
-        end
-        function plo_tai_rat_spo_met(obj)
-            dru_ons = [];
-            mat_fil_obj_raw = matfile("X:\kadiram\Data\Raw\esp090\tap.mat");
-            sti_ons = mat_fil_obj_raw.sti_ons;
-            sta_tim = mat_fil_obj_raw.sta_tim;
-            end_tim = mat_fil_obj_raw.end_tim;
-            n_tri_con = mat_fil_obj_raw.n_tri_con;
-            mat_fil_obj_pro = matfile("X:\kadiram\Data\Processed\esp090\tap.mat");
-            tim_bin = mat_fil_obj_pro.tim_bin;
-            mat_fil_obj_mul_sam = matfile(obj.fil_pat_mul_sam);
-            ave_rat_sam_win_ani_par = mat_fil_obj_mul_sam.ave_rat_sam_win_ani_par;
-            p_sam_com_par = mat_fil_obj_mul_sam.p_sam_com_par;
-            num_par = 1;
-            rat_ave_sam_bin_par = mat_fil_obj_mul_sam.rat_ave_sam_bin_par;
-            rat_sem_sam_bin_par = mat_fil_obj_mul_sam.rat_sem_sam_bin_par;
-            plo_rat_spo(dru_ons, sti_ons, sta_tim, end_tim, n_tri_con, tim_bin, ...
-                ave_rat_sam_win_ani_par, p_sam_com_par, num_par, rat_ave_sam_bin_par, ...
-                rat_sem_sam_bin_par, obj.tit_sam, obj.n_ani_sam)
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% paper
-        function h_fig = plo_tac_met(obj)
-            mat_fil_obj_pro = matfile("X:\kadiram\Data\Processed\esp090\tap.mat");
-            tim_tri_uni_fra = mat_fil_obj_pro.tim_tri_uni_fra;
-            %
-            mat_fil_mul_sam = matfile(obj.fil_pat_mul_sam);
-            nta_sam_fra_sta_con = mat_fil_mul_sam.nta_sam_fra_sta_con;
-            %
-            global fon_siz y_lab_nta y_lab_ave_nor_ang dur_tai
-            %
-            mat_fil_obj_raw = matfile("X:\kadiram\Data\Raw\esp090\tap.mat");
-            n_con = mat_fil_obj_raw.n_con;
-            %
-            pri = false;
-            pre = true;
-            p_nta_win_con_xsa = mat_fil_mul_sam.p_nta_win_con_xsa;
-            h_fig = plo_tac(tim_tri_uni_fra, nta_sam_fra_sta_con, fon_siz, ...
-                y_lab_nta, obj.n_sam, n_con, obj.tit_sho_sam_cha, ...
-                mat_fil_mul_sam.nta_win_con_sam_ani, ...
-                p_nta_win_con_xsa.lme, ...
-                dur_tai, pri, obj.ind_sam, y_lab_ave_nor_ang, pre, obj.col_sam_con, ...
-                mat_fil_mul_sam.p_nta_sam_win_xco);
-        end
-        function h_fig = plo_tai_met(obj)
-            mat_mul_sam = matfile(obj.fil_pat_mul_sam);
-            p_lat_sam_cro = mat_mul_sam.p_lat_sam_cro;
-            per_pro_shu_sam_ani = mat_mul_sam.per_pro_shu_sam_ani;
-            p_sam_cro = mat_mul_sam.p_sam_cro;
-            h_fig = plo_tai(mat_mul_sam.bea_lat_sam_ani_tri, mat_mul_sam.lat_win_con_sam_ani, ...
-                obj.tit_sam_cha, obj.n_sam, ...
-                p_lat_sam_cro, mat_mul_sam.pro_win_con_sam_ani, per_pro_shu_sam_ani, p_sam_cro, ...
-                obj.tit_sho_sam_cha, obj.log_tai_sam_ani, obj.ind_sam, obj.col_sam_con, ...
-                mat_mul_sam.p_pro_win_con_xsa, mat_mul_sam.p_lat_win_con_xsa);
+                p_nta_win_con_xsa, obj.ind_sam, log_fra);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neural
-        
+        function h_fig = plo_bri_com_met(obj)
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_bri_com(mul_sam_fil.bas_flu_sam_ani, mul_sam_fil.p_f_win_reg_cro, ...
+                obj.tit_sam);
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% evoked
         function h_fig = plo_neu_met(obj)
             global n_con col_sca_ste
@@ -1479,12 +1914,13 @@ classdef mul_sam
             end
             asp_rat_axe(4) = con_fil.n_fra_epo(epo_num_con, 1)/n_cel_reg.raw(reg_num);
             wid = true;
-            if epo_num == 1
-                %sca.map = 0.5;
-                sca.map = 1.5;
-            else
-                sca.map = 1.5;
-            end
+            % if epo_num == 1
+            %     %sca.map = 0.5;
+            %     sca.map = 1.5;
+            % else
+            %     sca.map = 1.5;
+            % end
+            sca.map = 1.5;
             sca_axe = [0.030 sca.map 0.030 sca.map];
             n_pix_ext = 33;
             [hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, ...
@@ -1614,14 +2050,6 @@ classdef mul_sam
                 getfield(p_act_reg_win_con_xsa, fie_num{:}), obj.n_ani_bri_sam, ...
                 n_cel_reg_sam.rem, obj.ind_sam, obj.tit_sho_sam_cha, dat);
         end
-        function h_fig = plo_res_met(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            x_sam_cel = mat_fil.x_sam_cel;
-            y_sam_cel = mat_fil.y_sam_cel;
-            act_reg_win_con_sam_uni = mat_fil.act_reg_win_con_sam_uni;
-            act_reg_win_con_sam_uni = act_reg_win_con_sam_uni.dff.raw.tri.cel;
-            h_fig = plo_res(x_sam_cel.res, y_sam_cel.res, act_reg_win_con_sam_uni);
-        end
         function h_fig = plo_spa_den_bou_spo_met(obj)
             mat_fil = matfile(obj.fil_pat_mul_sam);
             x_sam_cel = mat_fil.x_sam_cel;
@@ -1636,6 +2064,55 @@ classdef mul_sam
             log_sam_cel_con = mat_fil.log_sam_cel_con;
             h_fig = plo_spa_den(x_sam_cel.res, y_sam_cel.res, log_sam_cel_con);
         end
+        %
+        function h_fig = plo_res_bou_spo_met(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            x_sam_cel = mat_fil.x_sam_cel;
+            y_sam_cel = mat_fil.y_sam_cel;
+            act_reg_win_con_sam_uni = mat_fil.dff_reg_win_sam_cel;
+            act_reg_win_con_sam_uni = act_reg_win_con_sam_uni.bou.spo;
+            h_fig = plo_res(x_sam_cel.res_all, y_sam_cel.res_all, act_reg_win_con_sam_uni);
+        end
+        function h_fig = plo_res_met(obj)
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            x_sam_cel = mat_fil.x_sam_cel;
+            y_sam_cel = mat_fil.y_sam_cel;
+            act_reg_win_con_sam_uni = mat_fil.res_reg_win_con_sam_uni;
+            act_reg_win_con_sam_uni = act_reg_win_con_sam_uni.dff.raw.tri.cel;
+            h_fig = plo_res(x_sam_cel.res, y_sam_cel.res, act_reg_win_con_sam_uni);
+        end
+        % plotted sca(y, x)
+        %
+        function h_fig = plo_hig_com_for_met(obj)
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            fie_num = {'dff'; 'raw'; 'tri'; 'all'};
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            col_sam = con_fil.col_sam;
+            col_sam = col_sam.two;
+            p_act_reg_win_con_xsa = mul_fil.p_act_reg_win_con_xsa;
+            h_fig = plo_hig_com.sho_for(mul_fil.act_reg_sam_fra_sta_con, p_act_reg_win_con_xsa, ...
+                fie_num, col_sam);
+        end
+        %
+        function h_fig = plo_thr_met(obj)
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            res_reg_win_con_sam_uni = mul_fil.res_reg_win_con_sam_uni;
+            res_reg_win_con_sam_uni = res_reg_win_con_sam_uni.dff.raw.tri.cel;
+            h_fig = plo_thr(res_reg_win_con_sam_uni);
+        end
+        function [h_fig, p_xsa_one, p_xsa_two] = plo_thr_com_met(obj)
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            res_reg_win_con_sam_uni = mul_fil.res_reg_win_con_sam_uni;
+            res_reg_win_con_sam_uni = res_reg_win_con_sam_uni.dff.raw.tri.cel;
+            [h_fig, p_xsa_one, p_xsa_two] = plo_thr_com(res_reg_win_con_sam_uni);
+        end
+        function h_fig = plo_bal_met(obj)
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            res_reg_win_con_sam_uni = mul_fil.res_reg_win_con_sam_uni;
+            res_reg_win_con_sam_uni = res_reg_win_con_sam_uni.dff.raw.tri.cel;
+            log_gro_cel = mul_fil.log_gro_cel;
+            h_fig = plo_bal(res_reg_win_con_sam_uni, log_gro_cel);
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ong
         function plo_ofr_xsa_met(obj)
             mat_fil = matfile(obj.fil_pat_mul_sam);
@@ -1648,88 +2125,31 @@ classdef mul_sam
             mat_fil = matfile(obj.fil_pat_mul_sam);
             h_fig = plo_cor_dis(mat_fil.cor_coe_epo_reg_sam_blo_ani, mat_fil.p_epo_reg_fac);
         end
-        function h_fig = plo_cor_dis_epo_met(obj, epo_num)
+        function h_fig = plo_cor_dis_epo_met(obj, epo_num, fie)
             mat_fil = matfile(obj.fil_pat_mul_sam);
-            h_fig = plo_cor_dis_epo(mat_fil.cor_coe_epo_reg_sam_blo_ani, mat_fil.p_epo_reg_fac, ...
-                epo_num);
+            cor_coe_epo_reg_sam_blo_ani = mat_fil.cor_coe_epo_reg_sam_blo_ani;
+            p_epo_reg_fac = mat_fil.p_epo_reg_fac;
+            h_fig = plo_cor_dis_epo(cor_coe_epo_reg_sam_blo_ani.(fie), p_epo_reg_fac.(fie), epo_num);
         end
-        function h_fig = plo_cor_dis_ent_met(obj)
+        function h_fig = plo_cor_dis_ent_met(obj, fie)
             mat_fil = matfile(obj.fil_pat_mul_sam);
             pcc_sam_blo_ani = mat_fil.pcc_sam_blo_ani;
             p_ent_fac = mat_fil.p_ent_fac;
-            h_fig = plo_cor_dis_ent(pcc_sam_blo_ani, p_ent_fac);
-        end
-        function h_fig = plo_ave_cor_dis_met(obj)%?
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            h_fig = plo_ave_cor_dis(mat_fil.cor_coe_reg_sam_blo_ani, mat_fil.p_reg_fac);
-        end
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            col_sam = con_fil.col_sam;
+            col_sam = col_sam.two;
+            h_fig = plo_cor_dis_ent(pcc_sam_blo_ani.(fie), p_ent_fac.(fie), col_sam, obj.tit_sam);
+        end% Fig. 6B
         function h_fig = plo_ave_xcc_dis_met(obj)
             mat_fil = matfile(obj.fil_pat_mul_sam);
             h_fig = plo_ave_xcc_dis(mat_fil.xcc_sam_blo_ani, mat_fil.p_fac);
         end
-        %%%%%%%%%%% corr his
-        function h_fig = plo_cor_xsa_met(obj, epo_num)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            h_fig = plo_cor_xsa(mat_fil.per_pai_epo_reg_sam_bin_ani, mat_fil.ske_epo_reg_sam_ani, ...
-                mat_fil.p_ske_epo_reg_xsa, mat_fil.acc_epo_reg_sam_ani, ...
-                mat_fil.p_acc_epo_reg_xsa, obj.ind_sam, obj.col_sam, obj.tit_sho_sam_cha, epo_num);
-        end
-        function h_fig = plo_abs_cor_xsa_met(obj, epo_num)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            col_sam = con_fil.col_sam;
-            h_fig = plo_abs_cor_xsa(mat_fil.acc_epo_reg_sam_ani, ...
-                mat_fil.p_acc_epo_reg_xsa, obj.ind_sam, col_sam, obj.tit_sup_sho_sam_cha, epo_num);
-        end
-        function plo_cro_cor_xsa_met(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            global y_lab_ave_nor_fir
-            plo_cro_cor_xsa(mat_fil.per_pai_xre_sam_bin_mag_ani, mat_fil.ske_xre_sam_ani, ...
-                y_lab_ave_nor_fir, mat_fil.p_ske_xre_xsa)
-        end
         %%% diagram
-        function plo_dia_met(obj)
+        function h_fig = plo_dia_acc_met(obj, epo_num, fie)
             mat_fil = matfile(obj.fil_pat_mul_sam);
-            sig = false;
-            plo_dia(mat_fil.dif_ske_xre_sam, obj.tit_n_bri_sam, mat_fil.p_ske_xre_tot_xsa, ...
-                sig, obj.ind_sam)
-        end
-        function plo_dia_sig_met(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            sig = true;
-            plo_dia(mat_fil.dif_ske_xre_sam, obj.tit_n_bri_sam, mat_fil.p_ske_xre_tot_xsa, ...
-                sig, obj.ind_sam)
-        end
-        %
-        function plo_dia_mag_met(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            sig = false;
-            plo_dia(mat_fil.dif_mag_cor_coe_xre_sam, obj.tit_n_bri_sam, ...
-                mat_fil.p_mag_cor_coe_xre_xsa, sig, obj.ind_sam)
-        end
-        function plo_dia_mag_sig_met(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            sig = true;
-            plo_dia(mat_fil.dif_mag_cor_coe_xre_sam, obj.tit_n_bri_sam, ...
-                mat_fil.p_mag_cor_coe_xre_xsa, sig, obj.ind_sam)
-        end
-        %
-        function h_fig = plo_dia_com_met(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            h_fig = plo_dia_com(mat_fil.dif_ske_xre_sam, obj.tit_n_bri_sam, ...
-                mat_fil.p_ske_xre_tot_xsa, mat_fil.dif_mag_cor_coe_xre_sam, ...
-                mat_fil.p_mag_cor_coe_xre_xsa);
-        end
-        function h_fig = plo_dia_all_met(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            h_fig = plo_dia_all(mat_fil.dif_ske_epo_xre_sam, obj.tit_n_bri_sam, ...
-                mat_fil.p_ske_epo_xre_xsa, mat_fil.dif_acc_epo_xre_sam, ...
-                mat_fil.p_acc_epo_xre_xsa);
-        end
-        %
-        function h_fig = plo_dia_acc_met(obj, epo_num)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            h_fig = plo_dia_acc(mat_fil.dif_acc_epo_xre_sam, mat_fil.p_acc_epo_xre_xsa, epo_num);
+            dif_acc_epo_xre_sam = mat_fil.dif_acc_epo_xre_sam;
+            p_acc_epo_xre_xsa = mat_fil.p_acc_epo_xre_xsa;
+            h_fig = plo_dia_acc(dif_acc_epo_xre_sam.(fie), p_acc_epo_xre_xsa.(fie), epo_num);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neurobehavioral
         function h_fig = plo_act_tac_met(obj, fie_num)
@@ -1783,7 +2203,44 @@ classdef mul_sam
             p_dff_reg_win_xsa = mul_fil.p_dff_reg_win_xsa;
             h_fig = plo_hig_com.lon_sim(dff_reg_sam_fra_cel.bou.spo, p_dff_reg_win_xsa.bou.spo);
         end
+        function h_fig = plo_slo_com_met(obj)
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            slo_reg_sam_cel = mul_fil.slo_reg_sam_cel;
+            %slo_reg_sam_cel = slo_reg_sam_cel.all_tri;
+            slo_reg_sam_cel = slo_reg_sam_cel.lhx_tri;
+
+            coe_det_reg_sam_cel = mul_fil.coe_det_reg_sam_cel;
+            %thr = 0.7;
+            thr = -inf;
+
+            h_fig = plo_slo_com(slo_reg_sam_cel, coe_det_reg_sam_cel, thr);
+        end
+        function h_fig = plo_slo_den_met(obj)
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_slo_den(mul_fil.tac_sam_tri_cel, mul_fil.act_sam_tri_cel, ...
+                mul_fil.log_sam_cel_reg);
+        end
+        function h_fig = plo_lin_met(obj)
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            h_fig = plo_lin(mul_fil.tac_sam_sam_ani, mul_fil.act_sam_reg_ani_sam_cel);
+        end
+        function h_fig = plo_slo_lin_met(obj)
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            slo_reg_sam_cel = mul_fil.slo_reg_sam_cel;
+            h_fig = plo_slo_lin(slo_reg_sam_cel.hig_tri);
+        end
+        function h_fig = plo_slo_lin_ove_met(obj)
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            slo_reg_sam_cel = mul_fil.slo_reg_sam_cel;
+            h_fig = plo_slo_lin_ove(slo_reg_sam_cel.hig_tri);
+        end
+        function h_fig = plo_slo_lin_ove_sca_met(obj)
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            slo_reg_sam_cel = mul_fil.slo_reg_sam_cel;
+            h_fig = plo_slo_lin_ove_sca(slo_reg_sam_cel.hig_tri);
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% figures
+        
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% freely moving
         function sav_fig_ntt(obj)
             h_fig = plo_ntt_met(obj);
@@ -1795,11 +2252,11 @@ classdef mul_sam
             h_fig = plo_tap_fre_met(obj);
             fil_pat = char(obj.fil_pat_fig_tap_fre);
             exp_fig(h_fig, fil_pat)
-        end
+        end% poster figure
         function sav_fig_sig_fre(obj)
             h_fig = plo_sig_fre_met(obj);
             exp_fig(h_fig, [char(obj.poo_dir) '\sig_fre.png'])
-        end
+        end% signals
         function sav_fig_dis_fre(obj)
             h_fig = plo_dis_fre_met(obj);
             exp_fig(h_fig, [char(obj.poo_dir) '\dis_fre.png'])
@@ -1808,48 +2265,93 @@ classdef mul_sam
             h_fig = plo_foc_fre_met(obj);
             exp_fig(h_fig, [char(obj.poo_dir) '\foc_fre.png'])
         end
-        % zan
-        function sav_fig_y_pos(obj)
-            h_fig = plo_y_pos_met(obj);
-            fil_pat = char(obj.fil_pat_fig_y_pos);
-            exp_fig(h_fig, fil_pat)
+        function sav_fig_tax(obj)
+            % sta_poi = 21;
+            % end_poi = 29;
+            % h_fig = plo_tax_met(obj, end_poi, sta_poi);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\tax_1.png'])
+            % %
+            % sta_poi = 22;
+            % end_poi = 32;
+            % h_fig = plo_tax_met(obj, end_poi, sta_poi);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\tax_2.png'])
+
+            sta_poi = 20;
+            end_poi = 30;
+            h_fig = plo_tax_met(obj, end_poi, sta_poi);
+            exp_fig(h_fig, [char(obj.poo_dir) '\tax_2_trials.png'])
         end
-        function sav_fig_occ_map(obj)
-            h_fig = plo_occ_map_met(obj);
-            fil_pat = char(obj.fil_pat_fig_occ_map);
-            exp_fig(h_fig, fil_pat)
+        function sav_fig_dis_foc_sca(obj)
+            h_fig = plo_dis_foc_sca_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\dis_foc_sca.png'])
         end
-        % nov - ann
-        function sav_fig_ses(obj)
-            h_fig = plo_ses_met(obj);
-            fil_pat = char(obj.fil_pat_fig_ses);
-            exp_fig(h_fig, fil_pat)
+        function sav_fig_spe_sca_ric(obj)
+            h_fig = plo_spe_sca_ric_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\spe_sca_ric.png'])
         end
-        function sav_fig_occ_map_ann(obj)
-            mat_fil = matfile("X:\kadiram\Data\Pooled\nov\Tph2_NT_Vibration_2022_data.mat");
-            h_fig = AO_ploting_noveltank_heatmaps_over_fish(mat_fil.all_fish, mat_fil.group1, ...
-                mat_fil.name_group1);
-            fil_pat = char(obj.fil_pat_fig_occ_map_ann_abl);
-            exp_fig(h_fig, fil_pat)
-            h_fig = AO_ploting_noveltank_heatmaps_over_fish(mat_fil.all_fish, mat_fil.group2, ...
-                mat_fil.name_group2);
-            fil_pat = char(obj.fil_pat_fig_occ_map_ann_con);
-            exp_fig(h_fig, fil_pat)
+        function sav_fig_nta_fre(obj)
+            h_fig = plo_nta_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\nta_fre.png'])
+        end
+        function sav_fig_nta_sca(obj)
+            h_fig = plo_nta_sca_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\nta_sca.png'])
+        end
+        function sav_fig_hab_ric(obj)
+            h_fig = plo_hab_ric_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\hab_ric.png'])
+        end
+        function sav_fig_tau_com(obj)
+            h_fig = plo_tau_com_met(obj, 0.1);
+            exp_fig(h_fig, [char(obj.poo_dir) '\tau_com.png'])
+        end
+        function sav_fig_nor_ypc_ric(obj)
+            h_fig = plo_vib_res_ric_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\nor_ypc_tim.png'])
+            %
+            h_fig = plo_nor_vib_sca_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\nor_ypc_sca.png'])
+        end
+        function sav_fig_p_win(obj)
+            h_fig = plo_p_win_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\p_win.png'])
+        end
+        function sav_fig_hab_dyn_ric(obj)
+            % h_fig = plo_hab_dyn_ric_met(obj);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\hab_dyn_ric.png'])
+
+            mat_fil = matfile(obj.fil_pat_mul_sam);
+            ypc_sam_tri_ani = mat_fil.ypc_sam_tri_ani;
+
+            ypc_sam_ani_tri = cellfun(@transpose, ypc_sam_tri_ani.zer_thi, 'UniformOutput', false);
+            h_fig = plo_hab_dyn(ypc_sam_ani_tri);
+            exp_fig(h_fig, [char(obj.poo_dir) '\hab_dyn_ric_zer_thi.png'])
+
+            ypc_sam_ani_tri = cellfun(@transpose, ypc_sam_tri_ani.zer_for, 'UniformOutput', false);
+            h_fig = plo_hab_dyn(ypc_sam_ani_tri);
+            exp_fig(h_fig, [char(obj.poo_dir) '\hab_dyn_ric_zer_for.png'])
+        end
+        function sav_fig_tau_exa(obj)
+            h_fig = plo_tau_exa_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\tau_exa.png'])
         end
         function sav_fig_ypc(obj)
             h_fig = plo_ypc_met(obj);
-            fil_pat = char(obj.fil_pat_fig_ypc);
-            exp_fig(h_fig, fil_pat)
+            exp_fig(h_fig, [char(obj.poo_dir) '\ypc.png'])
+        end% scatter, no p value heatmap
+        function sav_fig_tax_hea(obj)
+            h_fig = plo_tax_hea_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\tax_hea.png'])
         end
-        function sav_fig_ypc_tog(obj)
-            h_fig = plo_ypc_tog_met(obj);
-            fil_pat = char(obj.fil_pat_fig_ypc_tog);
-            exp_fig(h_fig, fil_pat)
-        end
-        function sav_fig_y_pos_tog(obj)
-            h_fig = plo_y_pos_tog_met(obj);
-            fil_pat = char(obj.fil_pat_fig_y_pos_tog);
-            exp_fig(h_fig, fil_pat)
+        function sav_fig_ypc_hea(obj)
+            mul_sam_fil = matfile(obj.fil_pat_mul_sam);
+            ypc_sam_tim_ani = mul_sam_fil.ypc_sam_tim_ani;
+            sta_poi_win = mul_sam_fil.sta_poi_win;
+            p_win = mul_sam_fil.p_win;
+            h_fig = plo_tax_hea(ypc_sam_tim_ani.six, sta_poi_win, p_win.ypc_six);
+            exp_fig(h_fig, [char(obj.poo_dir) '\ypc_hea_six.png'])
+            h_fig = plo_tax_hea(ypc_sam_tim_ani.two, sta_poi_win, p_win.ypc_two);
+            exp_fig(h_fig, [char(obj.poo_dir) '\ypc_hea_two.png'])
         end
         % two
         function sav_fig_trm(obj)
@@ -1904,6 +2406,59 @@ classdef mul_sam
             fil_pat = char(obj.fil_pat_fig_spe_sca);
             exp_fig(h_fig, fil_pat)
         end
+        % ika
+        function sav_fig_tri_hea(obj)
+            h_fig = plo_tri_hea_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\tri_hea.png'])
+        end
+        function sav_fig_vib_res(obj)
+            h_fig = plo_vib_res_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\vib_res.png'])
+        end
+        function sav_fig_vib_sca(obj)
+            h_fig = plo_vib_sca_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\vib_sca.png'])
+        end
+        function sav_fig_hab(obj)
+            h_fig = plo_hab_met(obj, 'ini');
+            exp_fig(h_fig, [char(obj.poo_dir) '\hab_ini.png'])
+            %
+            h_fig = plo_hab_met(obj, 'rec');
+            exp_fig(h_fig, [char(obj.poo_dir) '\hab_rec.png'])
+        end
+        function sav_fig_hab_dyn(obj)
+            fie_num = {'two', 'ini'};
+            h_fig = plo_hab_dyn_met(obj, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\hab_dyn_' fie_num{1} '_' fie_num{2} '.png'])
+            %
+            fie_num = {'two', 'rec'};
+            h_fig = plo_hab_dyn_met(obj, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\hab_dyn_' fie_num{1} '_' fie_num{2} '.png'])
+            %
+            fie_num = {'fiv', 'ini'};
+            h_fig = plo_hab_dyn_met(obj, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\hab_dyn_' fie_num{1} '_' fie_num{2} '.png'])
+            %
+            fie_num = {'fiv', 'rec'};
+            h_fig = plo_hab_dyn_met(obj, fie_num);
+            exp_fig(h_fig, [char(obj.poo_dir) '\hab_dyn_' fie_num{1} '_' fie_num{2} '.png'])
+        end
+        function sav_fig_nor_vib_res(obj)
+            h_fig = plo_nor_vib_res_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\nor_vib_res.png'])
+        end
+        function sav_fig_nor_vib_sca(obj)
+            h_fig = plo_nor_vib_sca_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\nor_vib_sca.png'])
+        end
+        function sav_fig_tap_occ(obj)
+            h_fig = plo_tap_occ_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\tap_occ.png'])
+        end
+        function sav_fig_p_win_cro(obj)
+            h_fig = plo_p_win_cro_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\p_win_cro.png'])
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% behavioral
         function sav_fig_tai_dat(obj)
             sav_fig_abs(obj)
@@ -1918,8 +2473,8 @@ classdef mul_sam
             exp_fig(h_fig, fil_pat)
         end
         function sav_fig_ave_tai_ang_xsa(obj)
-            plo_ave_ang_xsa_met(obj)
-            export_fig(char(obj.fil_pat_fig_tai_ang_xsa))
+            h_fig = plo_ave_ang_xsa_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\tai_ang_xsa.png'])
         end
         %
         function sav_fig_nta(obj)
@@ -1981,17 +2536,6 @@ classdef mul_sam
             plo_tai_rat_spo_met(obj)
             export_fig(char(obj.fil_pat_fig_tai_rat_spo))
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% poster
-        function sav_fig_tac(obj)
-            h_fig = plo_tac_met(obj);
-            fil_pat = char(obj.fil_pat_fig_tac);
-            exp_fig(h_fig, fil_pat)
-        end
-        function sav_fig_tai(obj)
-            h_fig = plo_tai_met(obj);
-            fil_pat = char(obj.fil_pat_fig_tai);
-            exp_fig(h_fig, fil_pat)
-        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neural
         function sav_fig_neu_met(obj)% single animal responses
             h_fig = plo_neu_met(obj);
@@ -2006,6 +2550,11 @@ classdef mul_sam
                     export_fig(char(obj.fil_pat_fig_ras_map_epo_reg(i, ind_reg)))
                 end
             end
+        end
+        %
+        function sav_fig_bri_com(obj)
+            h_fig = plo_bri_com_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\bri_com.png'])
         end
         %
         function sav_fig_neu_all(obj)% all figures
@@ -2212,10 +2761,9 @@ classdef mul_sam
             fil_pat = char(obj.fil_pat_fig_abs_cor_xsa);
             exp_fig(h_fig, fil_pat)
         end
-        function sav_fig_dia_acc(obj, epo_num)
-            h_fig = plo_dia_acc_met(obj, epo_num);
-            fil_pat = char(obj.fil_pat_fig_dia_acc);
-            exp_fig(h_fig, fil_pat)
+        function sav_fig_dia_acc(obj, epo_num, fie)
+            h_fig = plo_dia_acc_met(obj, epo_num, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\dia_acc_' fie '.png'])
         end
         %
         function sav_fig_cor_dis(obj)
@@ -2223,10 +2771,9 @@ classdef mul_sam
             fil_pat = char(obj.fil_pat_fig_cor_dis);
             exp_fig(h_fig, fil_pat)
         end
-        function sav_fig_cor_dis_epo(obj, epo_num)
-            h_fig = plo_cor_dis_epo_met(obj, epo_num);
-            fil_pat = char(obj.fil_pat_fig_cor_dis_epo);
-            exp_fig(h_fig, fil_pat)
+        function sav_fig_cor_dis_epo(obj, epo_num, fie)
+            h_fig = plo_cor_dis_epo_met(obj, epo_num, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_epo_' fie '.png'])
         end
         function sav_fig_ave_cor_dis(obj)
             h_fig = plo_ave_cor_dis_met(obj);
@@ -2241,6 +2788,55 @@ classdef mul_sam
         function sav_fig_cor_dis_ent(obj)
             h_fig = plo_cor_dis_ent_met(obj);
             exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_ent.png'])
+        end
+        function sav_fig_cor_dis_ent_thr(obj)
+            % h_fig = plo_cor_dis_ent_met(obj, 'thr_cel');
+            % exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_ent_thr.png'])
+
+            % fie = 'thr_one';
+            % h_fig = plo_cor_dis_ent_met(obj, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_ent_' fie '.png'])
+            % epo_num = 6;
+            % h_fig = plo_dia_acc_met(obj, epo_num, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dia_acc_' fie '.png'])
+            % h_fig = plo_cor_dis_epo_met(obj, epo_num, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_epo_' fie '.png'])
+            % 
+            % fie = 'thr_two';
+            % h_fig = plo_cor_dis_ent_met(obj, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_ent_' fie '.png'])
+            % epo_num = 6;
+            % h_fig = plo_dia_acc_met(obj, epo_num, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dia_acc_' fie '.png'])
+            % h_fig = plo_cor_dis_epo_met(obj, epo_num, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_epo_' fie '.png'])
+
+            fie = 'for_syn';
+            % h_fig = plo_cor_dis_ent_met(obj, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_ent_' fie '.png'])
+            epo_num = 6;
+            % h_fig = plo_dia_acc_met(obj, epo_num, fie);
+            % exp_fig(h_fig, [char(obj.poo_dir) '\dia_acc_' fie '.png'])
+            h_fig = plo_cor_dis_epo_met(obj, epo_num, fie);
+            exp_fig(h_fig, [char(obj.poo_dir) '\cor_dis_epo_' fie '.png'])
+        end
+        %
+        function sav_fig_hig_com_for(obj)
+            h_fig = plo_hig_com_for_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\hig_com_for.png'])
+        end
+        function sav_fig_thr(obj)
+            h_fig = plo_thr_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\thr.png'])
+        end
+        function [p_xsa_one, p_xsa_two] = sav_fig_thr_com(obj)
+            [h_fig, p_xsa_one, p_xsa_two] = plo_thr_com_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\thr_com.png'])
+        end
+        %
+        function sav_fig_bal(obj)
+            h_fig = plo_bal_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\bal.png'])
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neurobehavioral
         function sav_fig_act_tac(obj)
@@ -2273,6 +2869,28 @@ classdef mul_sam
         function sav_fig_spa_den(obj)
             h_fig = plo_spa_den_met(obj);
             exp_fig(h_fig, [char(obj.poo_dir) '\spa_den.png'])
+        end
+        function sav_fig_res(obj)
+            h_fig = plo_res_bou_spo_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\res_bou_spo.png'])
+            h_fig = plo_res_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\res.png'])
+        end
+        function sav_fig_slo_com(obj)
+            h_fig = plo_slo_com_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\slo_com.png'])
+        end
+        function sav_fig_slo_den(obj)
+            h_fig = plo_slo_den_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\slo_den.png'])
+        end
+        function sav_fig_lin(obj)
+            h_fig = plo_lin_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\lin.png'])
+        end
+        function sav_fig_slo_lin_ove(obj)
+            h_fig = plo_slo_lin_ove_met(obj);
+            exp_fig(h_fig, [char(obj.poo_dir) '\slo_lin_ove.png'])
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% data mul all
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% behavioral
@@ -2577,6 +3195,18 @@ classdef mul_sam
                 app_clu_ana_all(sam_obj)
             end
         end
+        %
+        function isx_mul_var_all(obj, var_nam)
+            nam_sam = cell(obj.n_sam, 1);
+            for i = 1:obj.n_sam
+                nam_sam{i} = convertStringsToChars(strcat(obj.sam(i), "_fun"));
+            end
+            for i = 1:obj.n_sam
+                sam_fun_i = str2func(['sam_fun.' nam_sam{i}]);
+                sam_obj = sam_fun_i();
+                isx_var_all(sam_obj, var_nam)
+            end
+        end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neurobeh
         function app_mul_par_tai_cel_all(obj)
             nam_sam = cell(obj.n_sam, 1);
@@ -2767,6 +3397,38 @@ classdef mul_sam
                     "_fun"))]);
                 sam_obj = sam_fun_i();
                 app_spi_dat(sam_obj)
+            end
+        end
+        %
+        function app_par_fms_all(obj)
+            % fms: from mul sam
+            mul_fil = matfile(obj.fil_pat_mul_sam);
+            log_gro_cel = mul_fil.log_gro_cel;
+            for gro = 1:obj.n_sam
+                sam_fun_i = ...
+                    str2func(['sam_fun.' convertStringsToChars(strcat(obj.sam(gro), "_fun"))]);
+                sam_obj = sam_fun_i();
+                log_cel = log_gro_cel{gro};
+                sam_fil = matfile(sam_obj.fil_pat_sam);
+                n_cel_reg_ani = sam_fil.n_cel_reg_ani;
+                n_cel_reg_ani = n_cel_reg_ani.rem;
+                n_cel_ani = n_cel_reg_ani(1, :)';
+                log_ani_cel = splitCellsByAnimal(log_cel, n_cel_ani);
+                %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                save(sam_obj.fil_pat_sam, 'log_ani_cel', '-append')
+            end
+        end
+        %
+        function app_par_fro_sam_all_all(obj)
+            nam_sam = strings(obj.n_sam, 1);
+            for i = 1:obj.n_sam
+                nam_sam(i) = obj.sam(i);
+            end
+            for i = 1:obj.n_sam
+                sam_fun_i = str2func(['sam_fun.' convertStringsToChars(strcat(nam_sam(i), ...
+                    "_fun"))]);
+                sam_obj = sam_fun_i();
+                app_par_fro_sam_all(sam_obj)
             end
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neurobeh
@@ -3004,58 +3666,220 @@ p_foc_ntt_rst_win(2) = ranksum(foc_ntt_sam_ani_win{1}(:, 2), foc_ntt_sam_ani_win
 %
 foc_ntt_win_cox_sam_ani = tra(foc_ntt_sam_ani_win);
 end
-
-function [ave_dis_ntt_tph_ani_win, n_win] = com_ave_dis_ntt_tph_ani_win(dis_ntt_tph_tim_ani, ...
-    siz_win, poi)
-n_win = length(siz_win);
-[~, n_ani] = size(dis_ntt_tph_tim_ani);
-ave_dis_ntt_tph_ani_win = nan(n_ani, n_win);
-for i = 1:n_win
-    ave_dis_ntt_tph_ani_win(:, i) = mean(dis_ntt_tph_tim_ani(poi(i) - siz_win(i):poi(i), :))';
-end
-end
 % tap
 function [mea_dis_tap_tim_gro, sem_dis_tap_tim_gro, ave_dis_tap_win_cox_sam_ani, p_dis_tap_win] ...
-    = ext_fre_tap_dat(dis_tap_gro, off, tim_tap_bin)
+    = ext_fre_tap_dat(dis_tap_gro, end_poi, siz_win)
     [~, ~, dis_tap_nac_tim_ani, dis_tap_tph_tim_ani] = read_behaviour_EY_2(dis_tap_gro);
     %
+    off = 8;
     dis_tap_tph_tim_ani = dis_tap_tph_tim_ani + off;
-    [mea_dis_ntt_tph_tim, ~, sem_dis_ntt_tph_tim] = com_sta(dis_tap_tph_tim_ani, 2);
+    [mea_dis_tph_tim, ~, sem_dis_tph_tim] = com_sta(dis_tap_tph_tim_ani, 2);
     dis_tap_nac_tim_ani = dis_tap_nac_tim_ani + off;
-    [mea_dis_ntt_nac_tim, ~, sem_dis_ntt_nac_tim] = com_sta(dis_tap_nac_tim_ani, 2);
+    [mea_dis_nac_tim, ~, sem_dis_nac_tim] = com_sta(dis_tap_nac_tim_ani, 2);
     %%%%%%%%%%%%%%%%%%%%%%%%
-    mea_dis_tap_tim_gro = [mea_dis_ntt_nac_tim(tim_tap_bin) mea_dis_ntt_tph_tim(tim_tap_bin)];
-    sem_dis_tap_tim_gro = [sem_dis_ntt_nac_tim(tim_tap_bin) sem_dis_ntt_tph_tim(tim_tap_bin)];
+    tim_tap_bin = (1750:3360)';
+    mea_dis_tap_tim_gro = [mea_dis_nac_tim(tim_tap_bin) mea_dis_tph_tim(tim_tap_bin)];
+    sem_dis_tap_tim_gro = [sem_dis_nac_tim(tim_tap_bin) sem_dis_tph_tim(tim_tap_bin)];
     %
     [~, n_ani_nac] = size(dis_tap_nac_tim_ani);
     [~, n_ani_tph] = size(dis_tap_tph_tim_ani);
-    n_win = 4;
-    ave_dis_ntt_nac_ani_win = nan(n_ani_nac, n_win);
-    ave_dis_ntt_tph_ani_win = nan(n_ani_tph, n_win);
-    siz_win = 10;
+    n_win = 4;% bas + 3 con
+    ave_dis_nac_ani_win = nan(n_ani_nac, n_win);
+    ave_dis_tph_ani_win = nan(n_ani_tph, n_win);
+    % baseline
     fir = 1800;
-    poi = fir - 20;% end poi
-    ave_dis_ntt_nac_ani_win(:, 1) = com_ave_dis_ntt_tph_ani_win(dis_tap_nac_tim_ani, siz_win, poi);
-    ave_dis_ntt_tph_ani_win(:, 1) = com_ave_dis_ntt_tph_ani_win(dis_tap_tph_tim_ani, siz_win, poi);
+    ter_poi = fir - 20;% end poi
+    ave_dis_nac_ani_win(:, 1) = com_ave_dis_ntt_tph_ani_win(dis_tap_nac_tim_ani, siz_win, ter_poi);
+    ave_dis_tph_ani_win(:, 1) = com_ave_dis_ntt_tph_ani_win(dis_tap_tph_tim_ani, siz_win, ter_poi);
+    %%%%%%%%%%%%%%% taps
+    siz_win_tri = siz_win*ones(18, 1);
     sti_ons_tri = [1800:60:2100 2340:60:2640 2880:60:3180]';
-    siz_win = 10*ones(18, 1);
-    poi = sti_ons_tri + 30;% end poi, for trial-ave !!!!
-    ave_dis_ntt_nac_ani_tri = com_ave_dis_ntt_tph_ani_win(dis_tap_nac_tim_ani, siz_win, poi);
-    ave_dis_ntt_tph_ani_tri = com_ave_dis_ntt_tph_ani_win(dis_tap_tph_tim_ani, siz_win, poi);
-    global n_con n_tri_con
-    for i = 1:n_con
-        ave_dis_ntt_nac_ani_win(:, 1 + i) = ...
-            mean(ave_dis_ntt_nac_ani_tri(:, (i - 1)*n_tri_con + 1:i*n_tri_con), 2);
-        ave_dis_ntt_tph_ani_win(:, 1 + i) = ...
-            mean(ave_dis_ntt_tph_ani_tri(:, (i - 1)*n_tri_con + 1:i*n_tri_con), 2);
+    end_poi_tri = sti_ons_tri + end_poi;% for trial-ave !!!! in seconds
+    ave_dis_nac_ani_tri = com_ave_dis_ntt_tph_ani_win(dis_tap_nac_tim_ani, siz_win_tri, end_poi_tri);
+    ave_dis_tph_ani_tri = com_ave_dis_ntt_tph_ani_win(dis_tap_tph_tim_ani, siz_win_tri, end_poi_tri);
+    n_con = 3;
+    n_tri_con = 6;
+    for con = 1:n_con
+        ave_dis_nac_ani_win(:, 1 + con) = ...
+            mean(ave_dis_nac_ani_tri(:, (con - 1)*n_tri_con + 1:con*n_tri_con), 2);%matrix
+        ave_dis_tph_ani_win(:, 1 + con) = ...
+            mean(ave_dis_tph_ani_tri(:, (con - 1)*n_tri_con + 1:con*n_tri_con), 2);
     end
+    
+
+
+    ave_dis_sam_ani_win = {ave_dis_nac_ani_win; ave_dis_tph_ani_win};
+    ave_dis_tap_win_cox_sam_ani = tra(ave_dis_sam_ani_win);
+
     p_dis_tap_win = nan(n_win, 1);
     for i = 1:n_win
-        p_dis_tap_win(i) = ...
-            lme(ave_dis_ntt_nac_ani_win(:, i), ave_dis_ntt_tph_ani_win(:, i));
+        p_dis_tap_win(i) = lme(ave_dis_nac_ani_win(:, i), ave_dis_tph_ani_win(:, i));
     end
-    ave_dis_ntt_sam_ani_win = {ave_dis_ntt_nac_ani_win; ave_dis_ntt_tph_ani_win};
-    ave_dis_tap_win_cox_sam_ani = tra(ave_dis_ntt_sam_ani_win);
+end
+
+function [dis_tap_nac_tim_ani, dis_tap_tph_tim_ani] = ext_dis(dis_tap_gro)
+    [~, ~, dis_tap_nac_tim_ani, dis_tap_tph_tim_ani] = read_behaviour_EY_2(dis_tap_gro);
+    off = 8;
+    dis_tap_tph_tim_ani = dis_tap_tph_tim_ani + off;
+    dis_tap_nac_tim_ani = dis_tap_nac_tim_ani + off;
+end
+
+function [ave_dis_tap_win_cox_sam_ani, p_dis_tap_win, tax_dis_sam_tim_ani] = cal_ave_dis(...
+    dis_tap_nac_tim_ani, dis_tap_tph_tim_ani, end_poi, sta_poi, n_tri_tak)
+    [~, n_ani_nac] = size(dis_tap_nac_tim_ani);
+    [~, n_ani_tph] = size(dis_tap_tph_tim_ani);
+    n_win = 4;% bas + 3 con
+    ave_dis_nac_ani_win = nan(n_ani_nac, n_win);
+    ave_dis_tph_ani_win = nan(n_ani_tph, n_win);
+    % baseline
+    fir = 1800;
+    ter_poi = fir - 20;% end poi
+    siz_win = end_poi - sta_poi;
+    ave_dis_nac_ani_win(:, 1) = com_ave_dis_ntt_tph_ani_win(dis_tap_nac_tim_ani, siz_win, ter_poi);
+    ave_dis_tph_ani_win(:, 1) = com_ave_dis_ntt_tph_ani_win(dis_tap_tph_tim_ani, siz_win, ter_poi);
+    %%%%%%%%%%%%%%% taps
+    siz_win_tri = siz_win*ones(18, 1);
+    sti_ons_tri = [1800:60:2100 2340:60:2640 2880:60:3180]';
+    end_poi_tri = sti_ons_tri + end_poi;% for trial-ave !!!! in seconds
+    ave_dis_nac_ani_tri = com_ave_dis_ntt_tph_ani_win(dis_tap_nac_tim_ani, siz_win_tri, end_poi_tri);
+    ave_dis_tph_ani_tri = com_ave_dis_ntt_tph_ani_win(dis_tap_tph_tim_ani, siz_win_tri, end_poi_tri);
+    n_con = 3;
+    n_tri_con = 6;
+    %n_tri_tak = 2;% n_trial taken, original = 6.
+    for con = 1:n_con
+        tri_num_las = (con - 1)*n_tri_con;
+        ave_dis_nac_ani_win(:, 1 + con) = ...
+            mean(ave_dis_nac_ani_tri(:, tri_num_las + 1:tri_num_las + n_tri_tak), 2);%matrix
+        ave_dis_tph_ani_win(:, 1 + con) = ...
+            mean(ave_dis_tph_ani_tri(:, tri_num_las + 1:tri_num_las + n_tri_tak), 2);
+    end
+    ave_dis_sam_ani_win = {ave_dis_nac_ani_win; ave_dis_tph_ani_win};
+    ave_dis_tap_win_cox_sam_ani = tra(ave_dis_sam_ani_win);
+    p_dis_tap_win = nan(n_win, 1);
+    for i = 1:n_win
+        p_dis_tap_win(i) = lme(ave_dis_nac_ani_win(:, i), ave_dis_tph_ani_win(:, i));
+    end
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    siz_win_tri = 60*ones(6, 1);
+    sti_ons_tri = (1800:60:2100)';% n = 6
+    siz_win_tri = siz_win_tri(1:n_tri_tak);
+    sti_ons_tak = sti_ons_tri(1:n_tri_tak);
+    end_poi_tri = sti_ons_tak + 55;% end poi, for trial-ave !!!! in seconds
+    [~, ~, tax_dis_nac_tim_ani, nta_dis_nac_tim_ani, nta_dis_nac_ani] = com_ave_dis_ntt_tph_ani_win(...
+        dis_tap_nac_tim_ani, siz_win_tri, end_poi_tri);
+    [~, ~, tax_dis_tph_tim_ani, nta_dis_tph_tim_ani, nta_dis_tph_ani] = com_ave_dis_ntt_tph_ani_win(...
+        dis_tap_tph_tim_ani, siz_win_tri, end_poi_tri);
+    tax_dis_sam_tim_ani = {tax_dis_nac_tim_ani; tax_dis_tph_tim_ani};
+end
+
+function [tax_dis_sam_tim_ani, nta_dis_sam_tim_ani, nta_dis_sam_ani] = cal_tax_dis_sam_tim_ani(...
+    dis_tap_gro)
+    [~, ~, dis_tap_nac_tim_ani, dis_tap_tph_tim_ani] = read_behaviour_EY_2(dis_tap_gro);
+    off = 8;
+    dis_tap_nac_tim_ani = dis_tap_nac_tim_ani + off;
+    dis_tap_tph_tim_ani = dis_tap_tph_tim_ani + off;
+    % taps
+    siz_win_tri = 60*ones(6, 1);
+    sti_ons_tri = (1800:60:2100)';% n = 6
+    end_poi_tri = sti_ons_tri + 55;% end poi, for trial-ave !!!! in seconds
+    [~, ~, tax_dis_nac_tim_ani, nta_dis_nac_tim_ani, nta_dis_nac_ani] = com_ave_dis_ntt_tph_ani_win(...
+        dis_tap_nac_tim_ani, siz_win_tri, end_poi_tri);
+    [~, ~, tax_dis_tph_tim_ani, nta_dis_tph_tim_ani, nta_dis_tph_ani] = com_ave_dis_ntt_tph_ani_win(...
+        dis_tap_tph_tim_ani, siz_win_tri, end_poi_tri);
+    tax_dis_sam_tim_ani = {tax_dis_nac_tim_ani; tax_dis_tph_tim_ani};
+    nta_dis_sam_tim_ani = {nta_dis_nac_tim_ani; nta_dis_tph_tim_ani};
+    nta_dis_sam_ani = {nta_dis_nac_ani; nta_dis_tph_ani};
+end
+
+function [ave_dis_ntt_tph_ani_tri, n_tri, tax_dis_tim_ani, nta_dis_tim_ani, nta_dis_ani] = ...
+    com_ave_dis_ntt_tph_ani_win(dis_tim_ani, siz_win_tri, end_poi_tri)
+n_tri = length(siz_win_tri);
+[~, n_ani] = size(dis_tim_ani);
+ave_dis_ntt_tph_ani_tri = nan(n_ani, n_tri);
+for tri = 1:n_tri
+    ave_dis_ntt_tph_ani_tri(:, tri) = mean(dis_tim_ani(end_poi_tri(tri) - siz_win_tri(tri):...
+        end_poi_tri(tri), :))';
+    %endpoi sta poi is not the stimulus onset, end poi - win siz(10 s for
+    
+    %tap), 1s bins !!!
+end
+% tap
+n_bin = 60;
+tax_dis_tim_ani = nan(n_bin, n_ani);% trial-averaged
+nta_dis_tim_ani = nan(n_bin, n_ani);
+nta_dis_ani = nan(n_ani, 1);
+if siz_win_tri(1) == 60
+    for ani = 1:n_ani
+        dis_tim_tri = nan(n_bin, n_tri);
+        nor_dis_tim_tri = nan(n_bin, n_tri);
+        for tri = 1:n_tri
+            dis_tim_tri(:, tri) = dis_tim_ani(end_poi_tri(tri) - siz_win_tri(tri):end_poi_tri(tri)...
+                - 1, ani);
+            nor_dis_tim_tri(:, tri) = dis_tim_tri(:, tri)/min(dis_tim_tri(:, tri));
+        end
+        tax_dis_tim_ani(:, ani) = mean(dis_tim_tri, 2);
+        nta_dis_tim_ani(:, ani) = mean(nor_dis_tim_tri, 2);
+        nta_dis_ani(ani) = mean(nta_dis_tim_ani(26:35, ani));
+    end
+end
+end
+
+function [ypc_ani, ypc_tim_ani_tri, dis_tim_ani_tri, ypc_tri_ani, ypc_tim_ani] = cal_ypc_ani...
+    (dis_tim_ani, sta_poi, end_poi)
+bas_win_len = 5;
+sti_ons_tri = (1800:60:2100)';% n = 6
+sam_rat = 1;
+isi = 60;
+[ypc_tri_ani, ypc_tim_ani_tri, dis_tim_ani_tri] = cal_cha_tri_uni(dis_tim_ani, bas_win_len, ...
+    sti_ons_tri, sam_rat, isi, sta_poi, end_poi);
+ypc_ani.ear = mean(ypc_tri_ani(1:2, :), 1)';
+ypc_ani.lat = mean(ypc_tri_ani(5:6, :), 1)';
+%
+%ypc_tim_ani = squeeze(mean(ypc_tim_ani_tri(:, :, 1:2), 3));% first 2 trials !!!!!!
+ypc_tim_ani = squeeze(mean(ypc_tim_ani_tri, 3));
+end
+
+function p_win = cal_p_win(ypc_sam_tim_ani)
+    tim_poi = (-5:1:54)';
+    sta_poi_win = (-5:49)';
+    n_win = length(sta_poi_win);
+    end_poi_win = sta_poi_win + 5;
+    p_win = nan(n_win, 1);
+    for win = 1:n_win
+        p_val = cal_p_val(tim_poi, ypc_sam_tim_ani, sta_poi_win(win), end_poi_win(win));
+        p_win(win) = p_val.lme;
+    end
+end
+
+function [tau_ani, coe_det_ani] = cal_tau_ani(tax_dis_tim_ani)
+n_ani = size(tax_dis_tim_ani, 2);
+tau_ani = nan(n_ani, 1);
+coe_det_ani = nan(n_ani, 1);
+tim_poi = (-5:1:54)';
+log_poi = tim_poi > 5 & tim_poi < 40;
+tim_poi = tim_poi(log_poi);
+for ani = 1:n_ani
+    sam_poi = tax_dis_tim_ani(log_poi, ani);%trial-ave dis
+    [tau_ani(ani), ~, coe_det_ani(ani)] = fit_egm(tim_poi, sam_poi);% exponential growth model
+end
+end
+
+function [nor_ypc_fra_ani, nor_ypc_ani] = cal_nor_ypc_fra_ani(ypc_fra_ani_tri, dis_fra_ani_tri)
+[~, n_ani, ~] = size(ypc_fra_ani_tri);
+n_fra = 60;
+n_tri = size(ypc_fra_ani_tri, 3);
+nor_ypc_fra_ani = nan(n_fra, n_ani);
+nor_ypc_ani = nan(n_ani, 1);
+for ani = 1:n_ani
+    ypc_fra_tri = squeeze(ypc_fra_ani_tri(:, ani, :));
+    dis_fra_tri = squeeze(dis_fra_ani_tri(:, ani, :));
+    nor_ypc_fra_tri = nan(n_fra, n_tri);
+    for tri = 1:n_tri
+        nor_ypc_fra_tri(:, tri) = ypc_fra_tri(:, tri)/min(dis_fra_tri(:, tri));
+    end
+    nor_ypc_fra_ani(:, ani) = mean(nor_ypc_fra_tri, 2);
+    nor_ypc_ani(ani) = mean(nor_ypc_fra_ani(26:35, ani));
+end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%
 function ave_dis_ntt_win_cox_sam_ani = tra(ave_dis_ntt_sam_ani_win)
@@ -3684,6 +4508,267 @@ elseif strcmp(exp, 'two')
     [nan(n_fra_bef.(exp), n_ani_sam(3)); collected_spe_3(cri_ind.(exp):end, :)]};
 end
 end
+%%%%%%%%%%%%%%%%%%%%% ika
+function [p_ypc_xsa, ypc_sam_ani, ypc_sam_ani_tri, ypc_sam_fra_tri] = ext_ika_dat(all_fish, ...
+    x_values, change_yposition_1, change_yposition_2, change_yposition_3)
+win_lim = [35 60];
+[p_ypc_xsa, ypc_sam_ani, ypc_sam_ani_tri, ypc_sam_fra_tri] = ext_y_dat_ika(all_fish, x_values, ...
+    change_yposition_1, change_yposition_2, change_yposition_3, win_lim);
+end
+
+function [p_ypc_xsa, ypc_sam_ani, ypc_sam_ani_tri, ypc_sam_fra_tri] = ext_y_dat_ika(all_fish, ...
+    x_values, change_yposition_1, change_yposition_2, change_yposition_3, win_lim)
+[n_ani_sam, ~] = ext_n_ani_sam_ika(all_fish);
+[n_fra_ann, ~, ~] = size(change_yposition_1);
+% y position change
+n_sam = 3;
+ypc_sam_fra_ani = cell(1, n_sam);
+ypc_sam_ani_tri = cell(n_sam, 1);
+ypc_sam_fra_tri = cell(n_sam, 1);
+tim_tri_fra = x_values';
+log_fra = tim_tri_fra > win_lim(1) & tim_tri_fra <= win_lim(2);
+for sam = 1:n_sam
+    n_ani = n_ani_sam(sam);
+    ypc_sam_fra_ani{1, sam} = nan(n_fra_ann, n_ani);
+    if sam == 1
+        ypc_fra_ani_tri = change_yposition_2;%%%%!!!!!!!!!!!!!!!!!!!!!!!!!! sham
+    elseif sam == 2
+        ypc_fra_ani_tri = change_yposition_1;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% abl
+    elseif sam == 3
+        ypc_fra_ani_tri = change_yposition_3;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mtz
+    end
+    for k = 1:n_ani
+        ypc_sam_fra_ani{1, sam}(:, k) = squeeze(mean(ypc_fra_ani_tri(:, k, :), 3));
+    end
+    ypc_sam_ani_tri{sam} = squeeze(mean(ypc_fra_ani_tri(log_fra, :, :), 1));
+    ypc_sam_fra_tri{sam} = squeeze(mean(ypc_fra_ani_tri, 2));
+end
+%
+ypc_sam_ani = cell(n_sam, 1);
+for sam = 1:n_sam
+    ypc_sam_ani{sam} = nan(n_ani_sam(sam), 1);
+    for k = 1:n_ani_sam(sam)
+        ypc_sam_ani{sam}(k) = mean(ypc_sam_fra_ani{1, sam}(log_fra, k));
+    end
+end
+p_ypc_xsa = com_p_xsa(ypc_sam_ani);%%%%%%%%%%%%%%!!!!!!!!!!!!!!!!!!!!!!!!!!
+end
+
+function ypc_sam_ani_tri = cal_ypc_sam_ani_tri(win_len_bas, win_lim)
+[~, ypc_sam_fra_ani_tri, ~] = cal_ypc_sam_fra_ani(win_len_bas);
+n_sam = 3;
+ypc_sam_ani_tri = cell(n_sam, 1);
+ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
+x_values = ika_fil.x_values;
+tim_tri_fra = x_values';
+log_fra = tim_tri_fra > win_lim(1) & tim_tri_fra <= win_lim(2);
+for sam = 1:n_sam
+    ypc_fra_ani_tri = ypc_sam_fra_ani_tri{sam};
+    ypc_sam_ani_tri{sam} = squeeze(mean(ypc_fra_ani_tri(log_fra, :, :), 1));
+end
+end
+
+function [n_ani_sam, ani_num_sam_ind] = ext_n_ani_sam_ika(all_fish)
+n_sam  = 3;
+ani_num_two_ind = [];% ablated
+ani_num_one_ind = [];% control
+ani_num_thr_ind = [];% mtz
+for fish = 1:size(all_fish, 1)
+    if all_fish{fish, 1}.VibStability == 1
+        if all_fish{fish, 1}.selected == 1
+            if all_fish{fish, 1}.group == 1 % ablated
+                ani_num_two_ind = [ani_num_two_ind; all_fish{fish, 1}.realNum];
+            elseif all_fish{fish, 1}.group == 2 % control
+                ani_num_one_ind = [ani_num_one_ind; all_fish{fish, 1}.realNum];
+            elseif all_fish{fish, 1}.group == 3 % mtz
+                ani_num_thr_ind = [ani_num_thr_ind; all_fish{fish, 1}.realNum];
+            end
+        end
+    end
+end
+n_ani_sam = nan(n_sam, 1);
+n_ani_sam(1) = length(ani_num_one_ind);
+n_ani_sam(2) = length(ani_num_two_ind);
+n_ani_sam(3) = length(ani_num_thr_ind);
+ani_num_sam_ind = {ani_num_one_ind; ani_num_two_ind; ani_num_thr_ind};
+end
+
+function [ypc_sam_fra_ani, ypc_sam_fra_ani_tri, ypc_sam_fra_tri, ypo_sam_fra_ani_tri] = ...
+    cal_ypc_sam_fra_ani(win_len_bas)
+n_sam = 3;
+ypc_sam_fra_ani_tri = cell(n_sam, 1);% 3d array in a cell
+ypo_sam_fra_ani_tri = cell(n_sam, 1);% 3d array in a cell
+ypc_sam_fra_ani = cell(n_sam, 1);
+ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
+all_fish = ika_fil.all_fish;
+duration = 30; % xline marking stim onset
+groups = ika_fil.groups;
+ypc_sam_fra_tri = cell(n_sam, 1);
+for sam = 1:n_sam
+    if sam == 1
+        group = groups{2};%%%%!!!!!!!!!!!!!!!!!!!!!!!!!! sham
+    elseif sam == 2
+        group = groups{1};%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% abl
+    elseif sam == 3
+        group = groups{3};%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mtz
+    end
+    [ypo_sam_fra_ani_tri{sam}, ypc_sam_fra_ani_tri{sam}, ~, ypc_sam_fra_ani{sam}] = ...
+        Original_AO_plot_ypos_average_and_change(all_fish, duration, group, win_len_bas);
+    ypc_sam_fra_tri{sam} = squeeze(mean(ypc_sam_fra_ani_tri{sam}, 2));
+end
+end
+
+function [ypc_sam_ani, p_ypc_xsa] = cal_ypc_sam_ani(win_lim, x_values, ypc_sam_fra_ani, all_fish)
+[n_ani_sam, ~] = ext_n_ani_sam_ika(all_fish);
+n_sam = 3;
+tim_tri_fra = x_values';
+log_fra = tim_tri_fra > win_lim(1) & tim_tri_fra <= win_lim(2);
+ypc_sam_ani = cell(n_sam, 1);
+for sam = 1:n_sam
+    ypc_sam_ani{sam} = nan(n_ani_sam(sam), 1);
+    for k = 1:n_ani_sam(sam)
+        ypc_sam_ani{sam}(k) = mean(ypc_sam_fra_ani{sam}(log_fra, k));
+    end
+end
+p_ypc_xsa = com_p_xsa(ypc_sam_ani);
+end
+
+function ypc_sam_ani_epo = cal_ypc_sam_ani_epo(x_values, all_fish, ypc_sam_fra_ani_tri)
+ypc_sam_ani_epo.ini = cell(3, 1);
+ypc_sam_ani_epo.rec = cell(3, 1);
+[n_ani_sam, ~] = ext_n_ani_sam_ika(all_fish);
+for sam = 1:3
+    ypc_sam_ani_epo.ini{sam} = nan(n_ani_sam(sam), 3);
+    ypc_sam_ani_epo.rec{sam} = nan(n_ani_sam(sam), 3);
+end
+
+win_lim = [30 35];
+tri_lim = [1 10];
+ypc_sam_ani = cal_ypc_sam_ani_lim(win_lim, tri_lim, x_values, ypc_sam_fra_ani_tri, all_fish);
+for sam = 1:3
+    ypc_sam_ani_epo.ini{sam}(:, 1) = ypc_sam_ani{sam};
+end
+tri_lim = [21 30];
+ypc_sam_ani = cal_ypc_sam_ani_lim(win_lim, tri_lim, x_values, ypc_sam_fra_ani_tri, all_fish);
+for sam = 1:3
+    ypc_sam_ani_epo.ini{sam}(:, 3) = ypc_sam_ani{sam};
+end
+
+win_lim = [35 60];
+tri_lim = [1 10];
+ypc_sam_ani = cal_ypc_sam_ani_lim(win_lim, tri_lim, x_values, ypc_sam_fra_ani_tri, all_fish);
+for sam = 1:3
+    ypc_sam_ani_epo.rec{sam}(:, 1) = ypc_sam_ani{sam};
+end
+tri_lim = [21 30];
+ypc_sam_ani = cal_ypc_sam_ani_lim(win_lim, tri_lim, x_values, ypc_sam_fra_ani_tri, all_fish);
+for sam = 1:3
+    ypc_sam_ani_epo.rec{sam}(:, 3) = ypc_sam_ani{sam};
+end
+end
+
+function ypc_sam_ani = cal_ypc_sam_ani_lim(win_lim, tri_lim, x_values, ypc_sam_fra_ani_tri, all_fish)
+[n_ani_sam, ~] = ext_n_ani_sam_ika(all_fish);
+n_fra = length(x_values);
+n_sam = 3;
+ypc_sam_fra_ani = cell(n_sam, 1);
+num_tri = (1:30)';
+log_tri = num_tri >= tri_lim(1) & num_tri <= tri_lim(2);
+for sam = 1:n_sam
+    n_ani = n_ani_sam(sam);
+    ypc_sam_fra_ani{sam} = nan(n_fra, n_ani);
+    ypc_fra_ani_tri = ypc_sam_fra_ani_tri{sam};
+    for k = 1:n_ani
+        ypc_sam_fra_ani{sam}(:, k) = squeeze(mean(ypc_fra_ani_tri(:, k, log_tri), 3));
+    end
+end
+ypc_sam_ani = cell(n_sam, 1);
+tim_tri_fra = x_values';
+log_fra = tim_tri_fra > win_lim(1) & tim_tri_fra <= win_lim(2);
+for sam = 1:n_sam
+    ypc_sam_ani{sam} = nan(n_ani_sam(sam), 1);
+    for k = 1:n_ani_sam(sam)
+        ypc_sam_ani{sam}(k) = mean(ypc_sam_fra_ani{sam}(log_fra, k));
+    end
+end
+end
+
+function [nor_ypc_sam_fra_ani, nor_ypc_sam_ani] = cal_nor_ypc_sam_fra_ani(ypc_sam_fra_ani_tri, ...
+    dis_sam_fra_ani_tri, all_fish, n_tri)
+[n_ani_sam, ~] = ext_n_ani_sam_ika(all_fish);
+n_sam = 3;
+nor_ypc_sam_fra_ani = cell(n_sam, 1);
+nor_ypc_sam_ani = cell(n_sam, 1);
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+tim_fra = con_fil.tim_fra;
+tim_fra = tim_fra.ika;
+log_fra.res = tim_fra > 0;
+log_fra.rec = tim_fra > 5;
+n_fra = length(tim_fra);
+%n_tri = size(ypc_sam_fra_ani_tri{1}, 3);% 30
+for sam = 1:n_sam
+    nor_ypc_sam_fra_ani{sam} = nan(n_fra, n_ani_sam(sam));
+    nor_ypc_sam_ani{sam} = nan(n_ani_sam(sam), 1);
+    ypc_fra_ani_tri = ypc_sam_fra_ani_tri{sam};
+    dis_fra_ani_tri = dis_sam_fra_ani_tri{sam};
+    for ani = 1:n_ani_sam(sam)
+        ypc_fra_tri = squeeze(ypc_fra_ani_tri(:, ani, :));
+        dis_fra_tri = squeeze(dis_fra_ani_tri(:, ani, :));
+        nor_ypc_fra_tri = nan(n_fra, n_tri);
+        for tri = 1:n_tri
+            nor_ypc_fra_tri(:, tri) = ypc_fra_tri(:, tri)/min(dis_fra_tri(log_fra.res, tri));
+        end
+        nor_ypc_sam_fra_ani{sam}(:, ani) = mean(nor_ypc_fra_tri, 2);
+        nor_ypc_sam_ani{sam}(ani) = mean(nor_ypc_sam_fra_ani{sam}(log_fra.rec, ani));
+    end
+end
+end
+
+function p_cro = cal_p_cro(nor_ypc_sam_fra_ani, win_ons)
+n_sam = 3;
+nor_ypc_sam_ani = cell(n_sam, 1);
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+tim_fra = con_fil.tim_fra;
+tim_fra = tim_fra.ika;
+win_len = 5;
+log_fra.rec = tim_fra > win_ons & tim_fra < win_ons + win_len;
+for sam = 1:n_sam
+    nor_ypc_fra_ani = nor_ypc_sam_fra_ani{sam};
+    n_ani = size(nor_ypc_fra_ani, 2);
+    nor_ypc_sam_ani{sam} = nan(n_ani, 1);
+    for ani = 1:n_ani
+        nor_ypc_sam_ani{sam}(ani) = mean(nor_ypc_fra_ani(log_fra.rec, ani));
+    end
+end
+p_cro = com_p_xsa(nor_ypc_sam_ani);
+end
+
+function [pro_sam_row_col, foc_sam_ani] = cal_pro_sam_row_col
+ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
+all_fish = ika_fil.all_fish;
+duration = 25;
+all_fish = aj_pdfPosition_AO(all_fish, duration);
+n_sam = 3;
+groups = ika_fil.groups;
+pro_sam_row_col = cell(n_sam, 1);
+pro_sam_row_col_ani = cell(n_sam, 1);
+foc_sam_ani = cell(n_sam, 1);
+[n_ani_sam, ~] = ext_n_ani_sam_ika(all_fish);
+for sam = 1:n_sam
+    if sam == 1
+        group = groups{2};%%%%!!!!!!!!!!!!!!!!!!!!!!!!!! sham
+    elseif sam == 2
+        group = groups{1};%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% abl
+    elseif sam == 3
+        group = groups{3};%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mtz
+    end
+    [pro_sam_row_col{sam}, pro_sam_row_col_ani{sam}] = AO_ploting_tap_heatmaps_over_fish(all_fish, ...
+        group);
+    for ani = 1:n_ani_sam(sam)
+        foc_sam_ani{sam}(ani) = Focality_forVegard_EY(pro_sam_row_col_ani{sam}(:, :, ani));
+    end
+end
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% data neural
 function [sig_lev, kld_xsa] = com_kld(per_pai_reg_sam_bin_ani, ind_reg, ind_sam)
 kld_xsa = nan(1, 2);
@@ -3695,31 +4780,15 @@ kld_xsa(2) = kldiv(cor_coe_bin, per_pai_sha_bin, ...
     mean(per_pai_reg_sam_bin_ani{ind_reg, 2}, 2, 'omitnan')/100 + eps);
 end
 
-function dif_ske_xre_sam = com_dif_ske_xre_sam(ske_xre_sam_ani, ind_sam)
-global n_cro_tot
-ref_ske_xre = nan(n_cro_tot, 1);
-[~, n_sam] = size(ske_xre_sam_ani);
-dif_ske_xre_sam = nan(n_cro_tot, n_sam - 1);
-for i = 1:n_cro_tot
-    ref_ske_xre(i) = mean(ske_xre_sam_ani{i, ind_sam(1)}, 'omitnan');
-    dif_ske_xre_sam(i, 1) = ...
-        mean(ske_xre_sam_ani{i, ind_sam(2)}, 'omitnan') - ref_ske_xre(i);
-    if n_sam == 3
-        dif_ske_xre_sam(i, 2) = ...
-            mean(ske_xre_sam_ani{i, ind_sam(3)}, 'omitnan') - ref_ske_xre(i);
-    end
-end
-end
-
 function [act_reg_sam_con_fra_cel, act_reg_sam_fra_sta_con] = ext_act_reg_sam_con_fra_cel(obj, ...
     fie_cas_num)
-global n_reg_for n_con
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_reg_for = con_fil.n_reg_for;
 n_cas = length(fie_cas_num);
-act_sam_reg_con_fra_cel = cell(obj.n_sam, 1);
 act_sam_reg_fra_sta_con = cell(obj.n_sam, 1);
 for i = 1:obj.n_sam
     sam_fil = matfile(obj.fil_pat_sam(i));
-    act_sam_reg_con_fra_cel{i} = sam_fil.act_reg_con_fra_cel;
+    %act_sam_reg_con_fra_cel{i} = sam_fil.act_reg_con_fra_cel;
     act_sam_reg_fra_sta_con{i} = sam_fil.act_reg_fra_sta_con;
 end
 % initialization
@@ -3732,21 +4801,21 @@ else
     act_reg_sam_fra_sta_con = [];
 end
 for j = 1:n_cas
-    var_reg_sam_con_fra_cel = cell(n_reg_for, 1);
+    %var_reg_sam_con_fra_cel = cell(n_reg_for, 1);
     var_reg_sam_fra_sta_con = cell(n_reg_for, 1);
     for k = 1:n_reg_for
-        var_reg_sam_con_fra_cel{k} = cell(obj.n_sam, n_con);
+        %var_reg_sam_con_fra_cel{k} = cell(obj.n_sam, n_con);
         var_reg_sam_fra_sta_con{k} = cell(obj.n_sam, 1);
         for i = 1:obj.n_sam
-            act_reg_con_fra_cel = getfield(act_sam_reg_con_fra_cel{i}, fie_cas_num{j}{:});
-            var_reg_sam_con_fra_cel{k}(i, :) = act_reg_con_fra_cel(k, :);
+            % act_reg_con_fra_cel = getfield(act_sam_reg_con_fra_cel{i}, fie_cas_num{j}{:});
+            % var_reg_sam_con_fra_cel{k}(i, :) = act_reg_con_fra_cel(k, :);
             %
             act_reg_fra_sta_con = getfield(act_sam_reg_fra_sta_con{i}, fie_cas_num{j}{:});
             var_reg_sam_fra_sta_con{k}{i} = act_reg_fra_sta_con{k};
         end
     end
-    act_reg_sam_con_fra_cel = ...
-        setfield(act_reg_sam_con_fra_cel, fie_cas_num{j}{:}, var_reg_sam_con_fra_cel);
+    % act_reg_sam_con_fra_cel = ...
+    %     setfield(act_reg_sam_con_fra_cel, fie_cas_num{j}{:}, var_reg_sam_con_fra_cel);
     act_reg_sam_fra_sta_con = ...
         setfield(act_reg_sam_fra_sta_con, fie_cas_num{j}{:}, var_reg_sam_fra_sta_con);
 end
@@ -3790,175 +4859,382 @@ end
 p_pcc_reg_con_xsa = com_p_var_win_con_xsa(pcc_ave_reg_con_sam_ani);
 p_euc_dis_reg_con_xsa = com_p_var_win_con_xsa(euc_dis_ave_reg_con_sam_ani);
 end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% plot freely-moving
-function h_fig = plo_ntt(tim_uni, mea_val_pos_tim_gro, sem_val_pos_tim_gro, ...
-    val_pos_win_cox_sam_ani, p_val_pos_win, pro_ntt_sam_win_row_col, foc_ntt_win_cox_sam_ani, ...
-    p_foc_ntt_win, y_lab)
+
+function dif_ske_xre_sam = com_dif_ske_xre_sam(ske_xre_sam_ani, ind_sam)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_cro_tot = con_fil.n_cro_tot;
+ref_ske_xre = nan(n_cro_tot, 1);
+[~, n_sam] = size(ske_xre_sam_ani);
+dif_ske_xre_sam = nan(n_cro_tot, n_sam - 1);
+for i = 1:n_cro_tot
+    ref_ske_xre(i) = mean(ske_xre_sam_ani{i, ind_sam(1)}, 'omitnan');
+    dif_ske_xre_sam(i, 1) = ...
+        mean(ske_xre_sam_ani{i, ind_sam(2)}, 'omitnan') - ref_ske_xre(i);
+    if n_sam == 3
+        dif_ske_xre_sam(i, 2) = ...
+            mean(ske_xre_sam_ani{i, ind_sam(3)}, 'omitnan') - ref_ske_xre(i);
+    end
+end
+end
+
+function [pcc_sam_blo_ani, p_ent_fac, cor_coe_epo_reg_sam_blo_ani, p_epo_reg_fac, p_acc_epo_xre_xsa...
+    , dif_acc_epo_xre_sam] = cal_pcc_sam_blo_ani(obj, fie)
+pcc_sam_blo_ani.all = cell(obj.n_sam, 1);
+pcc_sam_blo_ani.pos = cell(obj.n_sam, 1);
+pcc_sam_blo_ani.neg = cell(obj.n_sam, 1);
+for i = 1:obj.n_sam
+    sam_fil = matfile(obj.fil_pat_sam(i));
+    pcc_blo_ani = sam_fil.pcc_blo_ani;
+    pcc_sam_blo_ani.all{i} = pcc_blo_ani.(fie).all;
+    pcc_sam_blo_ani.pos{i} = pcc_blo_ani.(fie).pos;
+    pcc_sam_blo_ani.neg{i} = pcc_blo_ani.(fie).neg;
+end
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+dis_blo = con_fil.dis_blo;
+dis_blo = dis_blo.xre;
+p_ent_fac.all = cal_p_fac(dis_blo, pcc_sam_blo_ani.all);
+p_ent_fac.pos = cal_p_fac(dis_blo, pcc_sam_blo_ani.pos);
+p_ent_fac.neg = cal_p_fac(dis_blo, pcc_sam_blo_ani.neg);
+%
+[cor_coe_epo_reg_sam_blo_ani, p_epo_reg_fac, p_acc_epo_xre_xsa, dif_acc_epo_xre_sam] = ...
+    gen_cor_coe_epo_reg_sam_blo_ani(obj, fie);
+end
+
+function [cor_coe_epo_reg_sam_blo_ani, p_epo_reg_fac, p_acc_epo_xre_xsa, dif_acc_epo_xre_sam] = ...
+    gen_cor_coe_epo_reg_sam_blo_ani(obj, fie)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_epo = con_fil.n_epo;
+n_reg_for = con_fil.n_reg_for;
+n_cro_tot = con_fil.n_cro_tot;
+%
+cor_coe_epo_reg_sam_blo_ani.all = gen_var_rox_cox_roq_coq(n_epo.tot, n_reg_for, obj.n_sam, 1);
+cor_coe_epo_reg_sam_blo_ani.pos = gen_var_rox_cox_roq_coq(n_epo.tot, n_reg_for, obj.n_sam, 1);
+cor_coe_epo_reg_sam_blo_ani.neg = gen_var_rox_cox_roq_coq(n_epo.tot, n_reg_for, obj.n_sam, 1);
+%
+acc_epo_xre_sam_ani = gen_var_rox_cox_roq_coq(n_epo.tot, n_cro_tot, obj.n_sam, 1);
+p_acc_epo_xre_xsa = cell(n_epo.tot, n_cro_tot);
+dif_acc_epo_xre_sam = cell(n_epo.tot, 1);
+for epo = 1:n_epo.tot
+    for reg = 1:n_reg_for
+        for sam = 1:obj.n_sam
+            sam_fil = matfile(obj.fil_pat_sam(sam));
+            cor_coe_epo_reg_blo_ani = sam_fil.cor_coe_epo_reg_blo_ani;
+            cor_coe_epo_reg_blo_ani = cor_coe_epo_reg_blo_ani.(fie);
+            cor_coe_epo_reg_sam_blo_ani.all{epo, reg}{sam} = cor_coe_epo_reg_blo_ani.all{epo, reg};
+            cor_coe_epo_reg_sam_blo_ani.pos{epo, reg}{sam} = cor_coe_epo_reg_blo_ani.pos{epo, reg};
+            cor_coe_epo_reg_sam_blo_ani.neg{epo, reg}{sam} = cor_coe_epo_reg_blo_ani.neg{epo, reg};
+        end
+    end
+    %
+    for cro = 1:n_cro_tot
+        for sam = 1:obj.n_sam
+            sam_fil = matfile(obj.fil_pat_sam(sam));
+            acc_epo_xre_ani = sam_fil.acc_epo_xre_ani;
+            if isfield(acc_epo_xre_ani, fie)
+                acc_epo_xre_sam_ani{epo, cro}{sam} = acc_epo_xre_ani.(fie){epo, cro};
+            end
+        end
+        p_acc_epo_xre_xsa{epo, cro} = com_p_xsa(acc_epo_xre_sam_ani{epo, cro});
+    end
+    acc_xre_sam_ani = ext_ske_xre_sam_ani(acc_epo_xre_sam_ani, epo);
+    dif_acc_epo_xre_sam{epo} = com_dif_ske_xre_sam(acc_xre_sam_ani, obj.ind_sam);
+end
+p_epo_reg_fac.all = cal_p_epo_reg_fac(cor_coe_epo_reg_sam_blo_ani.all);
+p_epo_reg_fac.pos = cal_p_epo_reg_fac(cor_coe_epo_reg_sam_blo_ani.pos);
+p_epo_reg_fac.neg = cal_p_epo_reg_fac(cor_coe_epo_reg_sam_blo_ani.neg);
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% freely-moving plotting
+function h_fig = plo_tax(dis_tap_nac_tim_ani, dis_tap_tph_tim_ani, end_poi, sta_poi, n_tri_tak)
 [h_fig, fig_wid, fig_hei] = fig;
-n_row = 3;
-n_col = 3;
-gap_ver_row = [0.070 0.020 0.050];
-gap_hor_row_col = [0.030 0.030 0.030; ...
-    0.010 0.100 0.030; ...
-    0.010 0.100 0.030];
-mar_bot = 0.040;
-mar_top = 0.030;
-mar_lef = 0.030;
-mar_rig = 0.001;
-global col_sam fon_siz mar_siz gro_two_cro
-asp_rat_bar = 0.5;
-asp_rat_are = 11.5/8;
-asp_rat_axe = [asp_rat_are asp_rat_bar asp_rat_bar ...
-    asp_rat_are asp_rat_are asp_rat_bar ...
-    asp_rat_are asp_rat_are asp_rat_bar];
+n_row = 1;
+n_col = 2;
+hei = 4.5;
+mar_top = cal_mar_top(hei);
+mar_bot = 0.028;
+mar_lef = 0.022;
+mar_rig = 0.000;
+
+% gap_ver_row = [0.000 0.000 0.010 0.050];
+% gap_hor_col = [0.030 0.030 0.030 0.030 0.030];
+% gap_hor_row_col = repmat(gap_hor_col, n_row, 1);
+
+gap_ver_row = 0.070;
+gap_hor_row_col = 0.030*ones(n_row, n_col);
+
+asp_rat_axe = [1; 0.5];
+sca_axe = [1; 1];
 wid = false;
-sca = 0.900;
-sca_axe = [1 1 1 ...
-    sca sca 1 ...
-    sca sca 1];
-n_pix_ext = 0;
+n_pix_ext = 30;
 [hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
     gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, fig_hei, ...
     wid, sca_axe, n_pix_ext);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% distance
 hax = hax_sub(1);
-log_smo = false;
-plo_sha(hax, tim_uni, mea_val_pos_tim_gro, sem_val_pos_tim_gro, col_sam, log_smo)
-dur = 4;
-siz_win = dur*[60; 60];
-poi = 60*[1 + dur 29];
-col_con = ["ash grey"; "ash grey"];
-plo_sti_sub_tri(hax, siz_win, poi, col_con)
-xlabel(hax, 'Time (s)')
-ylabel(hax, y_lab)
-xtl_abl = ['\color[rgb]{1,0,0} ', 'Abl'];
+%tim_poi = (0:1:59)';
+tim_poi = (-5:1:54)';
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([3 2]');
+[ave_dis_tap_win_cox_sam_ani, p_dis_tap_win, tax_dis_sam_tim_ani] = cal_ave_dis(dis_tap_nac_tim_ani...
+    , dis_tap_tph_tim_ani, end_poi, sta_poi, n_tri_tak);
+h_mtz = plo_sha.raw(hax, tim_poi, tax_dis_sam_tim_ani{1}, col_sam{1});
+hold(hax, "on")
+h_abl = plo_sha.raw(hax, tim_poi, tax_dis_sam_tim_ani{2}, col_sam{2});
+h = dra_ver_lin(hax, 0);
+
+%col_con = "ash grey";
+col_con = [178 190 181]/255;
+siz_win = end_poi - sta_poi;
+plo_sti_sub_tri(hax, siz_win, end_poi, col_con)
 %
-linkaxes(hax_sub(2:3))
-y_min = inf;
-y_max = -inf;
+tit_sam = con_fil.tit_sam;
+leg = legend(hax, [h_mtz h_abl], tit_sam([3 2]'));
+leg.Box = 'off';
+xlabel(hax, 'Time (s)')
+ylabel(hax, 'Distance from bottom (cm)')
+%ylabel(hax, 'Speed (cm/s)')
+%ylabel(hax, 'Nor. Dist. from bottom')
+
+fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+leg.Location = 'southeast';
 hax = hax_sub(2);
+ind_win = 2;
 ind_con = 1;
-ind_win = 1;
 ind_sam = [1 2];
 dat = true;
-[h_plo, n_uni_sam] = plo_dat_err_xsa(hax, val_pos_win_cox_sam_ani, ind_win, ind_con, mar_siz, ...
-    col_sam, ind_sam, dat);
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-hax.XTickLabels = {'Con'; ['\color[rgb]{1,0,0} ', 'Abl']};
-%
-hax = hax_sub(3);
-ind_con = 1;
-ind_win = 2;
-[h_plo, n_uni_sam] = plo_dat_err_xsa(hax, val_pos_win_cox_sam_ani, ind_win, ind_con, mar_siz, ...
-    col_sam, ind_sam, dat);
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-hax.YAxis.Visible = 'off';
-hax.XTickLabels = {'Con'; xtl_abl};
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
-hax = hax_sub(2);
-axes(hax)
-off_non = 0.070;
-y_lim_pre = ylim;
-mou = 0.030;
-sep = off_non + mou + 0.040;
+mar_siz = con_fil.mar_siz;
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([3 2]');
+[h_plo, n_uni_sam, tic_sam] = plo_dat_err_xsa(hax, ave_dis_tap_win_cox_sam_ani, ind_win, ind_con, ...
+    mar_siz.pub, col_sam, ind_sam, dat);
+xtl_sam = con_fil.xtl_sam;
+xtl_sam = xtl_sam([3 2]');
+hax.XTickLabels = xtl_sam;
+ylabel(hax, 'Distance from bottom (cm)')
+gro_two_cro = con_fil.gro_two_cro;
+y_lim_pre = ylim(hax);
+mou = 0.010;
+sep = mou + 0.040;
 ext_hei = -(sep + mou);
-ind_win = 1;
-[~, y_lim] = sigstar_lim(hax, gro_two_cro, fon_siz, off_non, y_lim_pre, sep, mou, ext_hei, ...
-    p_val_pos_win(ind_win));
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-hax.FontSize = fon_siz;
-title(hax, 'Early', 'FontWeight','normal')
+ind_sig.sig(hax, gro_two_cro, y_lim_pre, sep, mou, ext_hei, round(p_dis_tap_win(2), 2))
+fon_siz = 8;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz, mar_siz.pub, log_lin_wid);
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
+end
+
+function h_fig = plo_ypc(ypc_sam_tim_ani, ypc_ani)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 2;
+hei = 4.5;
+mar_top = cal_mar_top(hei);
+mar_bot = 0.028;
+mar_lef = 0.022;
+mar_rig = 0.000;
+gap_ver_row = 0.070;
+gap_hor_row_col = 0.030*ones(n_row, n_col);
+
+asp_rat_axe = [1; 0.5];
+sca_axe = [1; 1];
+wid = false;
+n_pix_ext = 30;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, fig_hei, ...
+    wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% distance
+hax = hax_sub(1);
+tim_poi = (-5:1:54)';
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([3 2]');
+h_mtz = plo_sha.raw(hax, tim_poi, ypc_sam_tim_ani{1}, col_sam{1});
+hold(hax, "on")
+h_abl = plo_sha.raw(hax, tim_poi, ypc_sam_tim_ani{2}, col_sam{2});
+h = dra_ver_lin(hax, 0);
+col_con = [178 190 181]/255;
+sta_poi = 20;
+end_poi = 30;
+siz_win = end_poi - sta_poi;
+plo_sti_sub_tri(hax, siz_win, end_poi, col_con)
+tit_sam = con_fil.tit_sam;
+leg = legend(hax, [h_mtz h_abl], tit_sam([3 2]'));
+leg.Box = 'off';
+xlabel(hax, 'Time (s)')
+y_lab = 'Δ(y position) (cm)';
+ylabel(hax, y_lab)
+fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+mar_siz = mar_siz.pub;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz.pub, mar_siz, log_lin_wid);
+leg.Location = 'southeast';
 %
-hax = hax_sub(3);
-axes(hax)
-y_lim_pre = ylim;
-ind_win = 2;
-[~, y_lim] = sigstar_lim(hax, gro_two_cro, fon_siz, off_non, y_lim_pre, sep, mou, ext_hei, ...
-    p_val_pos_win(ind_win));
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-hax.FontSize = fon_siz;
-title(hax, 'Late', 'FontWeight','normal')
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% heatmaps
-ind_var_col = nan;
-hax = hax_sub(4);
-ima(hax, ind_var_col, pro_ntt_sam_win_row_col{1, 1})
-colormap(jet)
-clim([0 0.01])
-hax.XTickLabels = [];
-hax.YTickLabels = [];
-ylabel(hax, 'Early')
-title(hax, 'Control', FontWeight='normal')
+hax = hax_sub(2);
+ind_sam = [1 2];
+dat = true;
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([3 2]');
+var_sam_uni = {ypc_ani.nac.ear; ypc_ani.tph.ear};
+[h_plo, n_uni_sam, gro_cro] = plo_dat_err_xsa_sim(hax, var_sam_uni, mar_siz, col_sam, ind_sam, dat);
+xtl_sam = con_fil.xtl_sam;
+xtl_sam = xtl_sam([3 2]');
+hax.XTickLabels = xtl_sam;
+ylabel(hax, y_lab)
+gro_two_cro = con_fil.gro_two_cro;
+y_lim_pre = ylim(hax);
+mou = 0.010;
+sep = mou + 0.040;
+ext_hei = -(sep + mou);
+p_xsa = com_p_xsa(var_sam_uni);
+ind_sig.sig(hax, gro_two_cro, y_lim_pre, sep, mou, ext_hei, p_xsa.lme)
+fon_siz = 8;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz, mar_siz.pub, log_lin_wid);
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
+end
+
+function h_fig = plo_tax_hea(tax_dis_sam_tim_ani, sta_poi_win, p_win)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 2;
+n_col = 1;
+hei = 4.5;
+mar_top = cal_mar_top(hei);
+mar_bot = 0.040;
+mar_lef = 0.022;
+mar_rig = 0.000;
+gap_ver_row = 0.010;
+gap_hor_row_col = 0.030*ones(n_row, n_col);
+asp_rat_axe = [10; 1];
+sca_axe = [0.1; 1];
+wid = false;
+n_pix_ext = 70;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_one_col(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, fig_hei, ...
+    wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% distance
+hax = hax_sub(1);
+ima_obj = ima(hax, sta_poi_win, p_win');
+colormap(hax, "cool")
+%clim(hax, [0.05 1])
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+hax.XAxis.Visible = "off";
+hax.YAxis.Visible = "off";
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+% traces
+hax = hax_sub(2);
+tim_poi = (-5:1:54)';
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([3 2]');
+col_sam{1} = [0 0 0];
+h_mtz = plo_sha.raw(hax, tim_poi, tax_dis_sam_tim_ani{1}, col_sam{1});
+hold(hax, "on")
+h_abl = plo_sha.raw(hax, tim_poi, tax_dis_sam_tim_ani{2}, col_sam{2});
+h = dra_ver_lin(hax, 0);
 %
-hax = hax_sub(5);
-axes(hax)
-ima(hax, ind_var_col, pro_ntt_sam_win_row_col{2, 1})
-colormap(jet)
-clim([0 0.01])
-hax.XTickLabels = [];
-hax.YTickLabels = [];
-title(hax, 'Ablated', FontWeight='normal', Color = 'r')
+tit_sam = con_fil.tit_sam;
+leg = legend(hax, [h_mtz h_abl], tit_sam([3 2]'));
+leg.Box = 'off';
+leg.Position(1) = 0.003;
+leg.Position(2) = 0.103;
+leg.IconColumnWidth = 5;
+xlabel(hax, 'Time (s)')
+
+%y_lab = 'Distance from bottom (cm)';
+%ylabel(hax, 'Speed (cm/s)')
+%ylabel(hax, 'Nor. Dist. from bottom')
+%y_lab = 'Δ(y position) (cm)';
+y_lab = 'Change in depth (cm)';
+
+ylabel(hax, y_lab)
+linkaxes(hax_sub, 'x')
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
 %
-hax = hax_sub(7);
-axes(hax)
-ima(hax, ind_var_col, pro_ntt_sam_win_row_col{1, 2})
-colormap(jet)
-clim([0 0.01])
-hax.XTickLabels = [];
-hax.YTickLabels = [];
-ylabel(hax, 'Late')
+shi = 0.005;
+col_han = adj_col_han(hax_sub(1), shi);
+%col_han.Ticks = round(col_han.Limits, 2);% didn't work well
+col_han.Ticks = col_han.Limits;
+col_han.Label.String = 'p';
 %
-hax = hax_sub(8);
-ima(hax, ind_var_col, pro_ntt_sam_win_row_col{2, 2})
-colormap(jet)
-clim([0 0.01])
-hax.XTickLabels = [];
-hax.YTickLabels = [];
-h = colorbar;
-h.Ticks = [0 0.01];
-h.Position(3) = 0.003;
-h.Position(1) = hax.Position(1) + hax.Position(3) + 0.010;
-h.Label.String = 'probability';
-h.Label.Position(1) = 4;
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
+end
+function h_fig = plo_dis_foc_sca(ave_dis_tap_win_cox_sam_ani, p_dis_tap_win, foc_tap_win_cox_sam_ani...
+    , p_foc_tap_win)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 2;
+gap_ver_row = 0.070;
+gap_hor_row_col = 0.020*ones(n_row, n_col);
+mar_bot = 0.022;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+hei = con_fil.hei;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.015;
+mar_rig = 0.001;
+asp_rat_bar = 0.5;
+asp_rat_axe = [asp_rat_bar asp_rat_bar];
+wid = false;
+sca_axe = [1 1];
+n_pix_ext = 3;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% scatter
-linkaxes(hax_sub([6 9]))
-y_min = inf;
-y_max = -inf;
-hax = hax_sub(6);
+hax = hax_sub(1);
+ind_win = 2;
 ind_con = 1;
-ind_win = 1;
-[h_plo, n_uni_sam] = plo_dat_err_xsa(hax, foc_ntt_win_cox_sam_ani, ind_win, ind_con, mar_siz, ...
-    col_sam, ind_sam, dat);
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-hax.XAxis.Visible = 'off';
-ylabel(hax, 'Focality')
+ind_sam = [1 2];
+dat = true;
+mar_siz = con_fil.mar_siz;
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([3 2]');
+[h_plo, n_uni_sam, tic_sam] = plo_dat_err_xsa(hax, ave_dis_tap_win_cox_sam_ani, ind_win, ind_con, ...
+    mar_siz.pub, col_sam, ind_sam, dat);
+xtl_sam = con_fil.xtl_sam;
+xtl_sam = xtl_sam([3 2]');
+hax.XTickLabels = xtl_sam;
+ylabel(hax, 'Distance from bottom (cm)')
 %
-hax = hax_sub(9);
-axes(hax)
+hax = hax_sub(2);
 ind_con = 1;
 ind_win = 2;
-[h_plo, n_uni_sam] = plo_dat_err_xsa(hax, foc_ntt_win_cox_sam_ani, ind_win, ind_con, mar_siz, ...
-    col_sam, ind_sam, dat);
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-hax.XTickLabels = {'Con'; xtl_abl};
+[h_plo, n_uni_sam] = plo_dat_err_xsa(hax, foc_tap_win_cox_sam_ani, ind_win, ind_con, ...
+    mar_siz.pub, col_sam, ind_sam, dat);
+hax.XTickLabels = xtl_sam;
 ylabel(hax, 'Focality')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
-hax = hax_sub(6);
-axes(hax)
-y_lim_pre = ylim;
+hax = hax_sub(1);
+gro_two_cro = con_fil.gro_two_cro;
+y_lim_pre = ylim(hax);
 ind_win = 1;
-[~, y_lim] = sigstar_lim(hax, gro_two_cro, fon_siz, off_non, y_lim_pre, sep, mou, ext_hei, ...
-    p_foc_ntt_win(ind_win));
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-hax.FontSize = fon_siz;
+mou = 0.010;
+sep = mou + 0.040;
+ext_hei = -(sep + mou);
+ind_sig.sig(hax, gro_two_cro, y_lim_pre, sep, mou, ext_hei, round(p_dis_tap_win(2), 2))
+fon_siz = 8;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz, mar_siz.pub, log_lin_wid);
 %
-hax = hax_sub(9);
-axes(hax)
-y_lim_pre = ylim;
+hax = hax_sub(2);
+y_lim_pre = ylim(hax);
 ind_win = 2;
-[~, y_lim] = sigstar_lim(hax, gro_two_cro, fon_siz, off_non, y_lim_pre, sep, mou, ext_hei, ...
-    p_foc_ntt_win(ind_win));
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-hax.FontSize = fon_siz;
+ind_sig.sig(hax, gro_two_cro, y_lim_pre, sep, mou, ext_hei, p_foc_tap_win(2))
+hax = adj_hax(hax, fon_siz, mar_siz.pub, log_lin_wid);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(h_fig.Children, 'Units', 'pixels')
 h_fig.Position(3) = las_pix;
@@ -3967,578 +5243,61 @@ h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
 h_fig.PaperUnits = 'normalized';
 h_fig.PaperPosition = [0 0 1 1];
 end
-function h_fig = plo_tap_fre(tim_bin, mea_dis_tim_gro, sem_dis_tim_gro, ...
-    ave_dis_tap_win_cox_sam_ani, p_dis_tap_win, pro_tap_sam_win_row_col, foc_tap_win_cox_sam_ani, ...
-    p_foc_tap_win)
-[h_fig, fig_wid, fig_hei] = fig;
-n_row = 4;
-n_col = 5;
-gap_ver_row = [0.000 0.000 0.010 0.050];
-mar_bot = 0.054;
-mar_top = 0.046;
-mar_lef = 0.050;
-mar_rig = 0.001;
-global col_sam fon_siz mar_siz gro_two_cro lin_wid_min xtl_abl
-asp_rat_bar = 0.5;
-asp_rat_are = 11.5/8;
-gap_hor_col = [0.030 0.030 0.030 0.030 0.030];
-gap_hor_row_col = repmat(gap_hor_col, n_row, 1);
-asp_rat_axe = [asp_rat_are asp_rat_bar asp_rat_bar asp_rat_bar asp_rat_bar ...
-    asp_rat_are asp_rat_are asp_rat_are asp_rat_are asp_rat_are ...
-    asp_rat_are asp_rat_are asp_rat_are asp_rat_are asp_rat_are ...
-    asp_rat_bar asp_rat_bar asp_rat_bar asp_rat_bar asp_rat_bar];
-sca = 0.610;
-sca_axe = [1 1 1 1 1 ...
-    sca sca sca sca sca ...
-    sca sca sca sca sca ...
-    1 1 1 1 1];
-wid = false;
-[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
-    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, fig_hei, ...
-    wid, sca_axe);
-for i = 16:20
-    hax_sub(i).Position(1) = hax_sub(i - n_col).Position(1);
-end
-delete([hax_sub(10) hax_sub(15) hax_sub(20)])
-[las_pix, rat_wid] = ext_las_pix_del(pos_axe, fig_wid, [10 15 20]);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% distance
-hax = hax_sub(1);
-plo_sha(hax, tim_bin, mea_dis_tim_gro, sem_dis_tim_gro, col_sam)
-siz_win = [10; 10; 10; 10];
-fir = 1800;
-poi = [fir - 20, fir + 30, 2340 + 30, 2880 + 30];% end poi
-col_con = ["ash grey"; "ash grey"; "ash grey"; "ash grey"];
-plo_sti_sub_tri(hax, siz_win, poi, col_con)
-%
-sti_ons_tri = [1800:60:2100 2340:60:2640 2880:60:3180]';
-h = plo_ver_lin(hax, sti_ons_tri, 'k', lin_wid_min, '-');
-%
-xlabel(hax, 'Time (s)')
-ylabel(hax, 'Dis. from the bottom (cm)')
-%%%%
-linkaxes(hax_sub(2:5))
-linkaxes(hax_sub(16:19))
-y_min = inf;
-y_max = -inf;
-n_win = 4;
-ind_con = 1;
-ind_sam = [1 2];
-dat = true;
-ind_var_col = nan;
-con_int = {'Baseline'; 'Low'; 'Medium'; 'High'};
-for ind_win = 1:n_win
-    hax = hax_sub(1 + ind_win);
-    plo_dat_err_xsa(hax, ave_dis_tap_win_cox_sam_ani, ind_win, ind_con, mar_siz, col_sam, ...
-        ind_sam, dat);
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    hax.XTickLabels = {'Con'; xtl_abl};
-    if ind_win > 1
-        hax.YAxis.Visible = 'off';
-    end
-    %%%%%%%%%%%%%%%%%%%%%% heatmaps
-    hax = hax_sub(5 + ind_win);
-    ima(hax, ind_var_col, pro_tap_sam_win_row_col{1, ind_win})
-    colormap(hax, jet)
-    clim(hax, [0 0.01])
-    hax.XTickLabels = [];
-    hax.YTickLabels = [];
-    %
-    hax = hax_sub(10 + ind_win);
-    ima(hax, ind_var_col, pro_tap_sam_win_row_col{2, ind_win})
-    colormap(hax, jet)
-    clim(hax, [0 0.01])
-    hax.XTickLabels = [];
-    hax.YTickLabels = [];
-    h = title(hax, con_int{ind_win}, 'FontWeight', 'normal');
-    h.Units = 'normalized';
-    h.Position(2) = 1.250;
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
-off_non = 0.070;
-y_lim_pre = ylim;
-mou = 0.030;
-sep = off_non + mou + 0.040;
-ext_hei = -(sep + mou);
-for ind_win = 1:n_win
-    hax = hax_sub(1 + ind_win);
-    [~, y_lim] = sigstar_lim(hax, gro_two_cro, fon_siz, off_non, y_lim_pre, sep, mou, ext_hei, ...
-    p_dis_tap_win(ind_win));
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    hax.FontSize = fon_siz;
-    title(hax, con_int{ind_win}, 'FontWeight', 'normal')
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% heatmaps
-ylabel(hax_sub(6), 'Control')
-ylabel(hax_sub(11), 'Ablated', 'Color', 'r')
-h = colorbar(hax_sub(14));
-h.Ticks = [0 0.01];
-h.Position(3) = 0.003;
-h.Label.String = 'probability';
-h.Label.Position(1) = 4;
-h.Position(1) = 0.580;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% scatter
-y_min = inf;
-y_max = -inf;
-for ind_win = 1:n_win
-    hax = hax_sub(15 + ind_win);
-    plo_dat_err_xsa(hax, foc_tap_win_cox_sam_ani, ind_win, ind_con, mar_siz, col_sam, ind_sam, dat);
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    hax.XTickLabels = {'Con'; xtl_abl};
-    if ind_win == 1
-        ylabel(hax, 'Focality')
-    else
-        hax.YAxis.Visible = 'off';
-    end
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
-y_lim_pre = ylim;
-for ind_win = 1:n_win
-    hax = hax_sub(15 + ind_win);
-    [~, y_lim] = sigstar_lim(hax, gro_two_cro, fon_siz, off_non, y_lim_pre, sep, mou, ext_hei, ...
-    p_foc_tap_win(ind_win));
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    hax.FontSize = fon_siz;
-end
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
-end
-function h_fig = plo_sig_fre(tim_bin, mea_dis_tim_gro, sem_dis_tim_gro)
-[h_fig, fig_wid, fig_hei] = fig;
-n_row = 1;
-n_col = 1;
-gap_ver_row = [0.000 0.000 0.010 0.050];
-% mar_bot = 0.070;
-% mar_top = 0.046;
-% mar_lef = 0.050;
-% mar_rig = 0.001;
-
-hei = 4.5;
-mar_top = cal_mar_top(hei);
-mar_bot = 0.017;
-mar_lef = 0.012;
-mar_rig = 0.001;
-
-global lin_wid_min
-asp_rat_bar = 0.5;
-asp_rat_are = 11.5/8;
-gap_hor_col = [0.030 0.030 0.030 0.030 0.030];
-gap_hor_row_col = repmat(gap_hor_col, n_row, 1);
-asp_rat_axe = [1];
-sca = 0.610;
-sca_axe = [1];
-wid = false;
-
-n_pix_ext = 30;
-[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
-    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, fig_hei, ...
-    wid, sca_axe, n_pix_ext);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% distance
-hax = hax_sub(1);
-
-log_bin = tim_bin <= 2160;
-con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-col_sam = con_fil.col_sam;
-col_sam = col_sam([3 2]');
-
-plo_sha.fun(hax, tim_bin(log_bin), mea_dis_tim_gro(log_bin, :), sem_dis_tim_gro(log_bin, :), col_sam)
-siz_win = [10; 10; 10; 10];
-fir = 1800;
-poi = [fir - 20, fir + 30, 2340 + 30, 2880 + 30];% end poi
-col_con = ["ash grey"; "ash grey"; "ash grey"; "ash grey"];
-plo_sti_sub_tri(hax, siz_win, poi, col_con)
-%
-sti_ons_tri = [1800:60:2100 2340:60:2640 2880:60:3180]';
-%h = plo_ver_lin(hax, sti_ons_tri, 'k', lin_wid_min, '-');
-h = xline(hax, sti_ons_tri, 'Color', [0.5 0.5 0.5], 'LineWidth', lin_wid_min, 'LineStyle', '--');
-%
-xlabel(hax, 'Time (s)')
-ylabel(hax, 'Distance from bottom (cm)')
-
-fon_siz = con_fil.fon_siz;
-mar_siz = con_fil.mar_siz;
-hax = adj_hax(hax, fon_siz.pub, mar_siz.pub);
-
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
-end
-function h_fig = plo_dis_fre(ave_dis_tap_win_cox_sam_ani, p_dis_tap_win)
-[h_fig, fig_wid, fig_hei] = fig;
-n_row = 1;
-n_col = 2;
-gap_ver_row = [0.000 0.000 0.010 0.050];
-% mar_bot = 0.054;
-% mar_top = 0.046;
-% mar_lef = 0.050;
-% mar_rig = 0.001;
-
-hei = 4.5;
-mar_top = cal_mar_top(hei);
-mar_bot = 0.010;
-mar_lef = 0.012;
-mar_rig = 0.001;
-gap_hor_col = 0.012*ones(1, n_col);
-
-global gro_two_cro
-asp_rat_bar = 0.5;
-gap_hor_row_col = repmat(gap_hor_col, n_row, 1);
-asp_rat_axe = [asp_rat_bar asp_rat_bar];
-sca = 0.610;
-sca_axe = [1 1];
-wid = false;
-n_pix_ext = 30;
-[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
-    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, fig_hei, ...
-    wid, sca_axe, n_pix_ext);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% distance
-y_min = inf;
-y_max = -inf;
-n_win = 2;
-ind_con = 1;
-ind_sam = [1 2];
-dat = true;
-con_int = {'Baseline'; 'Vibration'; 'Medium'; 'High'};
-con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-col_sam = con_fil.col_sam;
-col_sam = col_sam([3 2]');
-xtl_sam = con_fil.xtl_sam;
-xtl_sam = xtl_sam([3 2]');
-mar_siz = con_fil.mar_siz;
-for ind_win = 1:n_win
-    hax = hax_sub(ind_win);
-    plo_dat_err_xsa(hax, ave_dis_tap_win_cox_sam_ani, ind_win, ind_con, mar_siz.pub, col_sam, ...
-        ind_sam, dat);
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    hax.XTickLabels = xtl_sam;
-    if ind_win > 1
-        hax.YAxis.Visible = 'off';
-    end
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig, fon_siz
-off_non = 0.020;
-y_lim_pre = ylim;
-mou = 0.020;
-sep = off_non + mou + 0.020;
-ext_hei = -(sep + mou);
-fon_siz = con_fil.fon_siz;
-for ind_win = 1:n_win
-    hax = hax_sub(ind_win);
-    [~, y_lim] = sigstar.sig(hax, gro_two_cro, y_lim_pre, sep, mou, ext_hei, off_non, ...
-    round(p_dis_tap_win(ind_win), 2));
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    title(hax, con_int{ind_win}, 'FontWeight', 'normal')
-    if ind_win == 1
-        ylabel(hax, 'Distance from bottom (cm)')
-    end
-    hax = adj_hax(hax, fon_siz.pub, mar_siz.pub);
-end
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
-end
-function h_fig = plo_foc_fre(foc_tap_win_cox_sam_ani, p_foc_tap_win)
-[h_fig, fig_wid, fig_hei] = fig;
-n_row = 1;
-n_col = 2;
-gap_ver_row = [0.000 0.000 0.010 0.050];
-% mar_bot = 0.054;
-% mar_top = 0.046;
-% mar_lef = 0.050;
-% mar_rig = 0.001;
-
-hei = 4;
-mar_top = cal_mar_top(hei);
-mar_bot = 0.010;
-mar_lef = 0.017;
-mar_rig = 0.001;
-gap_hor_col = 0.010*ones(1, n_col);
-
-global gro_two_cro
-asp_rat_bar = 0.5;
-gap_hor_row_col = repmat(gap_hor_col, n_row, 1);
-asp_rat_axe = [asp_rat_bar asp_rat_bar];
-sca = 0.610;
-sca_axe = [1 1];
-wid = false;
-n_pix_ext = 30;
-[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
-    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, fig_hei, ...
-    wid, sca_axe, n_pix_ext);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% distance
-y_min = inf;
-y_max = -inf;
-n_win = 2;
-ind_con = 1;
-ind_sam = [1 2];
-dat = true;
-con_int = {'Baseline'; 'Vibration'; 'Medium'; 'High'};
-con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-col_sam = con_fil.col_sam;
-col_sam = col_sam([3 2]');
-xtl_sam = con_fil.xtl_sam;
-xtl_sam = xtl_sam([3 2]');
-mar_siz = con_fil.mar_siz;
-for ind_win = 1:n_win
-    hax = hax_sub(ind_win);
-    plo_dat_err_xsa(hax, foc_tap_win_cox_sam_ani, ind_win, ind_con, mar_siz.pub, col_sam, ...
-        ind_sam, dat);
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    hax.XTickLabels = xtl_sam;
-    if ind_win > 1
-        hax.YAxis.Visible = 'off';
-    end
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig, fon_siz
-off_non = 0.020;
-y_lim_pre = ylim;
-mou = 0.020;
-sep = off_non + mou + 0.020;
-ext_hei = -(sep + mou);
-fon_siz = con_fil.fon_siz;
-for ind_win = 1:n_win
-    hax = hax_sub(ind_win);
-    [~, y_lim] = sigstar.sig(hax, gro_two_cro, y_lim_pre, sep, mou, ext_hei, off_non, ...
-    round(p_foc_tap_win(ind_win), 2));
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    title(hax, con_int{ind_win}, 'FontWeight', 'normal')
-    if ind_win == 1
-        ylabel(hax, 'Focality')
-    end
-    hax = adj_hax(hax, fon_siz.pub, mar_siz.pub);
-end
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% zan
-function h_fig = plo_y_pos(y_pos_bas_sam_fra_ani, p_y_pos_bas_xsa, ...
-    y_pos_con_sam_fra_ani, p_y_pos_win_con_xsa, bas_spe_sam_bin_ani, p_bas_spe_xsa, ...
-    spe_con_sam_bin_ani, p_spe_win_con_xsa)
-n_row = 2;
-n_col = 4;
-[h_fig, fig_wid, fig_hei] = fig;
-gap_ver_row = 0.070*[1; 1];
-mar_bot = 0.000;
-mar_top = 0.010;
-mar_lef = 0.043;
-mar_rig = 0.010;
-gap_hor_row_col = 0.025*[1 1 1 1; ...
-    1 1 1 1];
-global asp_rat_sig n_con col_sam n_sam tim_fra col_sam_con win_len tim_bin
-asp_rat_axe = asp_rat_sig*[1 1 1 1 ...
-    1 1 1 1];
-sca_axe = 0.4*[1 1 1 1];
-wid = true;
-n_pix_ext = 15;
-[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
-    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
-    fig_hei, wid, sca_axe, n_pix_ext);
-linkaxes(hax_sub(1:n_col), 'y')
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% POS
-y_min = inf;
-y_max = -inf;
-hax = hax_sub(1);
-log_smo = true;
-for i = 1:n_sam
-    h_bas = plo_sha_gen(hax, tim_fra.zan.bas, y_pos_bas_sam_fra_ani{i}, col_sam{i}, log_smo);
-end
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-x_lab = 'Time (s)';
-y_lab = 'y position (mm)';
-xlabel(hax, x_lab)
-ylabel(hax, y_lab)
-nor_x = 0.5;
-nor_y = 0.7;
-log_all = true;
-pri_sig(hax, nor_x, nor_y, p_y_pos_bas_xsa.lme, log_all)
-%
-h_con = cell(n_con, 1);
-hax_tap = [];
-for j = 1:n_con
-    hax = hax_sub(1 + j);
-    for i = 1:n_sam
-        h_con_i = plo_sha_gen(hax, tim_fra.zan.tri, y_pos_con_sam_fra_ani{j, i}, col_sam_con{i, j}, ...
-            log_smo);
-        [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-        hold on
-        h_con{j} = [h_con{j}; h_con_i];
-    end
-    xlabel(hax, x_lab)
-    hax.YAxis.Visible = 'off';
-    hax_tap = [hax_tap; hax];
-    if j == n_con
-        hax.XTickLabel = hax_tap(end - 1).XTickLabel;
-    end
-end
-%
-for j = 1:n_con
-    hax = hax_sub(1 + j);
-    plo_lin_sub_tri(hax, win_len.zan.sec)
-    pri_sig(hax, nor_x, nor_y, p_y_pos_win_con_xsa.lme{2, j}, log_all)
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-y_min = inf;
-y_max = -inf;
-hax = hax_sub(n_col + 1);
-for i = 1:n_sam
-    h_bas = plo_sha_gen(hax, tim_bin.zan.bas, bas_spe_sam_bin_ani{i}, col_sam{i}, log_smo);
-end
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-x_lab = 'Time (s)';
-y_lab = 'Speed (a. u.)';
-xlabel(hax, x_lab)
-ylabel(hax, y_lab)
-nor_x = 0.5;
-nor_y = 0.7;
-pri_sig(hax, nor_x, nor_y, p_bas_spe_xsa.lme, log_all)
-%
-log_smo = false;
-h_con = cell(n_con, 1);
-hax_tap = [];
-for j = 1:n_con
-    hax = hax_sub(n_col + 1 + j);
-    for i = 1:n_sam
-        h_con_i = plo_sha_gen(hax, tim_bin.zan.tri, spe_con_sam_bin_ani{j, i}, col_sam_con{i, j}, ...
-            log_smo);
-        [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-        hold on
-        h_con{j} = [h_con{j}; h_con_i];
-    end
-    xlabel(hax, x_lab)
-    hax.YAxis.Visible = 'off';
-    hax_tap = [hax_tap; hax];
-    if j == n_con
-        hax.XTickLabel = hax_tap(end - 1).XTickLabel;
-    end
-end
-%
-linkaxes(hax_sub(n_col + 1:end), 'y')
-%
-for j = 1:n_con
-    hax = hax_sub(n_col + 1 + j);
-    plo_lin_sub_tri(hax, win_len.zan.sec)
-    pri_sig(hax, nor_x, nor_y, p_spe_win_con_xsa.lme{2, j}, log_all)
-end
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
-end
-function h_fig = plo_occ_map(pro_sam_epo_row_col, foc_epo_cox_sam_ani, p_foc_epo)
-[h_fig, fig_wid, fig_hei] = fig;
-n_row = 3;
-n_col = 4;
-gap_ver_row = [0.000 0.030 0.000];
-mar_bot = 0.054;
-mar_top = 0.046;
-mar_lef = 0.050;
-mar_rig = 0.001;
-global col_sam fon_siz mar_siz gro_two_cro xtl_abl
-asp_rat_bar = 0.5;
-asp_rat_are = 10/9;
-gap_hor_col = [0.030 0.030 0.030 0.030];
-gap_hor_row_col = repmat(gap_hor_col, n_row, 1);
-asp_rat_axe = [asp_rat_are asp_rat_are asp_rat_are asp_rat_are ...
-               asp_rat_are asp_rat_are asp_rat_are asp_rat_are ...
-               asp_rat_bar asp_rat_bar asp_rat_bar asp_rat_bar];
-sca = 0.610;
-sca_axe = [sca sca sca sca ...
-           sca sca sca sca ...
-            1   1   1   1     ];
-wid = false;
-n_pix_ext = 130;
-[hax_sub, ~, ~, ~, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, gap_ver_row, ...
-    gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, fig_hei, wid, ...
-    sca_axe, n_pix_ext);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-n_win = 4;
-ind_con = 1;
-ind_sam = [1 2];
-dat = true;
-ind_var_col = nan;
-con_int = {'Baseline'; 'Low'; 'Medium'; 'High'};
-for ind_win = 1:n_win
-    hax = hax_sub(ind_win);
-    ima(hax, ind_var_col, pro_sam_epo_row_col{1, ind_win})
-    colormap(hax, jet)
-    clim(hax, [0 0.01])
-    hax.XTickLabels = [];
-    hax.YTickLabels = [];
-    %
-    hax = hax_sub(n_col + ind_win);
-    ima(hax, ind_var_col, pro_sam_epo_row_col{2, ind_win})
-    colormap(hax, jet)
-    clim(hax, [0 0.01])
-    hax.XTickLabels = [];
-    hax.YTickLabels = [];
-    h = title(hax, con_int{ind_win}, 'FontWeight', 'normal');
-    h.Units = 'normalized';
-    h.Position(2) = 1.250;
-end
-ylabel(hax_sub(1), 'Control')
-ylabel(hax_sub(n_col + 1), 'Ablated', 'Color', 'r')
-h = colorbar(hax_sub(2*n_col));
-h.Ticks = [0 0.01];
-h.Position(3) = 0.003;
-h.Label.String = 'probability';
-h.Label.Position(1) = 4;
-h.Position(1) = 0.580;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% scatter
-y_min = inf;
-y_max = -inf;
-for ind_win = 1:n_win
-    hax = hax_sub(2*n_col + ind_win);
-    plo_dat_err_xsa(hax, foc_epo_cox_sam_ani, ind_win, ind_con, mar_siz, col_sam, ...
-        ind_sam, dat);
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    hax.XTickLabels = {'Con'; xtl_abl};
-    if ind_win == 1
-        ylabel(hax, 'Focality')
-    else
-        hax.YAxis.Visible = 'off';
-    end
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
-off_non = 0.070;
-y_lim_pre = ylim;
-mou = 0.030;
-sep = off_non + mou + 0.040;
-ext_hei = -(sep + mou);
-for ind_win = 1:n_win
-    hax = hax_sub(2*n_col + ind_win);
-    [~, y_lim] = sigstar_lim(hax, gro_two_cro, fon_siz, off_non, y_lim_pre, sep, mou, ext_hei, ...
-    p_foc_epo(ind_win));
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    hax.FontSize = fon_siz;
-end
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% nov
-function h_fig = plo_ses(tim_poi, mea_val_pos_tim_gro, sem_val_pos_tim_gro, y_lab, stim_times, ...
-    lab_sam)
+function [h_fig, p_xsa] = plo_nta_sca(nta_dis_sam_ani, y_lab)
 [h_fig, fig_wid, fig_hei] = fig;
 n_row = 1;
 n_col = 1;
 gap_ver_row = 0.070;
-gap_hor_row_col = 0.030;
-mar_bot = 0.070;
-mar_top = 0.030;
-mar_lef = 0.050;
+gap_hor_row_col = 0.020*ones(n_row, n_col);
+mar_bot = 0.030;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+hei = con_fil.hei;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.030;
 mar_rig = 0.001;
-col_sam = {'k'; 'r'; 'b'};
-asp_rat_axe = 1.85;
+asp_rat_bar = 0.5;
+asp_rat_axe = [asp_rat_bar asp_rat_bar];
 wid = false;
-sca_axe = 1;
-n_pix_ext = 10;
+sca_axe = [1 1];
+n_pix_ext = 3;
 [hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
     gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
     fig_hei, wid, sca_axe, n_pix_ext);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-log_poi = ~isnan(tim_poi);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% scatter
 hax = hax_sub(1);
-log_smo = false;
-tim_poi = tim_poi(log_poi);
-mea_val_pos_tim_gro = mea_val_pos_tim_gro(log_poi, :);
-sem_val_pos_tim_gro = sem_val_pos_tim_gro(log_poi, :);
-lin_sam = plo_sha(hax, tim_poi(1:5:end), mea_val_pos_tim_gro(1:5:end, :), sem_val_pos_tim_gro...
-    (1:5:end, :), col_sam, log_smo);
-legend(lin_sam, lab_sam)
-xlabel(hax, 'Time (s)')
+ind_sam = [1 2];
+dat = true;
+mar_siz = con_fil.mar_siz;
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([3 2]');
+col_sam{1} = [0 0 0];
+[h_plo, n_uni_sam, tic_sam] = plo_dat_err_xsa_sim(hax, nta_dis_sam_ani, mar_siz.pub, col_sam, ...
+    ind_sam, dat);
+xtl_sam = con_fil.xtl_sam;
+xtl_sam = xtl_sam([3 2]');
+xtl_sam{1} = '\color[rgb]{0,0,0} MTZ\newline Con';
+hax.XTickLabels = xtl_sam;
+
+%ht = fix_xticklabels(hax);
+
+%ylabel(hax, 'Nor. Dist. from bottom')
 ylabel(hax, y_lab)
-lin_wid = 1;
-h = plo_ver_lin(hax, stim_times, 'g', lin_wid, '-');
-legend(lin_sam, lab_sam)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
+hax = hax_sub(1);
+gro_two_cro = con_fil.gro_two_cro;
+y_lim_pre = ylim(hax);
+mou = 0.010;
+sep = mou + 0.040;
+ext_hei = -(sep + mou);
+p_xsa = com_p_xsa(nta_dis_sam_ani);
+ind_sig.sig(hax, gro_two_cro, y_lim_pre, sep, mou, ext_hei, round(p_xsa.lme, 2))
+fon_siz = 8;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz, mar_siz.pub, log_lin_wid);
+
+%ht = fix_xticklabels(hax);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(h_fig.Children, 'Units', 'pixels')
 h_fig.Position(3) = las_pix;
@@ -4547,101 +5306,209 @@ h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
 h_fig.PaperUnits = 'normalized';
 h_fig.PaperPosition = [0 0 1 1];
 end
-function h_fig = plo_ypc(ypc_wix_con_sam_ani, p_ypc_wix_con_xsa)
-n_row = 1;
-n_col = 3;
+function h_fig = plo_hab_ric(ypc_ani)
 [h_fig, fig_wid, fig_hei] = fig;
-gap_ver_row = 0.070*[1; 1];
-mar_bot = 0.000;
-mar_top = 0.010;
-mar_lef = 0.043;
-mar_rig = 0.010;
-gap_hor_row_col = 0.025*[1 1 1];
-global asp_rat_bar n_con col_sam xtl_abl gro_two_cro fon_siz mar_siz
-asp_rat_axe = asp_rat_bar*[1 1 1];
-sca_axe = 1*[1 1 1];
+n_row = 1;
+n_sam = 2;
+n_col = n_sam;
+gap_ver_row = 0.070;
+gap_hor_row_col = 0.010*ones(n_row, n_col);
+mar_bot = 0.025;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+hei = con_fil.hei;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.025;
+mar_rig = 0.001;
+asp_rat_bar = 0.5;
+asp_rat_axe = asp_rat_bar;
 wid = false;
-n_pix_ext = 15;
+sca_axe = 1;
+n_pix_ext = 20;
 [hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
     gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
     fig_hei, wid, sca_axe, n_pix_ext);
-linkaxes(hax_sub(1:n_col), 'y')
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+linkaxes(hax_sub)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% distance
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+mar_siz = con_fil.mar_siz;
+mar_siz = mar_siz.pub;
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
 y_min = inf;
 y_max = -inf;
-y_lab = 'y position change (mm)';
-hax_tap = [];
-ind_win = 1;
-ind_sam = [1 2];
-dat = true;
-for j = 1:n_con
-    hax = hax_sub(j);
-    plo_dat_err_xsa(hax, ypc_wix_con_sam_ani, ind_win, j, mar_siz, col_sam, ind_sam, dat);
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    hax.XTickLabels = {'Con'; xtl_abl};
-    if j == 1
-        ylabel(hax, y_lab)
+p_sam_xco = cell(n_sam, 1);
+for sam = 1:n_sam
+    hax = hax_sub(sam);
+    if sam == 1
+        ypx_ani = ypc_ani.nac;
     else
-        hax.YAxis.Visible = 'off';
+        ypx_ani = ypc_ani.tph;
     end
-end
-off_non = 0.070;
-y_lim_pre = ylim;
-mou = 0.030;
-sep = off_non + mou + 0.040;
-ext_hei = -(sep + mou);
-for j = 1:n_con
-    hax = hax_sub(j);
-    [~, y_lim] = sigstar_lim_duo(hax, gro_two_cro, fon_siz, off_non, y_lim_pre, sep, mou, ext_hei, ...
-    p_ypc_wix_con_xsa.lme{ind_win, j}, p_ypc_wix_con_xsa.rst{ind_win, j});
+    ypc_ani_epo = [ypx_ani.ear ypx_ani.lat];
+    int_con_pcx = [col_sam{sam}; col_sam{sam}];
+    h_plo = plo_dat_err_xco_sim(hax, ypc_ani_epo, mar_siz, int_con_pcx);
     [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    hax.FontSize = fon_siz;
+    p_sam_xco{sam} = com_p_xco(ypc_ani_epo(:, 1), ypc_ani_epo(:, 2));
 end
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
+mou = 0.010;
+sep = mou + 0.040;
+ext_hei = -(sep + mou);
+fon_siz = con_fil.fon_siz;
+hax.FontSize = fon_siz.pub;
+y_lab = 'Δ(y position) (cm)';
+fon_siz = 8;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+for sam = 1:n_sam
+    hax = hax_sub(sam);
+    y_lim_pre = ylim(hax);
+    ind_sig.sig(hax, {[1 2]}, y_lim_pre, sep, mou, ext_hei, p_sam_xco{sam}.srt)
+    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+    if sam > 1
+        hax.YAxis.Visible = 'off';
+    else
+        ylabel(hax, y_lab)
+    end
+    hax.XTickLabels = {'Early', 'Late'};
+    hax = adj_hax(hax, fon_siz, mar_siz.pub, log_lin_wid);
 end
-function h_fig = plo_ypc_tog(ypc_sam_ani, p_ypc_xsa, ind_sam, y_lab)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+function h_fig = plo_vib_res_ric(ypc_sam_fra_ani)
+[h_fig, fig_wid, fig_hei] = fig;
 n_row = 1;
 n_col = 1;
-[h_fig, fig_wid, fig_hei] = fig;
-gap_ver_row = 0.070*[1; 1];
-mar_bot = 0.000;
-mar_top = 0.010;
+gap_gap = 0.010;
+gap_ver_row = gap_gap*ones(n_row, 1);
+gap_hor_row_col = repmat(gap_gap, n_row, 1);
+mar_bot = 0.040;
+mar_top = 0.040;
 mar_lef = 0.050;
-mar_rig = 0.010;
-gap_hor_row_col = 0.025*[1 1 1];
-global asp_rat_bar xtl_abl fon_siz mar_siz
-asp_rat_axe = asp_rat_bar*[1 1 1];
-sca_axe = 1*[1 1 1];
+mar_rig = 0.050;
+asp_rat_axe = 1;
 wid = false;
-n_pix_ext = 15;
+sca = 1;
+sca_axe = sca;
+n_pix_ext = 100;
 [hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
     gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
     fig_hei, wid, sca_axe, n_pix_ext);
-linkaxes(hax_sub(1:n_col), 'y')
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-y_min = inf;
-y_max = -inf;
-dat = true;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% heatmaps
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+tim_poi = (-5:1:54)';
 hax = hax_sub(1);
-col_sam = {'k'; 'r'; 'b'};
-[h_plo, n_uni_sam] = plo_dat_err_xsa_sim(hax, ypc_sam_ani, mar_siz, col_sam, ind_sam, dat);
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-xtl_mtz = ['\color[rgb]{0, 0, 1} ', 'MTZ'];
-hax.XTickLabels = {'Sha'; xtl_abl; xtl_mtz};
-ylabel(hax, y_lab)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-n_sam = length(ypc_sam_ani);
-[sam_cro_ind, n_cro, gro_xsa_ind] = ext_sam_cro_ind(n_sam);
-off_non = 0.070;
-y_lim_pre = ylim;
-mou = 0.030;
-sep = off_non + mou + 0.040;
-ext_hei = -(sep + mou);
-[~, y_lim] = sigstar_lim_duo(hax, gro_xsa_ind, fon_siz, off_non, y_lim_pre, sep, mou, ext_hei, ...
-p_ypc_xsa.lme, p_ypc_xsa.rst);
-[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-hax.FontSize = fon_siz;
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([3 2]');
+h_mtz = plo_sha.raw(hax, tim_poi, ypc_sam_fra_ani{1}, col_sam{1});
+hold(hax, "on")
+h_abl = plo_sha.raw(hax, tim_poi, ypc_sam_fra_ani{2}, col_sam{2});
+xline(hax, 0, '--')
+col_con = [178 190 181]/255;
+sta_poi = 20;
+end_poi = 30;
+siz_win = end_poi - sta_poi;
+plo_sti_sub_tri(hax, siz_win, end_poi, col_con)
+ylabel(hax_sub(1), 'Normalized y position change');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+function h_fig = plo_p_win(sta_poi_win, p_win)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 1;
+gap_gap = 0.010;
+gap_ver_row = gap_gap*ones(n_row, 1);
+gap_hor_row_col = repmat(gap_gap, n_row, 1);
+mar_bot = 0.080;
+mar_top = 0.040;
+mar_lef = 0.080;
+mar_rig = 0.050;
+asp_rat_axe = 1;
+wid = false;
+sca = 1;
+sca_axe = sca;
+n_pix_ext = 100;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% heatmaps
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+tim_poi = (-5:1:54)';
+hax = hax_sub(1);
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([3 2]');
+h_mtz = plot(hax, sta_poi_win, p_win);
+yline(hax, 0.05, '--')
+xlabel(hax_sub(1), 'Window onset (s)');
+ylabel(hax_sub(1), 'p-value');
+box(hax, 'off')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+function h_fig = plo_tau_exa(tax_dis_sam_tim_ani)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 2;
+n_col = 2;
+gap_gap = 0.050;
+gap_ver_row = gap_gap*ones(n_row, 1);
+gap_hor_row_col = repmat(gap_gap, n_row, n_col);
+mar_bot = 0.080;
+mar_top = 0.040;
+mar_lef = 0.080;
+mar_rig = 0.050;
+asp_rat_axe = 1;
+wid = false;
+sca = 1;
+sca_axe = sca;
+n_pix_ext = 100;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+tim_poi = (-5:1:54)';
+log_poi = tim_poi > 5 & tim_poi < 40;
+tim_poi = tim_poi(log_poi);
+for row = 1:n_row
+    tax_dis_tim_ani = tax_dis_sam_tim_ani{row};
+    for col = 1:n_col
+        ani = col;
+        sam_poi = tax_dis_tim_ani(log_poi, ani);%trial-ave dis
+        [tau, fit_poi] = fit_egm(tim_poi, sam_poi);
+        disp(tau)
+        %
+        hax = hax_sub((row - 1)*n_col + col);
+        plot(hax, tim_poi, sam_poi, 'x')
+        hold(hax, "on")
+        plot(hax, tim_poi, fit_poi)
+        box(hax, 'off')
+    end
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% two
 function h_fig = plo_trm(ypc_sam_ani_tri, tit_n_sam, ind_sam, y_lab)
@@ -4695,10 +5562,10 @@ n_row = 1;
 n_col = 1;
 gap_ver_row = 0.070;
 gap_hor_row_col = 0.030;
-mar_bot = 0.028;
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 hei = con_fil.hei;
 mar_top = cal_mar_top(hei);
+mar_bot = 0.028;
 mar_lef = 0.022;
 mar_rig = 0.000;
 asp_rat_axe = 1;
@@ -4721,18 +5588,22 @@ met = 'sgolay';
 n_fra = 30;
 mea_poi_gro.smo = smoothdata(mea_poi_gro.raw, met, n_fra);
 sem_poi_gro.smo = smoothdata(sem_poi_gro.raw, met, n_fra);
-
-lin_gro = plo_sha.fun(hax, tim_poi, mea_poi_gro.smo, sem_poi_gro.smo, con_fil.col_sam);
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+lin_gro = plo_sha.fun(hax, tim_poi, mea_poi_gro.smo, sem_poi_gro.smo, col_sam);
 hax.LineWidth = 0.5;
 
 end_poi_win = 60 + win_len_win(1);
-col_con = "ash grey";
+%col_con = "ash grey";
+col_con = [178 190 181]/255;
 plo_sti_sub_tri(hax, win_len_win, end_poi_win, col_con)
 
 x_lab = xlabel(hax, 'Time (s)');
 ylabel(hax, 'y position (mm)')
 fon_siz = 8;
-hax = adj_hax(hax, fon_siz);
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz, mar_siz.pub, log_lin_wid);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(h_fig.Children, 'Units', 'pixels')
 h_fig.Position(3) = las_pix;
@@ -4877,9 +5748,6 @@ h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
 h_fig.PaperUnits = 'normalized';
 h_fig.PaperPosition = [0 0 1 1];
 end
-function gro_thr_cro = gen_gro_thr_cro(tic_sam)
-gro_thr_cro = {[tic_sam(1) tic_sam(2)]; [tic_sam(1) tic_sam(3)]; [tic_sam(2) tic_sam(3)]};
-end
 function h_fig = plo_bas_spe(val_pos_win_cox_sam_ani, p_y_pos_win_cox_xsa)
 [h_fig, fig_wid, fig_hei] = fig;
 n_row = 1;
@@ -4929,69 +5797,6 @@ ylabel(y_lab)
 mar_siz = con_fil.mar_siz;
 log_lin_wid = true;
 hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-set(h_fig.Children, 'Units', 'pixels')
-h_fig.Position(3) = las_pix;
-h_fig.Renderer = 'painters';
-h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
-h_fig.PaperUnits = 'normalized';
-h_fig.PaperPosition = [0 0 1 1];
-end
-function h_fig = plo_ntt_occ_hea(pro_win_sam_row_col)
-[h_fig, fig_wid, fig_hei] = fig;
-n_row = 2;
-n_col = 3;
-gap_gap = 0.003;
-gap_ver_row = gap_gap*ones(n_row, 1);
-gap_hor_row_col = repmat([gap_gap gap_gap gap_gap], n_row, 1);
-mar_bot = 0.025;
-hei = 5;
-mar_top = cal_mar_top(hei);
-mar_lef = 0.008;
-mar_rig = 0.001;
-asp_rat_bar = 0.5;
-asp_rat_are = 2/3;% 21 x 14 image (top 4 rows empty)
-asp_rat_axe = [asp_rat_are asp_rat_are asp_rat_are ...
-    asp_rat_are asp_rat_are asp_rat_are];
-wid = false;
-sca = 0.900;
-sca_axe = [sca sca sca sca sca sca];
-n_pix_ext = 33;
-[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
-    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
-    fig_hei, wid, sca_axe, n_pix_ext);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% heatmaps
-con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-tit_sam = con_fil.tit_sam;
-fon_siz = con_fil.fon_siz;
-%pro_lim = [0 0.05];
-%pro_lim = [0 0.03];
-pro_lim = [0 0.02];
-for i = 1:n_row
-    for j = 1:n_col
-        hax = hax_sub((i - 1)*n_col + j);
-        ima = sho_ima.gra(hax, pro_win_sam_row_col{i, j}(5:end, :));
-        colormap(hax, 'jet')
-        clim(hax, pro_lim)
-        if i == 1
-            title(hax, tit_sam(j), FontWeight = 'normal', FontSize = fon_siz.pub)
-        end
-    end
-end
-lab.ear = ylabel(hax_sub(1), 'Early', FontSize = fon_siz.pub);
-lab.ear.Position(1) = 0;
-lab.lat = ylabel(hax_sub(1 + n_col), 'Late', FontSize = fon_siz.pub);
-lab.lat.Position(1) = 0;
-lef = hax.Position(1) + hax.Position(3) + 0.001;
-h = colorbar(hax);
-h.Ticks = pro_lim;
-h.Label.String = 'probability';
-h.Position(1) = lef;
-h.Position(2) = hax.Position(2);
-h.Position(3) = 0.001;
-h.Position(4) = hax.Position(4);
-h.FontSize = fon_siz.pub;
-h.Label.Position(1) = 3;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(h_fig.Children, 'Units', 'pixels')
 h_fig.Position(3) = las_pix;
@@ -5110,6 +5915,69 @@ h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
 h_fig.PaperUnits = 'normalized';
 h_fig.PaperPosition = [0 0 1 1];
 end
+
+function h_fig = plo_ntt_occ_hea(pro_win_sam_row_col)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 2;% early, late
+n_col = 3;
+gap_gap = 0.003;
+gap_ver_row = gap_gap*ones(n_row, 1);
+gap_hor_row_col = repmat([gap_gap gap_gap gap_gap], n_row, 1);
+mar_bot = 0.025;
+hei = 5;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.008;
+mar_rig = 0.001;
+asp_rat_are = 2/3;% 21 x 14 image (top 4 rows empty)
+asp_rat_axe = [asp_rat_are asp_rat_are asp_rat_are ...
+    asp_rat_are asp_rat_are asp_rat_are];
+wid = false;
+sca = 0.900;
+sca_axe = [sca sca sca sca sca sca];
+n_pix_ext = 33;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% heatmaps
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+tit_sam = con_fil.tit_sam;
+fon_siz = con_fil.fon_siz;
+%pro_lim = [0 0.05];
+%pro_lim = [0 0.03];
+pro_lim = [0 0.02];
+for i = 1:n_row
+    for j = 1:n_col
+        hax = hax_sub((i - 1)*n_col + j);
+        ima = sho_ima.gra(hax, pro_win_sam_row_col{i, j}(5:end, :));
+        colormap(hax, 'jet')
+        clim(hax, pro_lim)
+        if i == 1
+            title(hax, tit_sam(j), FontWeight = 'normal', FontSize = fon_siz.pub)
+        end
+    end
+end
+lab.ear = ylabel(hax_sub(1), 'Early', FontSize = fon_siz.pub);
+lab.ear.Position(1) = 0;
+lab.lat = ylabel(hax_sub(1 + n_col), 'Late', FontSize = fon_siz.pub);
+lab.lat.Position(1) = 0;
+lef = hax.Position(1) + hax.Position(3) + 0.001;
+h = colorbar(hax);
+h.Ticks = pro_lim;
+h.Label.String = 'probability';
+h.Position(1) = lef;
+h.Position(2) = hax.Position(2);
+h.Position(3) = 0.001;
+h.Position(4) = hax.Position(4);
+h.FontSize = fon_siz.pub;
+h.Label.Position(1) = 3;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
 function h_fig = plo_ntt_occ_sca(foc_ntt_win_cox_sam_ani, p_foc_win_cox_xsa)
 [h_fig, fig_wid, fig_hei] = fig;
 n_row = 1;
@@ -5185,6 +6053,7 @@ h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
 h_fig.PaperUnits = 'normalized';
 h_fig.PaperPosition = [0 0 1 1];
 end
+% speed
 function h_fig = plo_spe_sca(val_pos_win_cox_sam_ani, p_y_pos_win_cox_xsa)
 [h_fig, fig_wid, fig_hei] = fig;
 n_row = 1;
@@ -5266,6 +6135,410 @@ h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
 h_fig.PaperUnits = 'normalized';
 h_fig.PaperPosition = [0 0 1 1];
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ika
+function h_fig = plo_tri_hea(ypc_sam_fra_tri)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 3;
+gap_gap = 0.010;
+gap_ver_row = gap_gap*ones(n_row, 1);
+gap_hor_row_col = repmat([gap_gap gap_gap gap_gap], n_row, 1);
+mar_bot = 0.025;
+mar_top = 0.040;
+mar_lef = 0.025;
+mar_rig = 0.050;
+asp_rat_are = 2/3;% 21 x 14 image (top 4 rows empty)
+asp_rat_axe = [asp_rat_are asp_rat_are asp_rat_are];
+wid = true;
+sca = 1;
+sca_axe = [sca sca sca];
+n_pix_ext = 100;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% heatmaps
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+tit_sam = con_fil.tit_sam;
+tim_fra = con_fil.tim_fra;
+tim_fra = tim_fra.ika;
+ypc_lim = [-15 15];
+map = con_fil.map;
+map = map.sym;
+for i = 1:n_row
+    for col = 1:n_col
+        hax = hax_sub(col);
+        ima_obj = ima(hax, tim_fra, ypc_sam_fra_tri{col}');
+        colormap(hax, map)
+        clim(hax, ypc_lim)
+        title(hax, tit_sam(col), FontWeight = 'normal')
+        if col > 1
+            hax.YAxis.Visible = 'off';
+        end
+        xline(hax, 0, '--')
+    end
+end
+lab = ylabel(hax_sub(1), 'Trial #');
+lab.Position(1) = -31;
+lef = hax.Position(1) + hax.Position(3) + 0.001;
+h = colorbar(hax);
+h.Ticks = ypc_lim;
+h.Label.String = 'y position change (mm)';
+h.Position(1) = lef;
+h.Position(2) = hax.Position(2);
+h.Position(3) = 0.010;
+h.Position(4) = hax.Position(4);
+h.Label.Position(1) = 3;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+function h_fig = plo_vib_res(ypc_sam_fra_ani)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 1;
+gap_gap = 0.010;
+gap_ver_row = gap_gap*ones(n_row, 1);
+gap_hor_row_col = repmat(gap_gap, n_row, 1);
+mar_bot = 0.040;
+mar_top = 0.040;
+mar_lef = 0.050;
+mar_rig = 0.050;
+asp_rat_axe = 1;
+wid = false;
+sca = 1;
+sca_axe = sca;
+n_pix_ext = 100;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% heatmaps
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+tim_fra = con_fil.tim_fra;
+tim_fra = tim_fra.ika;
+hax = hax_sub(1);
+col_sam = con_fil.col_sam;
+n_fra = con_fil.n_fra;
+h_plo = plo_sha.sam_smo_tri(hax, tim_fra, ypc_sam_fra_ani, col_sam.two, n_fra.zan.bas, n_fra.zan.smo);
+        xline(hax, 0, '--')
+%ylabel(hax_sub(1), 'y position change (mm)');
+ylabel(hax_sub(1), 'Normalized y position change');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+function h_fig = plo_vib_sca(ypc_sam_ani, xtl_sam, col_sam)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 1;
+gap_ver_row = 0.070;
+gap_hor_row_col = 0.010*ones(n_row, n_col);
+mar_bot = 0.022;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+hei = con_fil.hei;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.021;
+mar_rig = 0.001;
+asp_rat_bar = 0.5;
+asp_rat_axe = asp_rat_bar;
+wid = false;
+sca_axe = 1;
+n_pix_ext = 20;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% distance
+%y_lab = 'Δy position (mm)';
+y_lab = 'Nor. Δy position';
+y_min = inf;
+y_max = -inf;
+hax = hax_sub(1);
+mar_siz = con_fil.mar_siz;
+ind_sam = 1:3;
+dat = true;
+[~, ~, gro_cro] = plo_dat_err_xsa_sim(hax, ypc_sam_ani, mar_siz.pub, col_sam, ind_sam, dat);
+[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+hax.XTickLabels = xtl_sam;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
+hax = hax_sub(1);
+y_lim_pre = ylim;
+mou = 0.010;
+sep = mou + 0.040;
+ext_hei = -(sep + mou);
+p_ypc_xsa = com_p_xsa(ypc_sam_ani);
+ind_sig.sig(hax, gro_cro, y_lim_pre, sep, mou, ext_hei, p_ypc_xsa.lme)
+[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+fon_siz = con_fil.fon_siz;
+hax.FontSize = fon_siz.pub;
+ylabel(y_lab)
+fon_siz = 8;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+hax = adj_hax(hax, fon_siz, mar_siz.pub, log_lin_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+function h_fig = plo_hab(ypc_sam_ani_epo)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_sam = length(ypc_sam_ani_epo);
+n_col = n_sam;
+gap_ver_row = 0.070;
+gap_hor_row_col = 0.010*ones(n_row, n_col);
+mar_bot = 0.025;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+hei = con_fil.hei;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.025;
+mar_rig = 0.001;
+asp_rat_bar = 0.5;
+asp_rat_axe = asp_rat_bar;
+wid = false;
+sca_axe = 1;
+n_pix_ext = 20;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+linkaxes(hax_sub)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% distance
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+mar_siz = con_fil.mar_siz;
+mar_siz = mar_siz.pub;
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+y_min = inf;
+y_max = -inf;
+p_sam_xco = cell(n_sam, 1);
+for sam = 1:n_sam
+    hax = hax_sub(sam);
+    ypc_ani_epo = ypc_sam_ani_epo{sam};
+    ypc_ani_epo(:, 2) = [];% because all nan.
+    int_con_pcx = [col_sam{sam}; col_sam{sam}];
+    h_plo = plo_dat_err_xco_sim(hax, ypc_ani_epo, mar_siz, int_con_pcx);
+    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+    p_sam_xco{sam} = com_p_xco(ypc_ani_epo(:, 1), ypc_ani_epo(:, 2));
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
+mou = 0.010;
+sep = mou + 0.040;
+ext_hei = -(sep + mou);
+fon_siz = con_fil.fon_siz;
+hax.FontSize = fon_siz.pub;
+y_lab = 'Δy position (mm)';
+fon_siz = 8;
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+for sam = 1:n_sam
+    hax = hax_sub(sam);
+    y_lim_pre = ylim(hax);
+    ind_sig.sig(hax, {[1 2]}, y_lim_pre, sep, mou, ext_hei, p_sam_xco{sam}.srt)
+    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+    if sam > 1
+        hax.YAxis.Visible = 'off';
+    else
+        ylabel(hax, y_lab)
+    end
+    hax.XTickLabels = {'Early', 'Late'};
+    hax = adj_hax(hax, fon_siz, mar_siz.pub, log_lin_wid);
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+function h_fig = plo_hab_dyn(ypc_sam_ani_tri)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 1;
+gap_ver_row = 0.070;
+gap_hor_row_col = 0.010*ones(n_row, n_col);
+mar_bot = 0.080;
+mar_top = 0.025;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+% hei = con_fil.hei;
+% mar_top = cal_mar_top(hei);
+mar_lef = 0.080;
+mar_rig = 0.001;
+asp_rat_axe = 1.7;
+wid = false;
+sca_axe = 1;
+n_pix_ext = 20;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% distance
+n_sam = length(ypc_sam_ani_tri);
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+n_tri = size(ypc_sam_ani_tri{1}, 2);
+tri_num_tri = 1:n_tri;
+hax = hax_sub(1);
+h_sam = [];
+for sam = 1:n_sam
+    ypc_ani_tri = ypc_sam_ani_tri{sam};
+    [h_plo, ind_var_pea] = plo_sha.raw(hax, tri_num_tri', ypc_ani_tri', col_sam{sam});
+    h_sam = [h_sam; h_plo];
+    hold(hax, 'on')
+end
+xlabel(hax, 'Trial #')
+ylabel(hax, 'Δ(y position) (cm)')
+leg = legend(hax, h_sam, {'MTZ'; 'Ablated'});
+
+%ylabel(hax, 'Δ(y position) (mm)')
+%tit_sam = con_fil.tit_sam;
+%leg = legend(hax, h_sam, tit_sam);
+
+leg.Box = 'off';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+function h_fig = plo_tap_occ(pro_sam_row_col, foc_sam_ani)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 4;
+gap_gap = 0.003;
+gap_ver_row = gap_gap*ones(n_row, 1);
+gap_hor_row_col = repmat([gap_gap gap_gap 0.030 0.030], n_row, 1);
+mar_bot = 0.025;
+hei = 5;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.008;
+mar_rig = 0.001;
+asp_rat_bar = 0.5;
+asp_rat_are = 2/3;% 21 x 14 image (top 4 rows empty)
+asp_rat_axe = [asp_rat_are asp_rat_are asp_rat_are asp_rat_bar ...
+    asp_rat_are asp_rat_are asp_rat_are asp_rat_bar];
+wid = false;
+sca = 0.900;
+sca_axe = [sca sca sca 1 sca sca sca 1];
+n_pix_ext = 3;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% heatmaps
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+tit_sam = con_fil.tit_sam;
+fon_siz = con_fil.fon_siz;
+pro_lim = [0 0.01];
+for i = 1:n_row
+    for j = 1:n_col - 1
+        hax = hax_sub((i - 1)*n_col + j);
+        %ima = sho_ima.gra(hax, pro_sam_row_col{j}(7:end - 3, :));
+        
+        imx = pro_sam_row_col{j}(7:end - 3, :);
+        ima = sho_ima.gra(hax, imresize(imx, [33, 28]));
+
+        colormap(hax, 'jet')
+        clim(hax, pro_lim)
+        if i == 1
+            title(hax, tit_sam(j), FontWeight = 'normal', FontSize = fon_siz.pub)
+        end
+    end
+end
+lef = hax.Position(1) + hax.Position(3) + 0.001;
+h = colorbar(hax);
+h.Ticks = pro_lim;
+h.Label.String = 'probability';
+h.Position(1) = lef;
+h.Position(2) = hax.Position(2);
+h.Position(3) = 0.001;
+h.Position(4) = hax.Position(4);
+h.FontSize = fon_siz.pub;
+h.Label.Position(1) = 3;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% scatter
+y_min = inf;
+y_max = -inf;
+hax = hax_sub(n_col);
+ind_sam = 1:3;
+dat = true;
+mar_siz = con_fil.mar_siz;
+col_sam = con_fil.col_sam;
+[~, ~, tic_sam] = plo_dat_err_xsa_sim(hax, foc_sam_ani, mar_siz.pub, col_sam.two, ind_sam, dat);
+[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+ylabel(hax, 'Focality')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
+y_lim_pre = ylim(hax);
+mou = 0.010;
+sep = mou + 0.040;
+ext_hei = -(sep + mou);
+p_foc_xsa = com_p_xsa(foc_sam_ani);
+ind_sig.sig(hax, con_fil.gro_thr_cro, y_lim_pre, sep, mou, ext_hei, p_foc_xsa.lme)
+[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+lin_wid = con_fil.lin_wid;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, lin_wid.one);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+function h_fig = plo_p_win_cro(p_win_cro)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 1;
+gap_gap = 0.010;
+gap_ver_row = gap_gap*ones(n_row, 1);
+gap_hor_row_col = repmat(gap_gap, n_row, 1);
+mar_bot = 0.080;
+mar_top = 0.040;
+mar_lef = 0.080;
+mar_rig = 0.050;
+asp_rat_axe = 1;
+wid = false;
+sca = 1;
+sca_axe = sca;
+n_pix_ext = 100;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+hax = hax_sub(1);
+col_sam = con_fil.col_sam;
+%win_ons_win = con_fil.win_ons_win;
+
+win_ons_win = (0:25)';
+tit_cro = con_fil.tit_cro;
+col_sam = col_sam.two;
+col_sam = col_sam([3 2]');
+h_mtz = plot(hax, win_ons_win, p_win_cro);
+
+legend(hax, tit_cro)
+
+yline(hax, 0.05, '--')
+xlabel(hax_sub(1), 'Window onset (s)');
+ylabel(hax_sub(1), 'p-value');
+box(hax, 'off')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% behavioral plotting
 function h_fig = plo_abs(abs_sam_ani, tit_sam, n_sam, p_abs_cro, ind_sam)
 [h_fig, wid_mon, hei_mon] = fig;
@@ -5309,6 +6582,7 @@ ind_win = 1;
 dat = true;
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
 [~, n_ani_tai_sam, tic_sam] = ...
     plo_dat_err_xsa(hax, abs_sam_ani, ind_win, ind_con, mar_siz, col_sam, ind_sam, dat);
 hax.XTick = 1:n_sam;
@@ -5391,14 +6665,14 @@ ylabel(hax_sub(1), 'Average tail angle (rad)')
 end
 
 function h_fig = plo_ave_ang_xsa(nta_sam_fra_sta_con, y_lab, n_sam, n_con, p_nta_win_con_xsa, ...
-    ind_sam, col_sam_con, log_fra)
+    ind_sam, log_fra)
 n_row = 1;
 n_col = 3;
 [h_fig, fig_wid, fig_hei] = fig;
 gap_ver_row = 0.030;
 mar_bot = 0.040;
 mar_top = 0.015;
-mar_lef = 0.055;
+mar_lef = 0.060;
 mar_rig = 0.001;
 global asp_rat_sig tim_fra win_len
 gap_hor_row_col = [0.015 0.015 0.015];
@@ -5415,15 +6689,23 @@ y_max = -inf;
 h_con = cell(n_con, 1);
 x_lab = 'Time (s)';
 hax_tap = [];
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_fra = con_fil.n_fra;
+n_fra = n_fra.tai;
+col_sam_con = con_fil.col_sam_con;
 for j = 1:n_con
     hax = hax_sub(j);
     for i = 1:n_sam
         ind = ind_sam(i);
+        if ind == 3
+            [mea_dep_var_sam, sem_dep_var_sam] = smo_mea_sem(nta_sam_fra_sta_con{ind}(:, 1, j), ...
+                nta_sam_fra_sta_con{ind}(:, 2, j), n_fra);
+        else
+            [mea_dep_var_sam, sem_dep_var_sam] = smo_mea_sem(nta_sam_fra_sta_con{ind}(log_fra, 1, j)...
+                , nta_sam_fra_sta_con{ind}(log_fra, 2, j), n_fra);
+        end
 
-        [mea_dep_var_sam, sem_dep_var_sam] = smo_mea_sem(nta_sam_fra_sta_con{ind}(log_fra, 1, j), ...
-            nta_sam_fra_sta_con{ind}(log_fra, 2, j), win_len.tai);
-
-        h_con_i = plo_sha(hax, tim_fra.ani.tri(log_fra), ...
+        h_con_i = plo_sha.fun(hax, tim_fra.ani.tri(log_fra), ...
             mea_dep_var_sam, ...
             sem_dep_var_sam, col_sam_con(ind, j));
         h_con{j} = [h_con{j}; h_con_i];
@@ -5437,17 +6719,17 @@ for j = 1:n_con
     end
     hax_tap = [hax_tap; hax];
 end
-nor_x = 0.5;
-nor_y = 0.7;
-log_all = true;
-nor_x_two = 2.5/3;
-for j = 1:n_con
-    plo_lin_sub_tri(hax_tap(j), win_len.tai.sec)
-    pri_sig_duo(hax_sub(j), nor_x, nor_y, p_nta_win_con_xsa.lme{2, j}, p_nta_win_con_xsa.rst{2, j}, ...
-        log_all)
-    pri_sig_duo(hax_sub(j), nor_x_two, nor_y, p_nta_win_con_xsa.lme{3, j}, ...
-        p_nta_win_con_xsa.rst{3, j}, log_all)
-end
+% nor_x = 0.5;
+% nor_y = 0.7;
+% log_all = true;
+% nor_x_two = 2.5/3;
+% for j = 1:n_con
+%     plo_lin_sub_tri(hax_tap(j), win_len.tai)
+%     pri_sig_duo(hax_sub(j), nor_x, nor_y, p_nta_win_con_xsa.lme{2, j}, p_nta_win_con_xsa.rst{2, j}...
+%         , log_all)
+%     pri_sig_duo(hax_sub(j), nor_x_two, nor_y, p_nta_win_con_xsa.lme{3, j}, ...
+%         p_nta_win_con_xsa.rst{3, j}, log_all)
+% end
 h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -5618,28 +6900,6 @@ for i = 1:n_sam
     [y_min, y_max, hax_pro_i] = adj_y(hax_pro_i, y_min, y_max);
     [off_non, sep, mou, ext_hei] = adj_sig(y_lim_pre, hax_pro_i, off_non, sep, mou, ext_hei);
 end
-end
-
-function plo_par_map_mul(hax, var_ani_tri, min_val, max_val, lin)
-n_col_ori = 256;
-n_col_tot = n_col_ori + 1;
-var_ani_tri(isnan(var_ani_tri)) = max_val + (max_val - min_val)/(n_col_tot - 2);
-
-ind_var_col = nan;
-ima(hax, ind_var_col, var_ani_tri)
-
-map_mat = [cool(n_col_ori); [0 0 0]];
-colormap(map_mat);
-%%%%%%%%%%%%%
-col = 'red';
-if lin
-    lin_wid = 2.25;
-    lin_sty = '-';
-    plo_ver_lin(hax, 12.5, col, lin_wid, lin_sty)
-    plo_ver_lin(hax, 6.5, col, lin_wid, lin_sty)
-end
-fon_siz = 20;
-enl_num(fon_siz)
 end
 
 function plo_tai_cro(bea_lat_sam_ani_tri, lat_win_con_sam_ani, tit_sam, n_sam, ...
@@ -6369,7 +7629,7 @@ end
 global mar_siz
 y_min = inf;
 y_max = -inf;
-global lin_wid
+lin_wid = 2.25;
 for i = 1:n_sam
     ind_rig = (i - 1)*n_col + 3;
     hax_i = hax_sub(ind_rig);
@@ -6535,7 +7795,7 @@ global con_int
 global fon_siz
 y_min = inf;
 y_max = -inf;
-global lin_wid
+lin_wid = 2.25;
 for i = 1:n_sam
     [~, n_ani, ~] = size(ave_rat_bas_sam_win_ani_par{i});
     for j = 1:n_com
@@ -6993,6 +8253,75 @@ h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% neural plotting
+function h_fig = plo_bri_com(bas_flu_sam_ani, p_f_win_reg_cro, tit_sam)
+n_row = 1;
+n_reg = 1;
+n_col = n_reg;
+mar_bot = 0.070;
+mar_top = 0.070;
+mar_lef = 0.050;
+mar_rig = 0.001;
+gap_ver_row = 0.000*ones(n_row, 1);
+gap_hor_row_col = 0.010*ones(n_row, n_col);
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+asp_rat = con_fil.asp_rat;
+n_sub = n_row*n_col;
+asp_rat_axe = asp_rat.cal.ori*ones(n_row*n_col, 1);
+wid = false;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 30;
+[h_fig, fig_wid, fig_hei] = fig;
+%[h_fig, fig_wid, fig_hei] = fig_mac;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, fig_hei, ...
+    wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% bar plots
+global mar_siz
+linkaxes(hax_sub)
+y_min = inf;
+y_max = -inf;
+global nam_reg
+global fon_siz
+col_sam = con_fil.col_sam;
+col_sam = col_sam.rap;
+dat = true;
+ind_sam = con_fil.ind_sam;
+%for reg = 1:n_reg
+for reg = 1
+    hax = hax_sub(reg);
+    [h_plo, n_uni_sam] = plo_dat_err_xsa_sim(hax, bas_flu_sam_ani, mar_siz, col_sam, ind_sam, dat);
+
+    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+    if reg == 1
+        ylabel(hax, 'F (a. u.)')
+    else
+        yticks([])
+        hax.YColor = 'w';
+    end
+end
+xticklabels(hax, tit_sam(ind_sam))
+% % significance
+% global gro_cro_con
+% fon_siz_non_bar = 20;
+% mou = 0.030;
+% off_non = 0.070;
+% sep = off_non + mou + 0.040;
+% ext_hei = 0.010;
+% y_min = inf;
+% y_max = -inf;
+% n_sam = length(tit_sam);
+% for reg = 1:n_reg
+%     hax_bar_ij = hax_sub(reg);
+%     axes(hax_bar_ij)
+%     y_lim_pre = ylim;
+%     sigstar_lim(gro_cro_con, fon_siz_non_bar, off_non, y_lim_pre, sep, mou, ext_hei, ...
+%         p_f_win_reg_cro{win_num}(reg, :))
+%     [y_min, y_max, hax_bar_ij] = adj_y(hax_bar_ij, y_min, y_max);
+%     [off_non, sep, mou] = adj_sig(y_lim_pre, hax_bar_ij, off_non, sep, mou);
+%     xlim([1 - 0.3 n_sam + 0.3])
+%     xticks(1:n_sam)
+% end
+end
 % evoked
 function h_fig = plo_inh_exc(fra_reg_con_sam_ani, p_fra_reg_con_xsa, ind_sam, tit_sam)
 global n_con ind_sub_reg nam_com_reg col_sam_con n_reg_for_cro
@@ -7849,12 +9178,13 @@ end
 function h_fig = plo_res(x_sam_cel, y_sam_cel, act_reg_win_con_sam_uni)
 n_row = 1;
 n_col = 2;
-gap_ver_row = 0.050*ones(n_row, 1);
-gap_hor_row_col = 0.030*ones(n_row, n_col);
-mar_bot = 0.070;
-mar_top = 0.030;
-mar_lef = 0.060;
-mar_rig = 0.001;
+gap_ver_row = 0.000*ones(n_row, 1);
+gap_hor_row_col = 0.010*ones(n_row, n_col);
+mar_bot = 0.000;
+hei = 6.2;
+mar_top = cal_mar_top(hei);
+mar_lef = 0.000;
+mar_rig = 0.000;
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 asp_rat = con_fil.asp_rat;
 asp_rat_axe = asp_rat.cal.ori*ones(n_row*n_col, 1);
@@ -7866,31 +9196,43 @@ n_pix_ext = 30;
     gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, fig_hei, ...
     wid, sca_axe, n_pix_ext);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-mar_siz = 7;
+%mar_siz = 7;
+%mar_siz = con_fil.mar_siz;
+mar_siz.cel = 3;
 x_uni.all = vertcat(x_sam_cel{:});
 y_uni.all = vertcat(y_sam_cel{:});
 x_lim = [min(y_uni.all) max(y_uni.all)];
 y_lim = [min(x_uni.all) max(x_uni.all)];
-col_sca_ste = con_fil.col_sca_ste;
+lim = 20;
+col_lim = [-lim lim];
 reg = 1;
 win = 2;
-con = 3;
+[~, n_con] = size(act_reg_win_con_sam_uni{1});
+map = con_fil.map;
+map = map.sym;
 for col = 1:n_col
     hax = hax_sub(col);
-
-    act_cel = act_reg_win_con_sam_uni{reg}{win, con}{col};
-    act_cel(act_cel < col_sca_ste(1)) = col_sca_ste(1);
-    act_cel(act_cel > col_sca_ste(2)) = col_sca_ste(2);
-
-    h = scatter(hax, y_sam_cel{col}, x_sam_cel{col}, mar_siz, act_cel, 'filled');%!! n_cel mismatch
+    y_cel = y_sam_cel{col};
+    x_cel = x_sam_cel{col};
+    act_cel = act_reg_win_con_sam_uni{reg}{win, n_con}{col};
+    act_cel(act_cel < col_lim(1)) = col_lim(1);
+    act_cel(act_cel > col_lim(2)) = col_lim(2);
+    if min(act_cel) > col_lim(1)
+        y_cel = [y_cel; nan];
+        x_cel = [x_cel; nan];
+        act_cel = [act_cel; col_lim(1)];
+    end
+    h = scatter(hax, y_cel, x_cel, mar_siz.cel, act_cel, 'filled');
     set(hax, 'XDir', 'reverse')
     set(hax, 'YDir', 'reverse')
     hax.PlotBoxAspectRatio = [1 asp_rat.cal.ori 1];
     axis(hax, 'equal')
     hax.XLim = x_lim;
     hax.YLim = y_lim;
+    hax.XAxis.Visible = 'off';
+    hax.YAxis.Visible = 'off';
+    hax.Colormap = map;
 end
-colorbar(hax)
 end
 
 function h_fig = plo_spa_den(x_sam_cel, y_sam_cel, log_sam_cel_con)
@@ -7965,6 +9307,178 @@ end
 h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
 end
 
+function h_fig = plo_thr(res_reg_win_con_sam_uni)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 1;
+gap_ver_row = 0.070;
+gap_hor_row_col = 0.020*ones(n_row, n_col);
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+% hei = con_fil.hei;
+% mar_top = cal_mar_top(hei);
+% mar_bot = 0.022;
+% mar_lef = 0.030;
+% mar_rig = 0.001;
+
+mar_top = 0.080;
+mar_bot = 0.080;
+mar_lef = 0.080;
+mar_rig = 0.080;
+
+asp_rat_bar = 0.5;
+asp_rat_axe = [asp_rat_bar asp_rat_bar];
+wid = false;
+sca_axe = [1 1];
+n_pix_ext = 3;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% scatter
+hax = hax_sub(1);
+ind_sam = [1 2];
+mar_siz = con_fil.mar_siz;
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([1 2]');
+[h_plo, n_uni_sam, gro_cro] = plo_dat(hax, res_reg_win_con_sam_uni{1}{2, 3}, mar_siz.pre, col_sam, ...
+    ind_sam);
+res_thr = con_fil.res_thr;
+yline(hax, res_thr.upp.two, 'b')
+yline(hax, res_thr.low.two, 'b')
+yline(hax, res_thr.upp.one, 'g')
+yline(hax, res_thr.low.one, 'g')
+
+xtl_sam = con_fil.xtl_sam;
+xtl_sam = xtl_sam([1 2]');
+hax.XTickLabels = xtl_sam;
+y_lab = con_fil.y_lab;
+ylabel(hax, y_lab.dff)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function [h_fig, p_xsa_one, p_xsa_two] = plo_thr_com(res_reg_win_con_sam_uni)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 2;
+gap_ver_row = 0.070;
+gap_hor_row_col = 0.070*ones(n_row, n_col);
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+mar_top = 0.080;
+mar_bot = 0.080;
+mar_lef = 0.080;
+mar_rig = 0.080;
+asp_rat_bar = 0.5;
+asp_rat_axe = [asp_rat_bar asp_rat_bar];
+wid = false;
+sca_axe = [1 1];
+n_pix_ext = 3;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% scatter
+ind_sam = [1 2];
+mar_siz = con_fil.mar_siz;
+mar_siz = mar_siz.pre;
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([1 2]');
+res_thr = con_fil.res_thr;
+res_gro_cel = res_reg_win_con_sam_uni{1}{2, 3};
+%%%%
+hax = hax_sub(1);
+var_sam_uni = {res_gro_cel{1}(res_gro_cel{1} > res_thr.low.one & res_gro_cel{1} < res_thr.upp.one); ...
+    res_gro_cel{2}(res_gro_cel{2} > res_thr.low.one & res_gro_cel{2} < res_thr.upp.one)};
+dat = true;
+[h_plo, n_uni_sam, gro_cro] = plo_dat_err_xsa_sim(hax, var_sam_uni, mar_siz, col_sam, ...
+    ind_sam, dat);
+xtl_sam = con_fil.xtl_sam;
+xtl_sam = xtl_sam([1 2]');
+hax.XTickLabels = xtl_sam;
+y_lab = con_fil.y_lab;
+ylabel(hax, y_lab.dff)
+p_xsa_one = com_p_xsa(var_sam_uni);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+hax = hax_sub(2);
+var_sam_uni = {res_gro_cel{1}(res_gro_cel{1} > res_thr.low.two & res_gro_cel{1} < res_thr.upp.two); ...
+    res_gro_cel{2}(res_gro_cel{2} > res_thr.low.two & res_gro_cel{2} < res_thr.upp.two)};
+dat = true;
+[h_plo, n_uni_sam, gro_cro] = plo_dat_err_xsa_sim(hax, var_sam_uni, mar_siz, col_sam, ...
+    ind_sam, dat);
+hax.XTickLabels = xtl_sam;
+ylabel(hax, y_lab.dff)
+p_xsa_two = com_p_xsa(var_sam_uni);
+linkaxes(hax_sub)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
+
+function h_fig = plo_bal(res_reg_win_con_sam_uni, log_gro_cel)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 1;
+n_col = 1;
+
+% gap_ver_row = 0.070;
+% gap_hor_row_col = 0.020*ones(n_row, n_col);
+% mar_top = 0.080;
+% mar_bot = 0.080;
+% mar_lef = 0.080;
+% mar_rig = 0.080;
+
+gap_ver_row = 0.070;
+gap_hor_row_col = 0.020*ones(n_row, n_col);
+hei = 6.1221;
+mar_top = cal_mar_top(hei);
+mar_bot = 0.030;
+mar_lef = 0.020;
+mar_rig = 0.080;
+
+asp_rat_bar = 0.5;
+asp_rat_axe = [asp_rat_bar asp_rat_bar];
+wid = false;
+sca_axe = [1 1];
+n_pix_ext = 3;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% scatter
+hax = hax_sub(1);
+ind_sam = [1 2];
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+mar_siz = con_fil.mar_siz;
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+col_sam = col_sam([1 2]');
+res_gro_cel = res_reg_win_con_sam_uni{1}{2, 3};
+var_sam_uni = {res_gro_cel{1}(log_gro_cel{1}); res_gro_cel{2}(log_gro_cel{2})};
+plo_dat(hax, var_sam_uni, mar_siz.pre, col_sam, ind_sam)
+xtl_sam = con_fil.xtl_sam;
+xtl_sam = xtl_sam([1 2]');
+hax.XTickLabels = xtl_sam;
+y_lab = con_fil.y_lab;
+ylabel(hax, y_lab.dff)
+fon_siz = con_fil.fon_siz;
+log_lin_wid = true;
+mar_siz.pub = 3;
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+set(h_fig.Children, 'Units', 'pixels')
+h_fig.Position(3) = las_pix;
+h_fig.Renderer = 'painters';
+h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+h_fig.PaperUnits = 'normalized';
+h_fig.PaperPosition = [0 0 1 1];
+end
 % ong
 function plo_ofr_xsa(ofr_reg_win_sam_ani, y_lab_ave, p_ofr_reg_win_xsa, ...
     n_ani_bri_sam, ind_sam, tit_sam, col_sam_con)
@@ -8059,10 +9573,18 @@ end
 
 function h_fig = plo_cor_dis_epo(cor_coe_epo_reg_sam_blo_ani, p_epo_reg_fac, epo_num)
 [h_fig, fig_wid, fig_hei] = fig;
-global asp_rat_bar n_sam dis_blo nam_reg ind_sub_reg n_reg_for_cro
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-n_row = 1;
-n_col = n_reg_for_cro;
+asp_rat = con_fil.asp_rat;
+asp_rat_bar = asp_rat.bar;
+n_sam = con_fil.n_sam;
+dis_blo = con_fil.dis_blo;
+nam_reg = con_fil.nam_reg;
+ind_sub_reg = con_fil.ind_sub_reg;
+n_reg_for_cro = con_fil.n_reg_for_cro;
+n_blo = con_fil.n_blo;
+n_blo = n_blo.wre;
+n_row = 2;
+n_col = n_reg_for_cro/2;
 
 % gap_ver_row = 0.050*ones(n_row, 1);
 % gap_hor_row_col = 0.030*ones(n_row, n_col);
@@ -8070,17 +9592,18 @@ n_col = n_reg_for_cro;
 % mar_top = 0.040;
 % mar_lef = 0.055;
 % mar_rig = 0.015;
+% wid = true;
 
-gap_ver_row = 0.000*ones(n_row, 1);
-gap_hor_row_col = 0.010*ones(n_row, n_col);
-mar_bot = 0.070;
-mar_top = 0.040;
-wid = 1.5*6 + 1;
-mar_lef = cal_mar_lef(wid);
+gap_ver_row = 0.030*ones(n_row, 1);
+gap_hor_row_col = 0.020*ones(n_row, n_col);
+mar_bot = 0.030;
+mar_lef = 0.030;
+hei = 6.1221;
+mar_top = cal_mar_top(hei);
 mar_rig = 0.005;
 
 asp_rat_axe = asp_rat_bar*ones(n_row*n_col, 1);
-wid = true;
+wid = false;
 sca_axe = ones(n_row*n_col, 1);
 n_pix_ext = 30;
 [hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
@@ -8095,57 +9618,58 @@ log_all = true;
 nor_x = 0.5;
 nor_y_cas = [0.8; 0.7; 0.15; 0.05];
 col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
 fon_siz = con_fil.fon_siz;
-for i = ind_sub_reg
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+for reg = ind_sub_reg
     ind_ite = ind_ite + 1;
     hax = hax_sub(ind_ite);
     h_sam = [];
-    for j = 1:n_sam.one
-        pcc_blo_ani = cor_coe_epo_reg_sam_blo_ani.pos{epo_num, i}{j};
+    for sam = 1:n_sam.one
+        pcc_blo_ani = cor_coe_epo_reg_sam_blo_ani.pos{epo_num, reg}{sam};
         pcc_blo_ani = fix_out(pcc_blo_ani);
-        plo_sha.raw(hax, dis_blo.wre, pcc_blo_ani, col_sam{j})
+        plo_sha.raw(hax, dis_blo.wre, pcc_blo_ani(1:n_blo, :), col_sam{sam})
         hold(hax, 'on')
-        pcc_blo_ani = cor_coe_epo_reg_sam_blo_ani.neg{epo_num, i}{j};
+        pcc_blo_ani = cor_coe_epo_reg_sam_blo_ani.neg{epo_num, reg}{sam};
         pcc_blo_ani = fix_out(pcc_blo_ani);
-        plo_sha.raw(hax, dis_blo.wre, pcc_blo_ani, col_sam{j})
+        plo_sha.raw(hax, dis_blo.wre, pcc_blo_ani(1:n_blo, :), col_sam{sam})
         hold(hax, 'on')
         hax.XTickLabelMode = 'auto';
     end
     [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
     hax.Box = 'off';
-    title(hax, nam_reg(i), 'FontWeight', 'normal')
-    if i == ind_sub_reg(1)
-        ylabel(hax, 'pairwise CC')
+    title(hax, nam_reg(reg), 'FontWeight', 'normal')
+    if reg == ind_sub_reg(1) || reg == ind_sub_reg(4)
+        ylabel(hax, 'pairwise correlation')
     else
         hax.YAxis.Visible = 'off';
     end
+    if reg < ind_sub_reg(4)
+        hax.XAxis.Visible = 'off';
+    end
     xlim([0 100])%%%%%%%%%%%!!!!!!!!!!!!!!!!!!!!
-    %xlabel(hax, 'distance (\mum)')
-    xlabel(hax, 'dist. (\mum)')
-    pri_sig(hax, nor_x, nor_y_cas(1), p_epo_reg_fac.pos{epo_num, i}(1), log_all)
-    pri_sig(hax, nor_x, nor_y_cas(2), p_epo_reg_fac.pos{epo_num, i}(2), log_all)
-    pri_sig(hax, nor_x, nor_y_cas(3), p_epo_reg_fac.neg{epo_num, i}(1), log_all)
-    pri_sig(hax, nor_x, nor_y_cas(4), p_epo_reg_fac.neg{epo_num, i}(2), log_all)
-    hax = adj_hax(hax, fon_siz.pub);
+    xlabel(hax, 'distance (\mum)')
+    %xlabel(hax, 'dist. (\mum)')
+    %pri_sig(hax, nor_x, nor_y_cas(1), p_epo_reg_fac.pos{epo_num, reg}(1), log_all)
+    pri_sig(hax, nor_x, nor_y_cas(2), p_epo_reg_fac.pos{epo_num, reg}(2), log_all)
+    %pri_sig(hax, nor_x, nor_y_cas(3), p_epo_reg_fac.neg{epo_num, reg}(1), log_all)
+    pri_sig(hax, nor_x, nor_y_cas(4), p_epo_reg_fac.neg{epo_num, reg}(2), log_all)
+    hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
 end
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
+hax.YLim(1) = -0.15;%%%%%%%%%%%% for spo sha abl
+hax.YLim(2) = 0.30;%%%%%%%%%%%% for for_syn
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
 end
 
-function h_fig = plo_cor_dis_ent(pcc_sam_blo_ani, p_ent_fac)
-%[h_fig, fig_wid, fig_hei] = fig;
-[h_fig, fig_wid, fig_hei] = fig_mac;
-global asp_rat_bar n_sam dis_blo
+function h_fig = plo_cor_dis_ent(pcc_sam_blo_ani, p_ent_fac, col_sam, tit_sam)
+[h_fig, fig_wid, fig_hei] = fig;
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+asp_rat = con_fil.asp_rat;
+asp_rat_bar = asp_rat.bar;
+dis_blo = con_fil.dis_blo;
 n_row = 1;
 n_col = 1;
-
-% gap_ver_row = 0.050*ones(n_row, 1);
-% gap_hor_row_col = 0.030*ones(n_row, n_col);
-% mar_bot = 0.070;
-% mar_top = 0.040;
-% mar_lef = 0.055;
-% mar_rig = 0.015;
-
 gap_ver_row = 0.000*ones(n_row, 1);
 gap_hor_row_col = 0.010*ones(n_row, n_col);
 mar_bot = 0.030;
@@ -8153,7 +9677,6 @@ hei = 3.5;
 mar_top = cal_mar_top(hei);
 mar_lef = 0.020;
 mar_rig = 0.005;
-
 asp_rat_axe = asp_rat_bar*ones(n_row*n_col, 1);
 wid = false;
 sca_axe = ones(n_row*n_col, 1);
@@ -8161,43 +9684,53 @@ n_pix_ext = 30;
 [hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
     gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
     fig_hei, wid, sca_axe, n_pix_ext);
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ind_ite = 0;
 y_min = inf;
 y_max = -inf;
 log_all = true;
-nor_x = 0.5;
+%nor_x = 0.5;
+nor_x = 0.95;
 nor_y_cas = [0.8; 0.7; 0.24; 0.16];
-col_sam = con_fil.col_sam;
 fon_siz = con_fil.fon_siz;
-for i = 1
-    ind_ite = ind_ite + 1;
-    hax = hax_sub(ind_ite);
-    h_sam = [];
-    for j = 1:n_sam.one
-        pcc_blo_ani = pcc_sam_blo_ani.pos{j};
-        pcc_blo_ani = fix_out(pcc_blo_ani);
-        plo_sha.raw(hax, dis_blo.xre, pcc_blo_ani, col_sam{j})
-        hold(hax, 'on')
-        pcc_blo_ani = pcc_sam_blo_ani.neg{j};
-        pcc_blo_ani = fix_out(pcc_blo_ani);
-        plo_sha.raw(hax, dis_blo.xre, pcc_blo_ani, col_sam{j})
-        hold(hax, 'on')
-        hax.XTickLabelMode = 'auto';
-    end
-    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
-    hax.Box = 'off';
-    ylabel(hax, 'pairwise CC')
-    xlim([0 300])
-    xlabel(hax, 'distance (\mum)')
-    %xlabel(hax, 'dist. (\mum)')
-    pri_sig(hax, nor_x, nor_y_cas(1), p_ent_fac.pos(1), log_all)
-    pri_sig(hax, nor_x, nor_y_cas(2), p_ent_fac.pos(2), log_all)
-    pri_sig(hax, nor_x, nor_y_cas(3), p_ent_fac.neg(1), log_all)
-    pri_sig(hax, nor_x, nor_y_cas(4), p_ent_fac.neg(2), log_all)
-    hax = adj_hax(hax, fon_siz.pub);
+mar_siz = con_fil.mar_siz;
+log_lin_wid = true;
+h_gro = nan(2, 1);
+n_sam = length(pcc_sam_blo_ani.all);
+ind_ite = ind_ite + 1;
+hax = hax_sub(ind_ite);
+h_sam = [];
+for sam = 1:n_sam
+    pcc_blo_ani = pcc_sam_blo_ani.pos{sam};
+    pcc_blo_ani = fix_out(pcc_blo_ani);
+    h_plo = plo_sha.raw(hax, dis_blo.xre, pcc_blo_ani, col_sam{sam});
+    h_gro(sam) = h_plo;
+    hold(hax, 'on')
+    pcc_blo_ani = pcc_sam_blo_ani.neg{sam};
+    pcc_blo_ani = fix_out(pcc_blo_ani);
+    plo_sha.raw(hax, dis_blo.xre, pcc_blo_ani, col_sam{sam})
+    hold(hax, 'on')
+    hax.XTickLabelMode = 'auto';
 end
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
+[y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+hax.Box = 'off';
+ylabel(hax, 'pairwise correlation')
+xlim([0 300])
+xlabel(hax, 'distance (\mum)')
+%pri_sig(hax, nor_x, nor_y_cas(1), p_ent_fac.pos(1), log_all)
+pri_sig(hax, nor_x, nor_y_cas(2), p_ent_fac.pos(2), log_all)
+%pri_sig(hax, nor_x, nor_y_cas(3), p_ent_fac.neg(1), log_all)
+pri_sig(hax, nor_x, nor_y_cas(4), p_ent_fac.neg(2), log_all)
+hax = adj_hax(hax, fon_siz.pub, mar_siz.pub, log_lin_wid);
+leg = legend(hax, h_gro, tit_sam');
+leg.Box = "off";
+leg.ItemTokenSize(1) = 10;
+%leg.Position = [0.04 0.103 0 0.02];
+%leg.Position = [0.6 0.103 0 0.02];
+leg.Position = [0.6 0.7 0 0.02];
+
+%h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
 end
 
 function h_fig = plo_ave_cor_dis(cor_coe_reg_sam_blo_ani, p_reg_fac)
@@ -9157,8 +10690,10 @@ hei = 3;
 mar_top = cal_mar_top(hei);
 mar_lef = 0.005;
 mar_rig = 0.000;
-
-global gre n_cro_tot reg_cro_ind fil_pat_for
+gre = con_fil.gre;
+n_cro_tot = con_fil.n_cro_tot;
+reg_cro_ind = con_fil.reg_cro_ind;
+fil_pat_for = con_fil.fil_pat_for;
 n_row.cal = 1080;
 n_col.cal = 789;
 asp_rat_cax = n_col.cal/n_row.cal;
@@ -9214,7 +10749,13 @@ for k = epo_num
             dif = dif_acc_epo_xre_sam{k}(i);
             reg_one = reg_cro_ind(i, 1);
             reg_two = reg_cro_ind(i, 2);
-            if p_acc_epo_xre_xsa{k, i}.lme <= con_fil.sig_lev
+
+            p_val = p_acc_epo_xre_xsa{k, i};
+            if isnan(p_val.rst)
+                p_val.lme = nan;
+            end
+
+            if p_val.lme <= con_fil.sig_lev
                 n_sig = n_sig + 1;
             else
                 if dif > 0
@@ -9224,8 +10765,10 @@ for k = epo_num
                     col = "#ADD8E6";
                     n_dec = n_dec + 1;
                 end
-                plo_xre(hax_sub(j), dif, pix_num_hor_reg, pix_num_ver_reg, ...
-                    reg_one, reg_two, max_abs_dif_acc_epo(k), col)
+                if ~isnan(dif)
+                    plo_xre(hax_sub(j), dif, pix_num_hor_reg, pix_num_ver_reg, ...
+                        reg_one, reg_two, max_abs_dif_acc_epo(k), col)
+                end
             end
             hax_sub(j).Visible = 'off';
         end
@@ -9235,15 +10778,22 @@ for k = epo_num
             dif = dif_acc_epo_xre_sam{k}(i);
             reg_one = reg_cro_ind(i, 1);
             reg_two = reg_cro_ind(i, 2);
-            if p_acc_epo_xre_xsa{k, i}.lme <= con_fil.sig_lev
+
+            p_val = p_acc_epo_xre_xsa{k, i};
+            if isnan(p_val.rst)
+                p_val.lme = nan;
+            end
+
+            if p_val.lme <= con_fil.sig_lev
                 if dif > 0
                     col = "#8B0000";
                 else
                     col = "#00008B";
                 end
-                plo_xre(hax_sub(j), dif, pix_num_hor_reg, pix_num_ver_reg, ...
-                    reg_one, reg_two, max_abs_dif_acc_epo(k), col)
-            else
+                if ~isnan(dif)
+                    plo_xre(hax_sub(j), dif, pix_num_hor_reg, pix_num_ver_reg, ...
+                        reg_one, reg_two, max_abs_dif_acc_epo(k), col)
+                end
             end
             hax_sub(j).Visible = 'off';
         end
@@ -9258,7 +10808,7 @@ end
 mar_siz = 4;
 log_lin_wid = false;
 hax_sub(j) = adj_hax(hax_sub(j), fon_siz.pub, mar_siz, log_lin_wid);
-h_fig = opt_h_fig(h_fig, las_pix, rat_wid);
+h_fig = opt_h_fig(h_fig, las_pix, rat_wid, n_pix_ext);
 end
 
 function plo_xre(hax, dif, pix_num_hor_reg, pix_num_ver_reg, reg_one, reg_two, max_abs_dif, col)
@@ -9295,9 +10845,6 @@ gap_hor_ave = 0.005;
 gap_hor_col = gap_hor_ave*ones(n_col, 1);
 gap_hor_row_col = repmat(gap_hor_col, n_row, n_col);
 mar_bot = 0.030;
-%dis_asp_rat = con_fil.dis_asp_rat;
-% hei = wid/dis_asp_rat;
-% mar_top = cal_mar_top(hei);
 mar_top = 0.100;
 wid = 1.5*6 + 1;
 mar_lef = cal_mar_lef(wid);
@@ -9325,6 +10872,7 @@ y_lab = y_lab_ori.dff;
 x_lab = y_lab_ori.tac;
 mar_siz = con_fil.mar_siz;
 mar_siz = mar_siz.pub/2;
+log_lin_wid = true;
 for i = ind_sub_reg
     ind_ite = ind_ite + 1;
     hax = hax_sub(ind_ite);
@@ -9339,7 +10887,7 @@ for i = ind_sub_reg
     end
     title(hax, nam_reg(i), 'FontWeight', 'normal')
     xlabel(hax, x_lab)
-    hax = adj_hax(hax, fon_siz.pub, mar_siz);
+    hax = adj_hax(hax, fon_siz.pub, mar_siz, log_lin_wid);
 end
 % hax = axes('Position', [0 0 1 1], 'visible', 'off');
 % nor_x = 0.730;
@@ -9407,6 +10955,363 @@ text(hax, nor_x, 0.90, ['y_i = \beta_0 + \beta_1\cdotx_i + ' char(949) '_i'])
 text(hax, nor_x, 0.85, ...
     ['y_i = \beta_0 + \beta_1\cdota_i + \beta_2\cdotx_i + \beta_3\cdota_i\cdotx_i + ' ...
     char(949) '_i'])
+end
+
+function h_fig = plo_slo_com(slo_reg_sam_cel, coe_det_reg_sam_cel, thr)
+n_row = 1;
+n_col = 6;
+gap_ver = 0.050;
+gap_ver_row = gap_ver*ones(n_row, 1);
+gap_hor_ave = 0.025;
+gap_hor_row_col = repmat(gap_hor_ave, n_row, n_col);
+mar_bot = 0.070;
+mar_top = 0.070;
+mar_lef = 0.055;
+mar_rig = 0.003;
+asp_rat_bar = 0.5;
+asp_rat_axe = [asp_rat_bar asp_rat_bar asp_rat_bar ...
+asp_rat_bar asp_rat_bar asp_rat_bar]';
+[h_fig, wid_mon, hei_mon] = fig;
+wid = true;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 10;
+[hax_sub, pos_axe, axh, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen...
+    (n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, ...
+    hei_mon, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_reg = con_fil.n_reg_for_cro;
+mar_siz = con_fil.mar_siz;
+mar_siz = mar_siz.pre;
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+ind_sam = [1 2];
+
+%dat = true;
+dat = false;
+
+p_reg.lme = nan(n_reg, 1);
+p_reg.rst = nan(n_reg, 1);
+for reg = 1:n_reg
+    hax = hax_sub(reg);
+    slo_sam_cel = slo_reg_sam_cel{reg};
+    coe_det_sam_cel = coe_det_reg_sam_cel{reg};
+    slo_sam_cel = {slo_sam_cel{1}(coe_det_sam_cel{1} > thr); slo_sam_cel{2}(coe_det_sam_cel{2} > thr)};
+
+    [h_plo, n_uni_sam, tic_sam] = plo_dat_err_xsa_sim(hax, slo_sam_cel, mar_siz, col_sam, ...
+    ind_sam, dat);
+    hax.XTickLabels = con_fil.xtl_sam;
+    p_xsa = com_p_xsa(slo_sam_cel);
+    p_reg.lme(reg) = p_xsa.lme;
+    p_reg.rst(reg) = p_xsa.rst;
+end
+linkaxes(hax_sub)
+y_min = inf;
+y_max = -inf;
+mou = 0.010;
+sep = mou + 0.040;
+ext_hei = -(sep + mou);
+nam_com_reg = con_fil.nam_com_reg;
+for reg = 1:n_reg
+    hax = hax_sub(reg);
+    gro_thr_cro = {[1 2]};
+    y_lim_pre = ylim(hax);
+    ind_sig.sig(hax, gro_thr_cro, y_lim_pre, sep, mou, ext_hei, p_reg.rst(reg))
+    [y_min, y_max, hax] = adj_y(hax, y_min, y_max);
+    title(hax, nam_com_reg(reg))
+end
+end
+
+function h_fig = plo_slo_den(tac_sam_tri_cel, act_sam_tri_cel, log_sam_cel_reg)
+n_sam = 2;
+n_row = n_sam;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_reg = con_fil.n_reg_for_cro;
+n_col = n_reg;
+gap_ver = 0.050;
+gap_ver_row = gap_ver*ones(n_row, 1);
+gap_hor_ave = 0.025;
+gap_hor_row_col = repmat(gap_hor_ave, n_row, n_col);
+mar_bot = 0.070;
+mar_top = 0.070;
+mar_lef = 0.055;
+mar_rig = 0.003;
+asp_rat = 1;
+n_sub = n_row*n_col;
+asp_rat_axe = asp_rat*ones(n_sub, 1);
+[h_fig, wid_mon, hei_mon] = fig;
+wid = true;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 10;
+[hax_sub, pos_axe, axh, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen...
+    (n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, ...
+    hei_mon, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+min_den = 0;
+max_den = 0.7;
+mar_siz = 7*(200/50);
+ind_sub_reg = con_fil.ind_sub_reg;
+for sam = 1:n_sam
+    tac_tri_cel = tac_sam_tri_cel{sam};
+    act_tri_cel = act_sam_tri_cel{sam};
+    log_cel_reg = log_sam_cel_reg{sam};
+    log_cel_reg = log_cel_reg(:, ind_sub_reg);
+    for reg = 1:n_reg
+        hax = hax_sub(n_reg*(sam - 1) + reg);
+        log_cel = log_cel_reg(:, reg);
+        tar_tri_cel = tac_tri_cel(:, log_cel);
+        acr_tri_cel = act_tri_cel(:, log_cel);
+        tar_tri = tar_tri_cel(:);
+        acr_tri = acr_tri_cel(:);
+        coo_bin_dim = [tar_tri acr_tri];
+        pro_den_uni = ksdensity(coo_bin_dim, coo_bin_dim);
+        scatter(hax, tar_tri, acr_tri, mar_siz, pro_den_uni, 'filled');
+        hax.CLim = [min_den max_den];
+    end
+end
+linkaxes(hax_sub)
+end
+
+function h_fig = plo_lin(tac_sam_sam_ani, act_sam_reg_ani_sam_cel)
+n_sam = 2;
+n_row = n_sam;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_reg = con_fil.n_reg_for_cro;
+n_col = n_reg;
+gap_ver = 0.050;
+gap_ver_row = gap_ver*ones(n_row, 1);
+gap_hor_ave = 0.025;
+gap_hor_row_col = repmat(gap_hor_ave, n_row, n_col);
+mar_bot = 0.070;
+mar_top = 0.070;
+mar_lef = 0.055;
+mar_rig = 0.003;
+asp_rat = 1;
+n_sub = n_row*n_col;
+asp_rat_axe = asp_rat*ones(n_sub, 1);
+[h_fig, wid_mon, hei_mon] = fig;
+wid = true;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 10;
+[hax_sub, pos_axe, axh, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen...
+    (n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, ...
+    hei_mon, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+for sam = 1:n_sam
+    tac_sam_ani = tac_sam_sam_ani{sam};
+    n_ani = size(tac_sam_ani, 2);
+    act_reg_ani_sam_cel = act_sam_reg_ani_sam_cel{sam};
+    for reg = 1:n_reg
+        hax = hax_sub(n_reg*(sam - 1) + reg);
+        for ani = 1:n_ani
+            act_sam_cel = act_reg_ani_sam_cel{reg, ani};
+            if ~isempty(act_sam_cel)
+                plot(hax, tac_sam_ani(:, ani), act_sam_cel)
+                hold(hax, "on")
+            end
+        end
+    end
+end
+linkaxes(hax_sub)
+end
+
+function h_fig = plo_slo_lin(slo_reg_sam_cel)
+n_gro = 2;
+n_row = n_gro;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_reg = con_fil.n_reg_for_cro;
+n_col = n_reg;
+gap_ver = 0.050;
+gap_ver_row = gap_ver*ones(n_row, 1);
+gap_hor_ave = 0.025;
+gap_hor_row_col = repmat(gap_hor_ave, n_row, n_col);
+mar_bot = 0.070;
+mar_top = 0.070;
+mar_lef = 0.055;
+mar_rig = 0.003;
+asp_rat = 1;
+n_sub = n_row*n_col;
+asp_rat_axe = asp_rat*ones(n_sub, 1);
+[h_fig, wid_mon, hei_mon] = fig;
+wid = true;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 10;
+[hax_sub, pos_axe, axh, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen...
+    (n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, ...
+    hei_mon, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+n_sam = 100;
+tac_sam = linspace(0, 0.5, n_sam)';
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+alp = 0.1;
+for sam = 1:n_gro
+    for reg = 1:n_reg
+        slo_cel = slo_reg_sam_cel{reg}{sam}';
+        n_cel = length(slo_cel);
+        act_sam_cel = slo_cel.*repmat(tac_sam, 1, n_cel);
+        hax = hax_sub(n_reg*(sam - 1) + reg);
+        plot(hax, tac_sam, act_sam_cel, 'Color', [col_sam{sam} alp])
+        hax.Box = 'off';
+        if sam == 1 && reg ==1
+            hax.XTickLabel = [];
+        elseif sam == 1 && reg ~= 1
+            hax.YTickLabel = [];
+            hax.XTickLabel = [];
+        elseif sam == 2 && reg ~=1
+            hax.YTickLabel = [];
+        end
+        hold(hax, 'on')
+        plot(hax, tac_sam, mean(slo_cel)*tac_sam, 'Color', col_sam{sam})
+    end
+end
+linkaxes(hax_sub)
+end
+
+function h_fig = plo_slo_lin_ove(slo_reg_sam_cel)
+n_gro = 2;
+n_row = 1;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_reg = con_fil.n_reg_for_cro;
+n_col = n_reg;
+% gap_ver = 0.050;
+% gap_ver_row = gap_ver*ones(n_row, 1);
+% gap_hor_ave = 0.025;
+% gap_hor_row_col = repmat(gap_hor_ave, n_row, n_col);
+% mar_bot = 0.070;
+% mar_top = 0.070;
+% mar_lef = 0.055;
+% mar_rig = 0.010;
+
+gap_ver = 0.015;
+gap_ver_row = gap_ver*ones(n_row, 1);
+gap_hor_ave = 0.005;
+gap_hor_col = gap_hor_ave*ones(n_col, 1);
+gap_hor_row_col = repmat(gap_hor_col, n_row, n_col);
+mar_bot = 0.030;
+mar_top = 0.100;
+wid = 12.8446;
+mar_lef = cal_mar_lef(wid);
+mar_rig = 0.005;
+
+asp_rat = 1;
+n_sub = n_row*n_col;
+asp_rat_axe = asp_rat*ones(n_sub, 1);
+[h_fig, wid_mon, hei_mon] = fig;
+wid = true;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 10;
+[hax_sub, pos_axe, axh, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen...
+    (n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, ...
+    hei_mon, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+n_sam = 100;
+x_max = 0.01;
+tac_sam = linspace(0, x_max, n_sam)';
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+%alp = 0.1;
+%alp = 0.05;
+alp = 0.15;
+y_lab = con_fil.y_lab;
+fon_siz = con_fil.fon_siz;
+mar_siz = con_fil.mar_siz;
+mar_siz = mar_siz.pub;
+log_lin_wid = true;
+for reg = 1:n_reg
+    hax = hax_sub(reg);
+    for sam = 1:n_gro
+        slo_cel = slo_reg_sam_cel{reg}{sam}';% row vector
+        n_cel = length(slo_cel);
+        act_sam_cel = slo_cel.*repmat(tac_sam, 1, n_cel);
+        plot(hax, tac_sam, act_sam_cel, 'Color', [col_sam{sam} alp])
+        hold(hax, 'on')
+        % mean
+        % plot(hax, tac_sam, mean(slo_cel)*tac_sam, 'Color', col_sam{sam})
+        % hold(hax, 'on')
+    end
+    hax.XTick(2) = [];
+    hax.Box = 'off';
+    if reg == 1
+        ylabel(hax, y_lab.dff)
+    else
+        hax.YAxis.Visible = false;
+    end
+    lin_lim(hax)
+    yline(hax, 0, 'k--')
+    if reg == 3
+        xl = xlabel(hax, 'Change in tail angle (rad)');
+        % Change the horizontal alignment
+        xl.HorizontalAlignment = 'left';
+        
+        % Move the label to the left edge of the axis
+        xl.Position(1) = hax.XLim(1);  % set x position to start of axis
+    end
+    hax = adj_hax(hax, fon_siz.pub, mar_siz, log_lin_wid);
+end
+linkaxes(hax_sub)
+end
+
+function h_fig = plo_slo_lin_ove_sca(slo_reg_sam_cel)
+n_gro = 2;
+n_row = 1;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_reg = con_fil.n_reg_for_cro;
+n_col = n_reg;
+gap_ver = 0.050;
+gap_ver_row = gap_ver*ones(n_row, 1);
+gap_hor_ave = 0.025;
+gap_hor_row_col = repmat(gap_hor_ave, n_row, n_col);
+mar_bot = 0.070;
+mar_top = 0.070;
+mar_lef = 0.055;
+mar_rig = 0.003;
+asp_rat = 1;
+n_sub = n_row*n_col;
+asp_rat_axe = asp_rat*ones(n_sub, 1);
+[h_fig, wid_mon, hei_mon] = fig;
+wid = true;
+sca_axe = ones(n_row*n_col, 1);
+n_pix_ext = 10;
+[hax_sub, pos_axe, axh, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen...
+    (n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, wid_mon, ...
+    hei_mon, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+n_sam = 100;
+x_max = 0.1;
+tac_sam = linspace(0, x_max, n_sam)';
+col_sam = con_fil.col_sam;
+col_sam = col_sam.two;
+%alp = 0.1;
+%alp = 0.05;
+alp = 0.15;
+for reg = 1:n_reg
+    for sam = 1:n_gro
+        slo_cel = slo_reg_sam_cel{reg}{sam}';% row vector
+        n_cel = length(slo_cel);
+        act_sam_cel = slo_cel.*repmat(tac_sam, 1, n_cel);
+        hax = hax_sub(reg);
+        plot(hax, tac_sam, act_sam_cel, 'Color', [col_sam{sam} alp])
+        hax.Box = 'off';
+        if reg ~= 1
+            hax.YTickLabel = [];
+        end
+        % mean
+        hold(hax, 'on')
+        plot(hax, tac_sam, mean(slo_cel)*tac_sam, 'Color', col_sam{sam})
+        lin_lim(hax)
+        yline(hax, 0, 'k--')
+    end
+end
+linkaxes(hax_sub)
+% y_max = 60;
+% hax.YLim = [-y_max y_max];
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% general plotting
 function [tex_sam, hax] = wri_sam_rat_dou(tit_n_sam, gap_ver_row, mar_top, axh, gap_hor_col, ...
@@ -9516,6 +11421,7 @@ hax = axes('Units', 'Normal', 'Position', [0 0 1 1],'Visible', 'off', 'tag', 'su
 text(hax, nor_x, nor_y, tex_dis, 'Units', 'normalized')
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gen
+
 function cel = mul_kil_cel(cel)
 cel = cellfun(@mul_kil_vec, cel, 'UniformOutput', false);
 end
@@ -9526,7 +11432,8 @@ vec = vec*kil;
 end
 
 function ske_xre_sam_ani = ext_ske_xre_sam_ani(ske_epo_xre_sam_ani, epo_ind)
-global n_cro_tot
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_cro_tot = con_fil.n_cro_tot;
 n_sam = length(ske_epo_xre_sam_ani{1, 1});
 ske_xre_sam_ani = cell(n_cro_tot, n_sam);
 for i = 1:n_cro_tot
@@ -9552,7 +11459,12 @@ pcc_blo_ani(log_blo, :) = nan;
 end
 
 function p_epo_reg_fac = cal_p_epo_reg_fac(cor_coe_epo_reg_sam_blo_ani)
-global n_sam n_reg_for dis_blo n_blo ind_sub_reg
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+dis_blo = con_fil.dis_blo;
+n_sam = length(cor_coe_epo_reg_sam_blo_ani{1, 1});
+n_reg_for = con_fil.n_reg_for;
+n_blo = con_fil.n_blo;
+ind_sub_reg = con_fil.ind_sub_reg;
 n_ani_sam = nan(n_sam, 1);
 for i = 1:n_sam
     n_ani_sam(i) = size(cor_coe_epo_reg_sam_blo_ani{1, 1}{i}, 2);
@@ -9586,16 +11498,4 @@ for i = 1:n_epo
     cor_coe_blo_ani = [xcc_epo_sam_blo_ani{i, 1}{1} xcc_epo_sam_blo_ani{i, 1}{2}];
     p_epo_fac{i, 1} = anovan(cor_coe_blo_ani(:), fac_num);
 end
-end
-
-function p_fac = cal_p_fac(xcc_sam_blo_ani)
-global n_sam dis_blo n_blo
-n_ani_sam = nan(n_sam.one, 1);
-for i = 1:n_sam.one
-    n_ani_sam(i) = size(xcc_sam_blo_ani{i}, 2);
-end
-abl_blo_ani = [zeros(n_blo.xre, n_ani_sam(1)) ones(n_blo.xre, n_ani_sam(2))];
-fac_num = {repmat(dis_blo.xre, sum(n_ani_sam), 1); abl_blo_ani(:)};
-cor_coe_blo_ani = [xcc_sam_blo_ani{1} xcc_sam_blo_ani{2}];
-p_fac = anovan(cor_coe_blo_ani(:), fac_num);
 end

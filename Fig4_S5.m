@@ -56,3 +56,22 @@ app_par_axo_onl(axo_onl)
 sav_fig_pcc_dis_cel(axo_onl, 'ong')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2024 w30
 sav_fig_spa_den_dor_ven(axo_onl)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w16
+sta_ani = 11;
+app_par_tai_cel_all(axo_onl, sta_ani)
+%
+sav_fig_dff_ang(axo_onl)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w32
+sav_fig_dif_spa_den(axo_onl)
+%
+sav_fig_dsd(axo_onl)
+%
+sav_fig_spa_den_ave(axo_onl)
+%
+app_con_axo_onl(axo_onl)
+%
+sav_fig_spa_den_sid(axo_onl)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w34
+app_par_con_axo_onl(axo_onl)
+%
+sav_fig_dsd_sid(axo_onl)

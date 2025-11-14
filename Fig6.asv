@@ -97,3 +97,55 @@ epo_num = 1;
 sav_fig_dia_acc(sha_abl, epo_num)
 %
 sav_fig_abs(sha_abl)
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2024 w42
+sav_fig_res(sha_abl)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w32
+sav_fig_cor_dis_ent_thr(sha_abl)
+%
+epo_num = 6;
+fie = 'thr_cel';
+sav_fig_dia_acc(sha_abl, epo_num, fie)
+%
+fie = 'thr_cel';
+sav_fig_cor_dis_epo(sha_abl, epo_num, fie)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w34
+sav_fig_thr(sha_abl)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w36
+[p_xsa_one, p_xsa_two] = sav_fig_thr_com(sha_abl);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w38
+epo_num = 1;
+fie = 'lon_spo';
+sav_fig_cor_dis_epo(sha_abl, epo_num, fie)
+%
+app_par_fms_all(sha_abl)
+%
+app_par_fro_sam_all_all(sha_abl)
+%
+sav_fig_cor_dis_ent_thr(sha_abl)
+%
+sav_fig_bal(sha_abl)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w44
+h_fig = plo_slo_lin_ove_met(sha_abl);
+%
+exp_fig(h_fig, [char(sha_abl.poo_dir) '\slo_lin_ove.png'])
+%
+epo_num = 1;
+fie = 'lon_spo';
+h_fig = plo_cor_dis_epo_met(sha_abl, epo_num, fie);
+%
+exp_fig(h_fig, [char(sha_abl.poo_dir) '\cor_dis_epo_' fie '.png'])
+%
+sav_fig_cor_dis_epo(sha_abl, epo_num, fie)
+%
+h_fig = plo_bal_met(sha_abl);
+%
+sav_fig_bal(sha_abl)
+%
+sav_fig_cor_dis_ent_thr(sha_abl)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w46
+h_fig = plo_bal_met(sha_abl);
