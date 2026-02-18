@@ -44,14 +44,20 @@ mil = 1/1000;
 mic = 1/(10^6);
 n_sta = 2;
 con = 0.177340352483406;
+lat_thr = 0.3;
 %
 con_int = {'Low'; 'Medium'; 'High'};
 con_sti = {'Light'; 'Shock'; 'Vibration'};
+con_num.lig = 1;
+con_num.sho = 2;
+con_num.tap = 3;
 con_sho_int = {'Low'; 'Med'; 'High'};
 con_sup_sho_int = {'L'; 'M'; 'H'};
 abb_par = ["TR (Hz)"; "HR (Hz)"; "OR (Hz)"; "MR (Hz)"; "ER (Hz)"];
 inc = 2.54;%cm
 c = @cmu.colors;
+ind_sam = [3 1 2];
+mod_num = ["Tail (\DeltaF/F)"; "Light (\DeltaF/F)"; "Vibration (\DeltaF/F)"];
 %
 gro_two_cro = {[1 2]};
 gro_thr_cro = {[1 2]; [1 3]; [2 3]};
@@ -64,7 +70,7 @@ dis_asp_rat = 1920/1080;
 %
 n_con = 3;
 n_tri_con.vrs = 6;
-n_tri.vrs = n_con*n_tri_con.vrs;
+n_tri.vrs = n_con*n_tri_con.vrs;% 18
 dim_top_bot = 1;
 dim_lef_rig = 2;
 n_pla.sim = 1;
@@ -79,6 +85,12 @@ col_win_bas = "red";
 col_win_pha = "green";
 col_win_sti = "cyan";
 col_bla_con = ["black"; "black"; "black"];
+gre = [0.5 0.5 0.5];
+col.non = gre;
+col.tai = [0.6 0.3 0];
+col.lig = "blue";
+col.tap = "black";
+col.mul = "magenta";
 %
 n_tri_con_mod = n_tri_con.vrs + 1;
 n_xri = n_tri_con_mod*n_con;
@@ -100,18 +112,14 @@ n_str = 3; % hb, dm, dl
 %
 n_par = 5;
 %
-% n_tri_thr = [4; 5; 6];
-% n_thr = 3;
-% lat_thr = 0.3;
-%
-lab_xri = {'L1'; 'L2'; 'L3'; 'L4'; 'L5'; 'L6'; 'LA'; ...
-    'M1'; 'M2'; 'M3'; 'M4'; 'M5'; 'M6'; 'MA'; 'H1'; 'H2'; 'H3'; 'H4'; 'H5'; 'H6'; 'HA'};
-%
 n_win.tri = 3;
 win_cro_ind = nchoosek(1:n_win.tri, 2);
 n_cro_win = size(win_cro_ind, 1);
+%
+n_win.spo = 2;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 y_lab.com = ["PC1 (a. u.)"; "PC2 (a. u.)"; "PC3 (a. u.)"];
+y_lab.piv = '16-bit intensity';
 y_lab.cor = 'corr';
 y_lab.clu_sel = 'Cluster selectivity';
 y_lab.pai_cor = 'Pairwise correlation';
@@ -120,6 +128,7 @@ y_lab.dff = '\DeltaF/F (%)';
 y_lab.neu_num = 'Neuron #';
 y_lab_ang = 'Tail angle (rad)';
 y_lab.tac = 'TAC (rad)';
+y_lab.tai_rat = 'Tail rate (s^{-1})';
 y_lab_ave_nor_fir = 'Average FRC (s^{-1})';
 y_lab_ave_dff = 'Average \DeltaF/F (%)';
 y_lab_spe = 'Speed (a. u.)';
@@ -135,7 +144,7 @@ x_lab.tim = 'Time (s)';
 %%%%%%%
 fra_rat.cal.one = 18.6117647059;
 fra_rat.cal.eig = 18.6117647059/8;
-[~, sti_ons_tri.vrs.all, sta_tim, end_tim, fra_rat.man, dur_spo, dur_con, dur_con_end] = ...
+[~, sti_ons_tri.vrs.all, sta_tim, end_tim.sti, fra_rat.man, dur_spo, dur_con, dur_con_end] = ...
     gen_tap_tph(round(fra_rat.cal.one, 2));% sti ons in seconds
 % smo
 % in ephys they use 100 ms kernel size, we use ~ 1s. ~no in literature mouse
@@ -148,39 +157,49 @@ n_fra.dff.eig.smo = 10;
 n_fra.dff.one.smo = 19;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 min_sec = 60;
+% hfa behavior analyses
 rou_len = 1;
-win_len.tai = ext_len(fra_rat.man, rou_len);% now, only in sec !!!
-fra_rat.zan = 15;
-rou_len = 1;
-win_len.frc = ext_len(fra_rat.cal.one, rou_len);
+[win_len.tai, n_fra.tai.bas, ~] = ext_len(fra_rat.man, rou_len);% now, only in sec !!!
+n_fra.tai.smo = 12;
+
+% 2p baseline window
 rou_len = 5;
 [win_len.dff.one, n_fra.dff.one.bas] = ext_len(fra_rat.cal.one, rou_len);% len only in sec
 [win_len.dff.eig, n_fra.dff.eig.bas] = ext_len(fra_rat.cal.eig, rou_len);
 
+% 2p response windows
 rou_len = 10;
 [win_len.dff.pha.drn.tai, ~] = ext_len(fra_rat.cal.eig, rou_len);
 rou_len = 20;
 [win_len.dff.pha.drn.gab, ~] = ext_len(fra_rat.cal.eig, rou_len);
 
+% ongoing window
 rou_len = 2*min_sec;
 win_len.ong = ext_len(fra_rat.cal.one, rou_len);
+
+% zantiks window
 rou_len = 10;
+fra_rat.zan = 15;
 win_len.zan = ext_len(fra_rat.zan, rou_len);
-%
+n_fra.zan.bas = fra_rat.zan*5;
+n_fra.zan.smo = fra_rat.zan*2;
+
+% trial window
 rou_len = 60;
 [win_len.bou, n_fra.bou.win] = ext_len(fra_rat.cal.eig, rou_len);%141
 n_fra.bou.win_tri = 140; % fix (ext_poi_tri_lim) used instead of round (ext_len)
 n_fra.hal_bou = (n_fra.bou.win - 1)/2;
 n_fra.bou.bas = n_fra.dff.eig.bas;
 n_fra.bou.smo = n_fra.dff.eig.smo;
-%
+
+% 2p baseline window for sliding dff
 win_len.sli.cel = 80;
 win_len.sli.axo = 200;
 %
 off_ong_win = [4; 12; 20; 28]*min_sec;
 ons_ong_win = off_ong_win - win_len.ong;
 %
-epo_num = {[2 4], [4 10], [10 12], [12 18], [18 20], [20 26], [26 28]};
+epo_num = {[1 4], [4 10], [10 12], [12 18], [18 20], [20 26], [26 28]};
 % 1 min after the last tap is taken for the tapping period. all spo periods
 % 2 min.
 
@@ -203,7 +222,6 @@ for i = 1:n_epo.tot
     n_fra_epo.one(i) = length(fra_epo_sam.one{i});
     n_fra_epo.eig(i) = length(fra_epo_sam.eig{i});
     tim_epo_fra.cal.one{i} = cal_tim_poi(fra_rat.cal.one, n_fra_epo.one(i));
-    %tim_epo_fra.cal.eig{i} = cal_tim_poi(fra_rat.cal.eig, n_fra_epo(i));
 end
 nam_epo = ["Baseline"; "Low"; "After low"; "Medium"; "After medium"; "High"; "After high"];
 ind_fun_epo = [1 2 4 6];
@@ -216,34 +234,49 @@ isi = 60;
 hal_isi = isi/2;
 %
 n_fra.cal.ses.one = 32380;
-n_fra.cal.ses.eig = 4047;
 dur.cal.one = ifi.cal.one*n_fra.cal.ses.one;
-dur.cal.eig = ifi.cal.eig*n_fra.cal.ses.eig;
 tim_fra.cal.one.ses = (ifi.cal.one:ifi.cal.one:dur.cal.one)';
-tim_fra.cal.eig.ses.ent = (ifi.cal.eig:ifi.cal.eig:dur.cal.eig)';% other: tim_fra.cal.eig.ses.axo
 [poi_tri_lim.dff.one, tri_len.dff.one, tim_fra.cal.one.tri.dff, ~, n_fra.cal.tri.one.dff, ~, ...
     n_seg.dff.one] = ext_poi_tri_lim(win_len.dff.one, sti_ons_tri.vrs.all, fra_rat.cal.one, ...
     n_fra.cal.ses.one, isi);
+
+n_fra.cal.ses.eig.sti = 4047;
+dur.cal.eig.sti = ifi.cal.eig*n_fra.cal.ses.eig.sti;
+tim_fra.cal.eig.ses.ent = (ifi.cal.eig:ifi.cal.eig:dur.cal.eig.sti)';% other: tim_fra.cal.eig.ses.axo
 [poi_tri_lim.dff.eig, tri_len.dff.eig, tim_fra.cal.eig.tri.dff, ~, n_fra.cal.tri.eig.dff, ~, ...
     n_seg.dff.eig] = ext_poi_tri_lim(win_len.dff.eig, sti_ons_tri.vrs.all, fra_rat.cal.eig, ...
-    n_fra.cal.ses.eig, isi);
-
+    n_fra.cal.ses.eig.sti, isi);
 [poi_tri_lim.ten, tri_len.ten, tim_fra.ten, ~, n_fra.ten, ~, ...
     n_seg.ten] = ext_poi_tri_lim(win_len.dff.pha.drn.tai, sti_ons_tri.vrs.all, fra_rat.cal.eig, ...
-    n_fra.cal.ses.eig, isi);
+    n_fra.cal.ses.eig.sti, isi);
+
+n_fra.cal.ses.eig.spo = 8235;
+dur.cal.eig.spo = ifi.cal.eig*n_fra.cal.ses.eig.spo;
+tim_fra.cal.eig.ses.spo = (ifi.cal.eig:ifi.cal.eig:dur.cal.eig.spo)';
+% starts from the first rec frame, 0.x s, - till the last rec, after sync
 
 tim_fra.cal.eig.bou = (-win_len.bou/2:ifi.cal.eig:win_len.bou/2)';
 %
 ifi.man = 1/fra_rat.man;%120 fps
-tim_fra.ani.ses = (sta_tim + ifi.man:ifi.man:end_tim)';
-n_fra.ani.ses = length(tim_fra.ani.ses);
-tim_fra.ani.dow = (sta_tim + ifi.cal.eig:ifi.cal.eig:end_tim)';
+tim_fra.ani.ses.sti = (sta_tim + ifi.man:ifi.man:end_tim.sti)';
+n_fra.ani.ses.sti = length(tim_fra.ani.ses.sti);% 194400
+
+end_tim.spo = 58*60;% first 60 sec not used
+tim_fra.ani.ses.spo = (sta_tim + ifi.man:ifi.man:end_tim.spo)';
+n_fra.ani.ses.spo = length(tim_fra.ani.ses.spo);% 410400
+
+tim_fra.ani.dow = (sta_tim + ifi.cal.eig:ifi.cal.eig:end_tim.sti)';% 60 to 275; 3768 frames
 [poi_tri_lim.tai, tri_len.tai, tim_fra.tai.tri.ent, poi_bas_lim.tai, n_fra.tai.tri.ent] = ...% 60 s
-    ext_poi_tri_lim(win_len.tai, sti_ons_tri.vrs.all, fra_rat.man, n_fra.ani.ses, isi);
+    ext_poi_tri_lim(win_len.tai, sti_ons_tri.vrs.all, fra_rat.man, n_fra.ani.ses.sti, isi);
+%
 log_fra.tai.tri.lon = tim_fra.tai.tri.ent < 15;
 tim_fra.tai.tri.lon = tim_fra.tai.tri.ent(log_fra.tai.tri.lon);
 n_fra.tai.tri.lon = length(tim_fra.tai.tri.lon);% 16 s
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% zan
+%
+log_fra.tai.tri.sho = tim_fra.tai.tri.ent < 2;
+tim_fra.tai.tri.sho = tim_fra.tai.tri.ent(log_fra.tai.tri.sho);
+n_fra.tai.tri.sho = length(tim_fra.tai.tri.sho);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% zan
 n_tri_con.zan = 10;
 n_tri.zan = n_con*n_tri_con.zan;
 sti_ons_tri.zan = [1532.353
@@ -301,6 +334,7 @@ end
 sti_ons_tri.vrs.lig = sti_ons_tri.vrs.all(log_tri_con.vrs(:, 1));
 sti_ons_tri.vrs.sho = sti_ons_tri.vrs.all(log_tri_con.vrs(:, 2));
 sti_ons_tri.vrs.tap = sti_ons_tri.vrs.all(log_tri_con.vrs(:, 3));
+sti_ons_tri.vrs.gli = sti_ons_tri.vrs.all(logical(log_tri_con.vrs(:, 2) + log_tri_con.vrs(:, 3)));
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% nov
 cri_ind.nov = 1;
 cri_ind.two = 1;
@@ -309,8 +343,6 @@ fil_pat_nov = "X:\kadiram\Data\Pooled\nov\Tph2_NT_Vibration_2022_data.mat";
 [tim_fra.nov.ses, n_fra_bef.nov, n_fra.nov.ses] = ext_nov_tim_fra(fil_pat_nov);
 las_fra = find(tim_fra.nov.ses < (20 + 4)*60, 1, 'last');
 tim_fra.nov.ntt = tim_fra.nov.ses(1:las_fra);
-fil_pat_two = "X:\kadiram\Data\Pooled\two\Tph2_NTT_VibrAdapt_2022_data.mat";
-[tim_fra.two.ses, n_fra_bef.two, n_fra.two.ses] = ext_nov_tim_fra(fil_pat_two);
 dur.ntt.nov = (20 + 0);
 %
 sti_ons_tri.nov.sec = [1472.417
@@ -349,11 +381,9 @@ win_len.nov.ntt.sec = 5*60;
 win_len.nov.ntt.int = fra_rat.zan*win_len.nov.ntt.sec;
 n_fra.nov.ntt = 1 + win_len.nov.ntt.int;
 n_win.ntt = 2;
-%win_len.nov.ntt.two.sec = 1*60;
-win_len.nov.ntt.two.sec = 5*60;
-win_len.nov.ntt.two.int = fra_rat.zan*win_len.nov.ntt.two.sec;
-n_fra.nov.two.ntt = 1 + win_len.nov.ntt.two.int;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% two
+fil_pat_two = "X:\kadiram\Data\Pooled\two\Tph2_NTT_VibrAdapt_2022_data.mat";
+[tim_fra.two.ses, n_fra_bef.two, n_fra.two.ses] = ext_nov_tim_fra(fil_pat_two);
 sti_ons_tri.two.sec = [1471.047
                   1531.047
                   1591.047
@@ -369,12 +399,25 @@ sti_ons_tri.two.sec = [1471.047
                   2191.053
                   2251.054
                   2311.054];
-len_win.ntt.sec = [win_len.nov.ntt.sec; win_len.nov.ntt.two.sec];
+%win_len.nov.ntt.two.sec = 1*60;
+%win_len.nov.ntt.two.sec = 5*60;
+
+win_len.nov.ntt.two.sec = 10*60;
+win_len.nov.ntt.two.int = fra_rat.zan*win_len.nov.ntt.two.sec;
+n_fra.nov.two.ntt = 1 + win_len.nov.ntt.two.int;
+
+len_win.ntt.sec = [win_len.nov.ntt.two.sec; win_len.nov.ntt.two.sec];
+
 log_fra_win.ntt = false(n_fra.two.ses, n_win.ntt);
-log_fra_win.ntt(:, 1) = tim_fra.two.ses > 1*60 & tim_fra.two.ses <= 1*60 + win_len.nov.ntt.sec;
-dur.ntt.two = sti_ons_tri.two.sec(1);
+%log_fra_win.ntt(:, 1) = tim_fra.two.ses > 1*60 & tim_fra.two.ses <= 1*60 + win_len.nov.ntt.sec;
+dur.ntt.two = sti_ons_tri.two.sec(1);% duration till the first vibration trial, 1471.047 s
 log_fra.two.ntt = tim_fra.two.ses < dur.ntt.two;
+
+%log_fra_win.ntt(:, 1) = tim_fra.two.ses > 1*60 & tim_fra.two.ses <= 800;%%!!!!!!!!!!
+log_fra_win.ntt(:, 1) = tim_fra.two.ses > 1*60 & tim_fra.two.ses <= 660;%%!!!!!!!!!!
+
 log_fra_win.ntt(:, 2) = tim_fra.two.ses > dur.ntt.two - win_len.nov.ntt.two.sec & log_fra.two.ntt;
+% considering 5 min at the end of the ntt duration (before the 1st vib trial)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %isi.int.cal = fix(isi/ifi.cal.one);
 n_int.cal = fix(isi/ifi.cal.one);
@@ -406,6 +449,11 @@ n_bin.nov.ntt = 1 + win_len.nov.ntt.siz;
 ind_bin_win = nan(n_bin.nov.ntt, n_win.ntt);
 ind_bin_win(:, 1) = (fir_bin:fir_bin + n_bin.nov.ntt - 1)';
 ind_bin_win(:, 2) = (las_bin - n_bin.nov.ntt + 1:las_bin)';
+%%%%%%%%%%%%% ika
+ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
+x_values = ika_fil.x_values;
+tim_fra.ika = x_values';
+tim_fra.ika = tim_fra.ika - tim_fra.ika(443);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% reg
 nam_reg = ["Forebrain"; "Habenula"; "Telencephalon"; "Dl"; "Dm"; "Dc"; "Dd"; "Dmp"];
 ind_sub_reg = [2 4 5 6 7 8];
@@ -428,7 +476,7 @@ int_reg_cha = [nan nan nan; ...
     1 128/255 0; ...
     150/255 75/255 0];
 log_com_reg = [false; true; false; true; true; true; true; true];
-nam_com_reg = ["Ha"; "Dl"; "Dm"; "Dc"; "Dd"; "Dmp"];
+nam_com_reg = ["Hb"; "Dl"; "Dm"; "Dc"; "Dd"; "Dmp"];
 n_reg_for_cro = 6;% hab + 5 tel
 n_cro_reg = nchoosek(n_reg_for_cro, 2);
 %
@@ -459,14 +507,13 @@ for i = 1:n_con
 end
 %
 asp_rat.sig.sho = 1;
-asp_rat.sig.lon = 1.5;
+asp_rat.sig.lon = 1.7;
 asp_rat.bar = 0.5;
 n_row.cal = 1536;
 n_col.cal = 850;
 asp_rat.cal.ori = n_col.cal/n_row.cal;
 %
 n_k = 5;
-gre = [0.5 0.5 0.5];
 % single plane
 max_dis.wre = 500;% entire forebrain
 %n_blo.wre = 125;
@@ -514,9 +561,11 @@ n_bin_acc = n_edg_acc - 1;
 %%%%
 sig_lev = 0.05;
 %%%
-tit_sam = ["Sham"; "Ablated"; "MTZ"];
+tit_sam = ["Sham"; "Ablated"; "MTZ Con"];
+tit_cro = ["Sha x Abl"; "Sha x MTZ"; "Abl x MTZ"];
 %
-gra = [0.5 0.5 0.5];
+gra.nor = [0.5 0.5 0.5];
+gra.lig = [211 211 211]/255;
 n_dig = 2;
 %
 fie_cas_num.dff.den.sli = {{'dff'; 'den'; 'sli'; 'all'}; ...
@@ -533,17 +582,23 @@ fie_cas_num.dff.raw.tri = {{'dff'; 'raw'; 'tri'; 'all'}; ...% !!!!!!!!!!!!!
     {'dff'; 'raw'; 'tri'; 'res'; 'tes'}};
 n_cas = length(fie_cas_num.dff.den.sli);
 %
+% col_sam_con = cellfun(@(x) x/255, {[217,217,217] [115,115,115] [0,0,0]; ...
+%     [254,217,118] [252,78,42] [128,0,38]}, 'UniformOutput', false);
 col_sam_con = cellfun(@(x) x/255, {[217,217,217] [115,115,115] [0,0,0]; ...
-    [254,217,118] [252,78,42] [128,0,38]}, 'UniformOutput', false);
-%col_sam = {[0 0 0]/255; [128 0 38]/255; [128 0 38]/255};
-col_sam = {[0 0 0]/255; [128 0 38]/255; [0 0 255]/255};% black, bordeux, blue
+    [254,217,118] [252,78,42] [128,0,38]; ...
+    [217,217,255] [115,115,255] [0,0,255]}, 'UniformOutput', false);
+col_sam.two = {[0 0 0]/255; [128 0 38]/255; [0 0 255]/255};% black, bordeux, blue | sha-abl
+col_sam.rap = {[128 0 38]/255; [0 0 255]/255; [0 0 0]/255};
+col_sam.con_abl = {[0 0 255]/255; [128 0 38]/255};
 %
 n_cha = 2;% inh, exc.
 %
 fil_pat_for = "\\home.ansatt.ntnu.no\kadiram\Documents\illustrations\forebrain.png";
 %
 xtl_abl = ['\color[rgb]{0.5, 0, 0.15} ', 'Abl'];
-xtl_mtz = ['\color[rgb]{0, 0, 1} ', 'MTZ'];
+%xtl_mtz = ['\color[rgb]{0, 0, 0} ', 'MTZ Con'];
+xtl_mtz = ['\color[rgb]{0, 0, 1} ', sprintf('MTZ\nCon')];
+%xtl_mtz = sprintf('MTZ\nCon');
 xtl_sam = {'Sha'; xtl_abl; xtl_mtz};
 n_cox = 4;
 %
@@ -565,10 +620,14 @@ max_int = 65535;
 log_fra.cal.one.ses = tim_fra.cal.one.ses > 60;
 log_fra.cal.eig.ses.cel = tim_fra.cal.eig.ses.ent > 60;
 unu_per.axo = 200;
-log_fra.cal.eig.ses.axo = tim_fra.cal.eig.ses.ent > 200 & tim_fra.cal.eig.ses.ent <= end_tim;
+log_fra.cal.eig.ses.axo = tim_fra.cal.eig.ses.ent > 200 & tim_fra.cal.eig.ses.ent <= end_tim.sti;
 % end: 28 min
-
 tim_fra.cal.eig.ses.axo = tim_fra.cal.eig.ses.ent(log_fra.cal.eig.ses.axo);
+
+% end: 58 min ?
+log_fra.cal.eig.ses.lon = tim_fra.cal.eig.ses.spo > 60 & tim_fra.cal.eig.ses.spo <= end_tim.spo;
+tim_fra.cal.eig.ses.lon = tim_fra.cal.eig.ses.spo(log_fra.cal.eig.ses.lon);
+
 %
 log_fra.cal.one.tri = tim_fra.cal.one.tri.dff <= 2*win_len.dff.one;% logical for short!
 log_fra.cal.eig.tri = true(n_fra.cal.tri.eig.dff, 1);
@@ -577,6 +636,9 @@ epo_num_ong = 1;
 log_fra.cal.eig.ong = tim_fra.cal.eig.ses.ent > 60 & ...
     tim_fra.cal.eig.ses.ent < 60*epo_num{epo_num_ong}(2);% 1-4 min
 tim_epo_fra.cal.eig{epo_num_ong} = cal_tim_poi(fra_rat.cal.eig, sum(log_fra.cal.eig.ong));
+
+log_fra.cal.one.ong = tim_fra.cal.one.ses > 60 & ...
+    tim_fra.cal.one.ses < 60*epo_num{epo_num_ong}(2);% 1-4 min
 %
 log_fra.cal.eig.ong_one = tim_fra.cal.eig.ses.ent > 60 & ...
     tim_fra.cal.eig.ses.ent < 60*2.5;% 1 - 2.5
@@ -587,12 +649,15 @@ log_fra.cal.eig.ong_two(find(log_fra.cal.eig.ong_two, 1, 'last')) = false;
 n_fra.cal.eig.ong_two = sum(log_fra.cal.eig.ong_two);
 n_fra.cal.eig.ong = sum(log_fra.cal.eig.ong);
 %
+log_fra.cal.eig.ong_gli = tim_fra.cal.eig.ses.ent > 60 & ...
+    tim_fra.cal.eig.ses.ent < sti_ons_tri.vrs.all(7);
+%
 blockLength = 50;
 %
 lim_r = 0.2;
 r_lim = [-lim_r lim_r];
-map.cen = centered;% blue to red
 [map.sym,num,typ,scheme] = brewermap([], "-RdBu");
+map.sym(129, :) = [1 1 1];
 map.asy = gen_asy_col;
 %
 piv.gre = 0.94;
@@ -636,19 +701,34 @@ piv_col_pcx.axo.bou.all = [139/255 0 0
     173/255 216/255 230/255
     0 0 1];% identical piv_col_pcx.fiv.pix.bou; for getfield ...
     % in the real colorbar blue on top! --- maps based on rows!
-
-piv_col_pcx.cel_onl.cel.bou.all = [139/255 0 0
+%%%%%%%%%%%%
+piv_col_pcx.bou_all = [139/255 0 0
     1 0 0
     255/255 127/255 127/255
     173/255 216/255 230/255
     0 0 1];% identical piv_col_pcx.axo.bou.all
 
-piv_col_pcx.cel_onl.cel.bou.spo = [139/255 0 0
+piv_col_pcx.lig = [100/255 0 0
+    139/255 0 0
     1 0 0
+    255/255 70/255 70/255
+    255/255 127/255 127/255];
+
+piv_col_pcx.tap = [1 0 0
     255/255 127/255 127/255
     173/255 216/255 230/255
-    0 0 1];% identical piv_col_pcx.axo.bou.all
+    0 0 1
+    0 0 139/255];
 
+
+piv_col_pcx.mod = [1 0 0
+    255/255 127/255 127/255
+    173/255 216/255 230/255
+    0 0 1
+    0 0 139/255];
+
+
+%%%%%%%%%%%%%%
 piv_col_pcx.fiv.cel = [139/255 0 0
     1 0 0
     255/255 127/255 127/255
@@ -659,10 +739,21 @@ piv_col_pcx.thr.ong = [0 0 0
     1 0 0
     0 0 1];
 
-piv_col_pcx.fou.ong = [0 0 0% color 1
+piv_col_pcx.fou.ong = [150/255 75/255 0/255% color 1
     1 0 0
     0 1 0
-    0 1 1];
+    0 1 1];% cyan
+
+% % 08.10.25-15.10.25, for supp fig clusters ! bou_non
+% piv_col_pcx.fou.ong = [150/255 75/255 0/255% color 1
+%     0 1 0
+%     1 0 0
+%     0 1 1];% cyan
+
+piv_col_pcx.fou.ong_gab = [1 0 0% color 1
+    150/255 75/255 0/255
+    0 1 0
+    0 1 1];% cyan
 
 piv_col_pcx.fiv.ong = [0 0 0% color 1
     1 0 0
@@ -700,7 +791,23 @@ tra = 0.5;
 
 n_kxx = 30;
 bin_siz.ima = 10;
-%
+
+win_ons_win = (5:20)';
+
+num_sam = 100;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% spo
+%per = 132;% 2.2 min, ewelina
+%per = 60*10;
+per = 60*3;
+[log_fra_per, n_per] = framesPerPeriod(tim_fra.cal.eig.ses.spo, per);
+n_bin.spo = n_per - 1;
+% manu
+log_fra_per(:, end) = [];
+n_bin.spo = n_bin.spo - 1;
+%%%%
+log_sho_fra_per = framesPerPeriod(tim_fra.cal.eig.ses.ent, per);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 save('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat')
 clear
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -833,4 +940,68 @@ end
 function piv_col_pcx = ext_piv_col_pcx(map, n_col)
 % piv_col_pcx = map(1:64/(n_col - 1) - 1:64, :); % blue
 piv_col_pcx = flip(map(192:64/(n_col - 1) - 1:256, :));
+end
+
+function [log_fra_per, n_per] = framesPerPeriod(tim_fra, per)
+%FRAMESPERPERIOD Logical frame-by-period matrix with delayed start
+%
+%   [log_fra_per, n_per] = FRAMESPERPERIOD(tim_fra, per)
+%
+%   Inputs
+%   ------
+%   tim_fra : Nx1 numeric vector
+%       Elapsed time per frame (seconds).
+%   per : scalar numeric
+%       Period duration (seconds).
+%
+%   Outputs
+%   -------
+%   log_fra_per : NxP logical matrix
+%       Each column corresponds to a consecutive period of length "per",
+%       starting from the first time point strictly larger than 60 s.
+%   n_per : scalar integer
+%       Number of retained periods.
+
+    % Ensure column vector
+    tim_fra = tim_fra(:);
+    n_fra   = numel(tim_fra);
+
+    % Find start index: first time point > 60 s
+    idx_start = find(tim_fra > 60, 1, 'first');
+    if isempty(idx_start)
+        error('No time points larger than 60 seconds were found.');
+    end
+
+    % Shift time so that first valid frame is time zero
+    t0 = tim_fra(idx_start);
+    tim_shift = tim_fra - t0;
+
+    % Only consider frames from idx_start onward for period assignment
+    valid = tim_shift >= 0;
+
+    % Number of periods
+    n_per = ceil(max(tim_shift(valid)) / per);
+
+    % Define edges
+    edges = (0:n_per) * per;
+
+    % Assign frames to periods
+    per_idx = discretize(tim_shift, edges);
+
+    % Build logical matrix
+    log_fra_per = false(n_fra, n_per);
+    sel = valid & ~isnan(per_idx);
+    log_fra_per(sub2ind(size(log_fra_per), ...
+                        find(sel), per_idx(sel))) = true;
+
+    % Check last two periods for equal frame counts
+    if n_per >= 2
+        cnt_last     = sum(log_fra_per(:, end));
+        cnt_penult   = sum(log_fra_per(:, end-1));
+
+        if cnt_last ~= cnt_penult
+            log_fra_per(:, end) = [];
+            n_per = n_per - 1;
+        end
+    end
 end

@@ -253,7 +253,7 @@ classdef rec
 
             obj.fil_pat_exp = strcat(raw_dir, "\tap.mat");
             n_pla = con_fil.n_pla;
-            if obj.exp == "g2r" || obj.exp == "spo" || obj.exp == "exp"
+            if obj.exp == "g2r" || obj.exp == "spo" || obj.exp == "exp"% exp - explant
                 obj.fil_pat_bin_pla = cell(n_pla.neu.raw, 1);
                 obj.fil_pat_two_pla = cell(n_pla.neu.raw, 1);
                 % wor_dir = strcat("D:\Kadir\raw\", obj.ani);
@@ -512,6 +512,7 @@ classdef rec
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             n_pla = con_fil.n_pla;
             obj.fil_pat_bin_pla = cell(n_pla.neu.raw, 1);
+            obj.fil_pat_two_pla = cell(n_pla.neu.raw, 1);
             %
             % wor_dir = strcat("D:\Kadir\raw\", obj.ani);
             % wor_dir_con = dir(wor_dir);
@@ -556,12 +557,20 @@ classdef rec
                 %
                 obj.tif_dir_pla = cell(n_pla.neu.raw, 1);
                 obj.fil_pat_ima_cal_pla = cell(n_pla.neu.raw, 1);
+
+                obj.fil_pat_ima_cal_red_pla = cell(n_pla.neu.raw, 1);
+
                 obj.fil_pat_ima_cal_blu_pla = cell(n_pla.neu.raw, 1);
                 obj.fil_pat_ima_cal_glu_pla = cell(n_pla.neu.raw, 1);
-                for i = 1:n_pla.neu.raw
+                fun_pla = con_fil.fun_pla;
+                for i = fun_pla.raw
                     obj.tif_dir_pla{i, 1} = strcat(obj.targetP, "plane", string(i - 1), "\reg_tif");
                     obj.fil_pat_ima_cal_pla{i, 1} = strcat(obj.targetP, "plane", string(i - 1), ...
                         "\pla_", string(i), ".mat");
+
+                    obj.fil_pat_ima_cal_red_pla{i, 1} = strcat(obj.targetP, "plane", string(i ...
+                            - 1), "\red_pla_", string(i), ".mat");
+
                     obj.fil_pat_ima_cal_blu_pla{i, 1} = strcat(obj.targetP, "plane", string(i - 1), ...
                         "\blu_pla_", string(i), ".mat");
                     obj.fil_pat_ima_cal_glu_pla{i, 1} = strcat(obj.targetP, "plane", string(i - 1), ...
@@ -569,8 +578,10 @@ classdef rec
                 end
                 %%%%%%%
                 for pla = 1:n_pla.neu.raw
-                    obj.fil_pat_bin_pla{pla, 1} = strcat(obj.targetP, "plane", string(pla - 1), ...
+                    obj.fil_pat_bin_pla{pla} = strcat(obj.targetP, "plane", string(pla - 1), ...
                         "\data", ".bin");
+                    obj.fil_pat_two_pla{pla} = strcat(obj.targetP, "plane", string(pla - 1), ...
+                        "\data_chan2", ".bin");
                 end
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -602,6 +613,8 @@ classdef rec
             if isempty(obj.bri)
                 obj.bri = false;
             end
+            obj.vir_spe_thr = 0.1;
+            obj.vir_spe_new = false;
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% preprocessing
         function sav_rec(obj)
@@ -657,7 +670,11 @@ classdef rec
             save(obj.fil_pat_rec, 'piv_pla_row_col', 'dff_pla_con_row_col', '-append')
         end
         function app_reg_met(obj)
-            mat_fil = matfile("X:\kadiram\Data\Raw\esp247\2023_03_17\20230317_16_25_53_BS_2023-03-17_Exp4\suite2p\plane2\ops.mat");
+            %mat_fil = matfile("X:\kadiram\Data\Raw\esp247\2023_03_17\20230317_16_25_53_BS_2023-03-17_Exp4\suite2p\plane2\ops.mat");
+            mat_fil = matfile("X:\kadiram\Data\Raw\esp249\2023_06_01\20230601_14_17_11_BS_2023-06-01_Exp6\suite2p\plane2\ops.mat");
+            
+            
+            
             ops = mat_fil.ops;
             x_off_fra = double(ops.xoff)*obj.factor_meter;
             y_off_fra = double(ops.yoff)*obj.factor_meter;
@@ -724,13 +741,14 @@ classdef rec
             readMetadata = @() getMetadata(obj.sourceP, microscope);
             n_pla = con_fil.n_pla;
             piv_pla_row_col = cell(n_pla.neu.raw, 1);
+            n_fra = 4047;  % Total number of frames
             for pla = fun_pla.raw
                 disp(pla)
-                im = gen_imx_bin(obj.fil_pat_bin_pla{pla});
+                im = gen_imx_bin(obj.fil_pat_bin_pla{pla}, n_fra);
                 mean_per_block = cal_mean_per_block(readMetadata, con_fil.blockLength, im);
                 save(obj.fil_pat_ima_cal_pla{pla}, 'im', 'mean_per_block', '-v7.3')
                 sav_mean_per_block.raw(mean_per_block, obj.targetP, pla);
-                piv_pla_row_col{pla} = uint16(mean(im, 3));
+                piv_pla_row_col{pla} = im2uint16(mean(im2double(im), 3));
             end
             metadata = readMetadata();
             save(obj.fil_pat_met_cal, 'metadata', '-v7.3')
@@ -742,7 +760,11 @@ classdef rec
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             fun_pla = con_fil.fun_pla;
             n_fra = con_fil.n_fra;
-            n_fra = n_fra.cal.ses.eig.spo;
+            if obj.exp == "spo"
+                n_fra = n_fra.cal.ses.eig.spo;
+            elseif obj.exp == "dua"
+                n_fra = 4047;  % Total number of frames
+            end
             microscope = 'resonant';
             readMetadata = @() getMetadata(obj.sourceP, microscope);
             n_pla = con_fil.n_pla;
@@ -754,28 +776,35 @@ classdef rec
                 mean_per_block = cal_mean_per_block(readMetadata, con_fil.blockLength, im);
                 save(obj.fil_pat_ima_cal_pla{pla}, 'im', 'mean_per_block', '-v7.3')
                 sav_mean_per_block.raw(mean_per_block, obj.targetP, pla);
-                piv_pla_row_col.gre{pla} = uint16(mean(im, 3));
+                piv_pla_row_col.gre{pla} = cal_piv_row_col(im);
                 %
                 im = gen_imx_bin(obj.fil_pat_two_pla{pla}, n_fra);
                 mean_per_block = cal_mean_per_block(readMetadata, con_fil.blockLength, im);
                 save(obj.fil_pat_ima_cal_red_pla{pla}, 'im', 'mean_per_block', '-v7.3')
                 sav_mean_per_block.red(mean_per_block, obj.targetP, pla);
-                piv_pla_row_col.red{pla} = uint16(mean(im, 3));
+                piv_pla_row_col.red{pla} = cal_piv_row_col(im);
             end
             metadata = readMetadata();
             save(obj.fil_pat_met_cal, 'metadata', '-v7.3')
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_rec, 'piv_pla_row_col', '-append')
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% behavioral
-        function [man_sec, ini_del] = app_syn(obj)
-            [man_sec, ini_del] = ext_syn_par(obj.fil_pat_ima_fis, obj.fil_pat_exp);
-            display(man_sec)
-            display(ini_del)
-            save(obj.fil_pat_rec, 'man_sec', 'ini_del', '-append')
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% cor
+        function cor_ima_gfa(obj)
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            fun_pla = con_fil.fun_pla;
+            mat_fil = matfile(obj.fil_pat_rec);
+            piv_pla_row_col = mat_fil.piv_pla_row_col;
+            for pla = fun_pla.raw
+                disp(pla)
+                piv_pla_row_col{pla} = im2uint16(piv_pla_row_col{pla});
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'piv_pla_row_col', '-append')
         end
-        function app_syn_axo(obj)
-            [man_sec, ini_del] = ext_syn_par_axo(obj.fil_pat_ima_fis, obj.fil_pat_exp);
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% behavioral
+        function app_syn(obj)
+            [man_sec, ini_del] = ext_syn_par(obj.fil_pat_ima_fis, obj.fil_pat_exp);
             display(man_sec)
             display(ini_del)
             save(obj.fil_pat_rec, 'man_sec', 'ini_del', '-append')
@@ -937,9 +966,12 @@ classdef rec
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% spo
             [res_ons_per, res_off_per, dur_res_per] = cal_pcb_ons_bou(bou_ons_bou.all, ...
                 bou_off_bou.all);
-            [mrp, ind_max] = max(dur_res_per);% max_res_per
+            
+            [mrp, ind_max] = max(dur_res_per);% max_res_per | res: pcb
             mrp_ons = res_ons_per(ind_max);% max_res_per
             mrp_off = res_off_per(ind_max);
+            
+            % 'spo' - for loc, no-loc plot! 
             spo_per_ons = mrp_ons - mrp;
             spo_per_off = mrp_ons + mrp;
             log_tai_bin = tim_bin > spo_per_ons & tim_bin < spo_per_off;
@@ -986,6 +1018,8 @@ classdef rec
 
             % 'tai_ang_uni' ('tai_ang_fra' - not uniform like Ca signal)
 
+            [~, ~, ~, tim_syn_fra] = ext_tem_fra_dat_cut(obj.fil_pat_ima_fis, ...
+                obj.fil_pat_exp, man_sec, ini_del);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_rec, 'tai_bea', 'tai_sig', 'tai_ang_uni', 'fra_tim_uni', ...
                 'vir_spe_uni', ...
@@ -1001,7 +1035,8 @@ classdef rec
                 'res_ons_per', 'res_off_per', 'dur_res_per', ...
                 'mrp', 'mrp_ons', 'mrp_off', 'log_tai_bin', ...
                 'max_ang_bou', 'acb_ons_bou', 'acb_off_bou', 'dur_acb_bou', 'n_acb', 'log_acb', ...
-                'pcb_ons_bou', 'pcb_off_bou', 'dur_pcb_bou', '-append')
+                'pcb_ons_bou', 'pcb_off_bou', 'dur_pcb_bou', ...
+                'tim_syn_fra', '-append')
 
             % rec_fil = matfile(obj.fil_pat_rec);
             % con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
@@ -1015,14 +1050,6 @@ classdef rec
             % tai_ang_fra.con = conv(tai_ang_uni, kernel1, 'same');
             % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % save(obj.fil_pat_rec, 'tai_ang_fra', '-append')
-
-            rec_fil = matfile(obj.fil_pat_rec);
-            man_sec = rec_fil.man_sec;
-            ini_del = rec_fil.ini_del;
-            [~, ~, ~, tim_syn_fra] = ext_tem_fra_dat_cut(obj.fil_pat_ima_fis, ...
-                obj.fil_pat_exp, man_sec, ini_del);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'tim_syn_fra', '-append')
 
             % rec_fil = matfile(obj.fil_pat_rec);
             % con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
@@ -1968,6 +1995,7 @@ classdef rec
             piv_pla_row_col = mat_fil.piv_pla_row_col;
             
             %obj.per_bin_edg = 30; % axo_onl, cel_onl !!!!
+            
             %obj.per_bin_edg = 25;
             %obj.per_bin_edg = 15;
             %obj.per_bin_edg = 10;
@@ -1976,6 +2004,7 @@ classdef rec
             %obj.per_bin_edg = 3;
             
             %[high_in, low_in] = ext_hig_low.pea(piv_pla_row_col.glu{1}, obj.per_bin_edg);
+            
             %h_fig = plo_piv(piv_pla_row_col.glu, high_in, low_in);
 
             % for glia
@@ -2524,8 +2553,11 @@ classdef rec
             fie_mod = 'bou_non';
             fie_cel = 'exc';
             dis_tem_pai = cal_dis_fie_pai(coo_roi_dim, log_roi, coo_cel_dim, log_cel, fie_mod, ...
-                fie_cel);
+                fie_cel);% exc/inh axo - exc cel
+            
+            % exc cel - exc axo
             dis_fie_pai.bou_non_exc.exc = dis_tem_pai.(fie_mod).exc;
+            % exc cel - inh axo
             dis_fie_pai.bou_non_exc.inh = dis_tem_pai.(fie_mod).inh;
             dff_roi_fra = rec_fil.dff_roi_fra;
             [~, r_fie_pai.bou_non_exc] = cal_cor_fie_fie_roi_cel(dff_roi_fra.bou_non', log_roi, ...
@@ -2572,12 +2604,15 @@ classdef rec
             log_roi = rec_fil.log_roi;
             coo_cel_dim = rec_fil.coo_cel_dim;
             log_cel = rec_fil.log_cel;
+
+            % all
             dis_fie_roi_cel.lef = pdist2(coo_roi_dim(log_roi.lef.all, :), coo_cel_dim(...
                 log_cel.lef.all, :));
             dis_fie_roi_cel.rig = pdist2(coo_roi_dim(log_roi.rig.all, :), coo_cel_dim(...
                 log_cel.rig.all, :));
+
             dis_fie_pai = rec_fil.dis_fie_pai;
-            dis_fie_pai.bou_non.all = [dis_fie_roi_cel.lef(:); dis_fie_roi_cel.rig(:)];
+            dis_fie_pai.bou_non.all = [dis_fie_roi_cel.lef(:); dis_fie_roi_cel.rig(:)];% for shu.
             r_fie_pai = rec_fil.r_fie_pai;
             %%%%%%%%%%%%%%%%%%%%% with tail data
             dff_pla_fra_roi = rec_fil.dff_pla_fra_roi;
@@ -2625,95 +2660,30 @@ classdef rec
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo onl
         function app_log_pla_icx_row_col(obj)
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            n_pla = con_fil.n_pla;
-            fun_pla = con_fil.fun_pla;
-            rec_fil = matfile(obj.fil_pat_rec);
-
-            piv_pla_row_col = rec_fil.piv_pla_row_col;
-
-            % for axo
-
-            % piv_pla_row_col = piv_pla_row_col.glu;% ave. raw image
-            % log_pla_row_col: manually drawn roi for the target region
-
-            log_pla_icx_row_col = ext_log_pla_icx_row_col(piv_pla_row_col, ...
-                rec_fil.log_pla_row_col, rec_fil.low_in, obj.per_bin_edg);% pixel identification
-            [n_pix_pla, n_pix] = ext_n_pix_pla(log_pla_icx_row_col.glu);
-            piv_pla_fra_pix = cell(n_pla.neu.raw, 1);
-            for pla_num = fun_pla.raw
-
-                % for axo
-                % obj_ima_cal = matfile(obj.fil_pat_ima_cal_glu_pla{pla_num});
-
-                obj_ima_cal = matfile(obj.fil_pat_ima_cal_pla{pla_num});
-                piv_row_col_fra = obj_ima_cal.im;
-                piv_pla_fra_pix{pla_num} = ext_sig_roi(piv_row_col_fra, log_pla_icx_row_col.glu...
-                    {pla_num});% only for the identified pixels !
-            end
+            [log_pla_icx_row_col.glu, n_pix_pla, n_pix, piv_pla_fra_pix, x_pla_pix, y_pla_pix, ...
+                z_pla_pix, piv_pla_fra_bin, x_bin, y_bin, z_bin, dis_bin_bin, coo_bin_dim, ...
+                n_bin_pla, n_bin, log_bin, dis_pai, ind_pla_pix] = cal_axo_pre(piv_pla_row_col, ...
+                log_pla_row_col, low_in, obj);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_rec, 'log_pla_icx_row_col', 'n_pix_pla', 'n_pix', 'piv_pla_fra_pix', ...
-                '-append')
+                'x_pla_pix', 'y_pla_pix', 'z_pla_pix', 'piv_pla_fra_bin', 'x_bin', 'y_bin', 'z_bin',...
+                'dis_bin_bin', 'coo_bin_dim', 'n_bin_pla', 'n_bin', 'log_bin', 'dis_pai', ...
+                'ind_pla_pix', '-append')
 
-             [x_pla_pix, y_pla_pix, z_pla_pix] = ext_xyz_pla_pix(log_pla_icx_row_col.glu, ...
-                obj.factor_meter, obj.iniStruct);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'x_pla_pix', 'y_pla_pix', 'z_pla_pix', '-append')
-
-            %%%%%%%%%%%% BIN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            [piv_pla_fra_bin, x_bin, y_bin, z_bin, dis_bin_bin.all] = cal_piv_pla_fra_bin(...
-                piv_pla_fra_pix, log_pla_icx_row_col.glu, x_pla_pix, y_pla_pix, z_pla_pix);
-            coo_bin_dim = [x_bin y_bin z_bin];
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'piv_pla_fra_bin', 'x_bin', 'y_bin', 'z_bin', 'dis_bin_bin', ...
-                'coo_bin_dim', '-append')
-
-            n_bin_pla = cellfun(@(x) size(x, 2), piv_pla_fra_bin);
-            n_bin.all = length(x_bin);
-            log_bin.all.all = true(n_bin.all, 1);
-            n_bin.dor = sum(n_bin_pla(fun_pla.dor));
-            log_bin.dor = [false(n_bin_pla(1), 1); true(n_bin.dor, 1); false(n_bin.all - n_bin_pla(...
-                1) - n_bin.dor, 1)];
-            log_bin.lef.all = y_bin > obj.y_mid;
-            log_bin.rig.all = ~log_bin.lef.all;
-            dis_bin_bin.lef = dis_bin_bin.all(log_bin.lef.all, log_bin.lef.all);
-            dis_pai_lef = ext_upp(dis_bin_bin.lef);
-            dis_bin_bin.rig = dis_bin_bin.all(log_bin.rig.all, log_bin.rig.all);
-            dis_pai_rig = ext_upp(dis_bin_bin.rig);
-            dis_pai = [dis_pai_lef; dis_pai_rig];
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'n_bin_pla', 'n_bin', 'log_bin', 'dis_pai', '-append')
-            
-            % win_len = con_fil.win_len;
-            % bou_ons_bou = rec_fil.bou_ons_bou;
-            % log_bin = rec_fil.log_bin;
-            % fra_rat = con_fil.fra_rat;
-            % isi = con_fil.isi;
-            % [dff_bin_fra.bou.all, log_bin.all, res_bin.all, dff_bin_bou_win, ...
-            %     dff_bin_fra_bou] = ext_dff_pix_fra.tri(piv_pla_fra_bin, win_len.dff.eig, ...
-            %     bou_ons_bou.all, fra_rat.cal.eig, isi, win_len.dff.pha.drn.tai, log_bin.all);
-            % log_bou = rec_fil.log_bou;
-            % coo_bin_dim = rec_fil.coo_bin_dim;
-            % dis_blo = con_fil.dis_blo;
-            % [log_bin.all, ~, res_bin.all] = ext_inh_exc(dff_bin_bou_win, log_bou.all, log_bin.all);
-            % [log_bin.vib, ~, res_bin.vib] = ext_inh_exc(dff_bin_bou_win, log_bou.vib, log_bin.all);
-            % [log_bin.non, ~, res_bin.non] = ext_inh_exc(dff_bin_bou_win, log_bou.non, log_bin.all);
-            % fra_blo.all = cal_fra_blo(coo_bin_dim, log_bin.all, dis_blo.for);
-            % fra_blo.vib = cal_fra_blo(coo_bin_dim, log_bin.vib, dis_blo.for);
-            % fra_blo.non = cal_fra_blo(coo_bin_dim, log_bin.non, dis_blo.for);
-            % r_pai = cal_r_pai.sep(dff_bin_fra.bou.all', log_bin);
-            % r_blo.tai.dat = cal_pcc_blo(dis_pai, r_pai, dis_blo.wre);
-            % r_blo.tai.shu = cal_r_blo_shu(dis_pai, r_pai, dis_blo.wre);
-            % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            % save(obj.fil_pat_rec, 'dff_bin_fra', 'dff_bin_bou_win', 'dff_bin_fra_bou', 'fra_blo', ...
-            %     'log_bin', 'res_bin', 'r_pai', 'r_blo', '-append')
-
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             win_len = con_fil.win_len;
             fra_rat = con_fil.fra_rat;
             isi = con_fil.isi;
+            rec_fil = matfile(obj.fil_pat_rec);
+            bou_ons_bou = rec_fil.bou_ons_bou;
+            log_bin = rec_fil.log_bin;
+            piv_pla_fra_bin = rec_fil.piv_pla_fra_bin;
             piv_fra_bin = [piv_pla_fra_bin{:}];
             fra_rat = fra_rat.cal.eig;
             sti_ons_tri = con_fil.sti_ons_tri;
+            [~, ~, ~, ~, ~, dff_bin_fra.bou.non, ~, ~, log_bin.non, ~, ~, res_bin.non] = ...
+                cal_rel_cha_uni_poi_tri(piv_fra_bin, win_len.dff.eig, bou_ons_bou.non, fra_rat, ...
+                isi, win_len.dff.pha.drn.tai);% log_uni.srt.exc
             % [~, ~, ~, ~, ~, dff_bin_fra.lig, ~, ~, log_bin.lig, ~, ~, res_bin.lig] = ...
             %     cal_rel_cha_uni_poi_tri(piv_fra_bin, win_len.dff.eig, sti_ons_tri.vrs.lig, fra_rat, ...
             %     isi, win_len.dff.pha.drn.tai);
@@ -2723,127 +2693,21 @@ classdef rec
             [~, ~, ~, ~, ~, dff_bin_fra.tap, ~, ~, log_bin.tap, ~, ~, res_bin.tap] = ...
                 cal_rel_cha_uni_poi_tri(piv_fra_bin, win_len.dff.eig, sti_ons_tri.vrs.tap, fra_rat, ...
                 isi, win_len.dff.pha.drn.tai);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'dff_bin_fra', 'log_bin', 'res_bin', '-append')
-
-            rec_fil = matfile(obj.fil_pat_rec);
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             dis_blo = con_fil.dis_blo;
             dis_pai = rec_fil.dis_pai;
-            log_bin = rec_fil.log_bin;
-            r_pai.tai = cal_r_pai.sep(dff_bin_fra.bou.all', log_bin);
-            r_pai.lig = cal_r_pai.sep(dff_bin_fra.lig', log_bin);
+            
+            r_pai.non = cal_r_pai.sep(dff_bin_fra.bou.non', log_bin);
+            %r_pai.lig = cal_r_pai.sep(dff_bin_fra.lig', log_bin);
             r_pai.sho = cal_r_pai.sep(dff_bin_fra.sho', log_bin);
             r_pai.tap = cal_r_pai.sep(dff_bin_fra.tap', log_bin);
 
-            r_blo.tai = cal_r_blo(dis_pai, r_pai.tai, dis_blo.tel);
-            r_blo.lig = cal_r_blo(dis_pai, r_pai.lig, dis_blo.tel);
+            r_blo.non = cal_r_blo(dis_pai, r_pai.non, dis_blo.tel);
+            %r_blo.lig = cal_r_blo(dis_pai, r_pai.lig, dis_blo.tel);
             r_blo.sho = cal_r_blo(dis_pai, r_pai.sho, dis_blo.tel);
             r_blo.tap = cal_r_blo(dis_pai, r_pai.tap, dis_blo.tel);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'r_pai', 'r_blo', '-append')
-
-            rec_fil = matfile(obj.fil_pat_rec);
-            n_bin_pla = rec_fil.n_bin_pla;
-            ind_pla_bin = ext_ind_pla_cel(n_bin_pla);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'ind_pla_bin', '-append')
-
-            rec_fil = matfile(obj.fil_pat_rec);
-            n_pix_pla = rec_fil.n_pix_pla;
-            ind_pla_pix = ext_ind_pla_cel(n_pix_pla);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'ind_pla_pix', '-append')
-
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            fra_rat = con_fil.fra_rat;
-            rec_fil = matfile(obj.fil_pat_rec);
-            piv_pla_fra_bin = rec_fil.piv_pla_fra_bin;
-            piv_fra_bin = [piv_pla_fra_bin{:}];
-            dff_fra_bin = cal_dff_fra_roi.sli(fra_rat.cal.eig, piv_fra_bin);
-            met = 'sgolay';
-            n_fra = con_fil.n_fra;
-            dff_fra_bin = smoothdata(dff_fra_bin, met, n_fra.dff.eig.smo);
-
-            log_fra = con_fil.log_fra;
-            r_pai = rec_fil.r_pai;
-            r_pai.ong = cal_r_pai.tog(dff_fra_bin(log_fra.cal.eig.ong, :));
-
-            dis_blo = con_fil.dis_blo;
-            dis_blo = dis_blo.tel;
-            r_blo = rec_fil.r_blo;
-            dis_pai = rec_fil.dis_pai;
-            r_blo.ong = cal_r_blo(dis_pai, r_pai.ong, dis_blo);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'dff_fra_bin', 'r_pai', 'r_blo', '-append')
-
-
-
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gfa !!!!!!!!!
-            rec_fil = matfile(obj.fil_pat_rec);
-            n_bin_pla = rec_fil.n_bin_pla;
-            n_bin_pla = n_bin_pla(:, 1);
-            ind_pla_bin = ext_ind_pla_cel(n_bin_pla);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'ind_pla_bin', '-append')
-
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            rec_fil = matfile(obj.fil_pat_rec);
-            win_len = con_fil.win_len;
-            bou_ons_bou = rec_fil.bou_ons_bou;
-            log_bin = rec_fil.log_bin;
-            dff_bin_fra = rec_fil.dff_bin_fra;
-            res_bin = rec_fil.res_bin;
-            fra_rat = con_fil.fra_rat;
-            isi = con_fil.isi;
-            piv_pla_fra_bin = rec_fil.piv_pla_fra_bin;
-            piv_fra_bin = [piv_pla_fra_bin{:}];
-            fra_rat = fra_rat.cal.eig;
-
-            % log_bin.all used before ...!!!!
-
-            [~, ~, ~, ~, ~, dff_bin_fra.bou.all, ~, ~, log_bin.all, ~, ~, res_bin.all] = ...
-                cal_rel_cha_uni_poi_tri(piv_fra_bin, win_len.dff.eig, bou_ons_bou.all, fra_rat, ...
-                isi, win_len.dff.pha.drn.tai);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'dff_bin_fra', 'log_bin', 'res_bin', '-append')
-
-            dis_blo = con_fil.dis_blo;
-            dis_pai = rec_fil.dis_pai;
-            r_pai.tai = cal_r_pai.sep(dff_bin_fra.bou.all', log_bin);
-            r_pai.sho = cal_r_pai.sep(dff_bin_fra.sho', log_bin);
-            r_pai.tap = cal_r_pai.sep(dff_bin_fra.tap', log_bin);
-
-            r_blo.tai = cal_r_blo(dis_pai, r_pai.tai, dis_blo.wre);
-            r_blo.sho = cal_r_blo(dis_pai, r_pai.sho, dis_blo.wre);
-            r_blo.tap = cal_r_blo(dis_pai, r_pai.tap, dis_blo.wre);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'r_pai', 'r_blo', '-append')
-
-            %%%%%%%%%%%%%% spo !!!!!!!!!!!!!!!!!!!!
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            rec_fil = matfile(obj.fil_pat_rec);
-            win_len = con_fil.win_len;
-            bou_ons_bou = rec_fil.bou_ons_bou;
-            log_bin = rec_fil.log_bin;
-            dff_bin_fra = rec_fil.dff_bin_fra;
-            res_bin = rec_fil.res_bin;
-            fra_rat = con_fil.fra_rat;
-            isi = con_fil.isi;
-            piv_pla_fra_bin = rec_fil.piv_pla_fra_bin;
-            piv_fra_bin = [piv_pla_fra_bin{:}];
-            fra_rat = fra_rat.cal.eig;
-            [~, ~, ~, ~, ~, dff_bin_fra.bou.non, ~, ~, log_bin.non, ~, ~, res_bin.non] = ...
-                cal_rel_cha_uni_poi_tri(piv_fra_bin, win_len.dff.eig, bou_ons_bou.non, fra_rat, ...
-                isi, win_len.dff.pha.drn.tai);% log_uni.srt.exc
-            dis_blo = con_fil.dis_blo;
-            dis_pai = rec_fil.dis_pai;
-            r_pai = cal_r_pai.sep(dff_bin_fra.bou.non', log_bin);
-            r_blo = rec_fil.r_blo;
-            r_blo.non = cal_r_blo(dis_pai, r_pai, dis_blo.wre);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'dff_bin_fra', 'log_bin', 'res_bin', 'r_blo', '-append')
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gfa !!!!!!!!!
+            save(obj.fil_pat_rec, 'dff_bin_fra', 'log_bin', 'res_bin', 'r_pai', 'r_blo', '-append')
 
             rec_fil = matfile(obj.fil_pat_rec);
             x_bin = rec_fil.x_bin;
@@ -2866,28 +2730,14 @@ classdef rec
             pro_den_bin.tap = cal_pro_den_bin(x_bin, y_bin, log_bin, fie_num, coo_bin_dim.(fie));
             pro_den_sid_bin.tap = cal_pro_den_sid_bin(x_bin, z_bin, log_bin, fie_num, ...
                 coo_sid_bin_dim.(fie));
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'pro_den_bin', 'pro_den_sid_bin', '-append')
-
-            rec_fil = matfile(obj.fil_pat_rec);
-            pro_den_bin = rec_fil.pro_den_bin;
-            x_bin = rec_fil.x_bin;
-            y_bin = rec_fil.y_bin;
-            log_bin = rec_fil.log_bin;
-            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            coo_bin_dim = con_fil.coo_bin_dim;
-            fie = 'uni';
             fie_num = {'axo', 'bou', 'non', 'srt'};
             pro_den_bin.non = cal_pro_den_bin(x_bin, y_bin, log_bin, fie_num, coo_bin_dim.(fie));
-            pro_den_sid_bin = rec_fil.pro_den_sid_bin;
-            z_bin = rec_fil.z_bin;
-            coo_sid_bin_dim = con_fil.coo_sid_bin_dim;
             pro_den_sid_bin.non = cal_pro_den_sid_bin(x_bin, z_bin, log_bin, fie_num, ...
                 coo_sid_bin_dim.(fie));
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_rec, 'pro_den_bin', 'pro_den_sid_bin', '-append')
         end
-        % un
+        % in
         function app_par_axo_onl(obj)
             rec_fil = matfile(obj.fil_pat_rec);
             pro_den_bin = rec_fil.pro_den_bin;
@@ -3286,17 +3136,12 @@ classdef rec
         % in
         function app_par_som(obj)
             rec_fil = matfile(obj.fil_pat_rec);
-            fra = rec_fil.fra;
-            log_cel = rec_fil.log_cel;
-            n_cel = rec_fil.n_cel;
-            fra.bou_non.exc = sum(log_cel.bou_non.srt.exc)/n_cel.all;
-            fra.lig.exc = sum(log_cel.lig.srt.exc)/n_cel.all;
-            fra.tap.exc = sum(log_cel.tap.srt.exc)/n_cel.all;
-            fra.bou_non.inh = sum(log_cel.bou_non.srt.inh)/n_cel.all;
-            fra.lig.inh = sum(log_cel.lig.srt.inh)/n_cel.all;
-            fra.tap.inh = sum(log_cel.tap.srt.inh)/n_cel.all;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            dff_fra_cel = rec_fil.dff_fra_cel;
+            log_fra = con_fil.log_fra;
+            [ioi_kxx, ioi_shu_kxx, del_ioi_kxx] = ext_clu_ana(dff_fra_cel(log_fra.cal.eig.ong, :));
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_rec, 'fra', '-append')
+            save(obj.fil_pat_rec, 'ioi_kxx', 'ioi_shu_kxx', 'del_ioi_kxx', '-append')
         end
         %%%%%%
         function app_sui(obj)
@@ -3395,24 +3240,24 @@ classdef rec
             save(obj.fil_pat_rec, 'dff_cem_fra', '-append')
         end
         function app_dff_spo(obj)
-            % rec_fil = matfile(obj.fil_pat_rec);
-            % con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            % cel_fie_pla_row_col = rec_fil.cel_fie_pla_row_col;
-            % fra_rat = con_fil.fra_rat;
-            % dff_pla_fra_cem = rec_fil.dff_pla_fra_cel;
-            % pla = 3;
-            % fil_pat_cal_pla = obj.fil_pat_ima_cal_pla;
-            % obj.fil_pat_ima_cal = fil_pat_cal_pla{pla};
-            % cel_row_col = rec_fil.cel_row_col;
-            % piv_fra_cel = cal_piv_fra_cel(obj.fil_pat_ima_cal, cel_row_col);
-            % %
-            % cel_fie_pla_row_col.pla{pla} = cel_row_col;
-            % cel_fie_pla_row_col.pla{pla}(cel_fie_pla_row_col.pla{pla} == 0) = nan;
-            % dff_pla_fra_cem{pla} = cal_dff_fra_roi.sli(fra_rat.cal.eig, piv_fra_cel);
-            % [~, ~, ~, x_cem, y_cem, z_cem, ~] = cal_xyz_cel(obj.factor_meter, ...
-            %     obj.iniStruct, cel_fie_pla_row_col.pla);
-            % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            % save(obj.fil_pat_rec, 'dff_pla_fra_cem', 'x_cem', 'y_cem', 'z_cem', '-append')
+            rec_fil = matfile(obj.fil_pat_rec);
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            cel_fie_pla_row_col = rec_fil.cel_fie_pla_row_col;
+            fra_rat = con_fil.fra_rat;
+            dff_pla_fra_cem = rec_fil.dff_pla_fra_cel;
+            pla = 3;
+            fil_pat_cal_pla = obj.fil_pat_ima_cal_pla;
+            obj.fil_pat_ima_cal = fil_pat_cal_pla{pla};
+            cel_row_col = rec_fil.cel_row_col;
+            piv_fra_cel = cal_piv_fra_cel(obj.fil_pat_ima_cal, cel_row_col);
+            %
+            cel_fie_pla_row_col.pla{pla} = cel_row_col;
+            cel_fie_pla_row_col.pla{pla}(cel_fie_pla_row_col.pla{pla} == 0) = nan;
+            dff_pla_fra_cem{pla} = cal_dff_fra_roi.sli(fra_rat.cal.eig, piv_fra_cel);
+            [~, ~, ~, x_cem, y_cem, z_cem, ~] = cal_xyz_cel(obj.factor_meter, ...
+                obj.iniStruct, cel_fie_pla_row_col.pla);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'dff_pla_fra_cem', 'x_cem', 'y_cem', 'z_cem', '-append')
 
             rec_fil = matfile(obj.fil_pat_rec);
             clu_cel_k = rec_fil.clu_cel_k;
@@ -3426,6 +3271,136 @@ classdef rec
             [clu_cel_k.ong_man, ~] = com_clu_cel_k(dff_fra_cem(log_fra.cal.eig.ong, :));% single per
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_rec, 'dff_fra_cem', 'clu_cel_k', '-append')
+        end
+        
+        % for esp247
+        function app_247(obj)
+            % fix_pat_ima_cal_pla = obj.fil_pat_ima_cal_pla;
+            % load(obj.fil_pat_exp, 'sti_ons')
+            % sti_num = 1;
+            % sti_ons = sti_ons(sti_num);
+            % pla = 3;
+            % dev = 90;
+            % n_fra_blo = 5;
+            % [pif_row_col_fra, n_fra_ext, log_fra] = ext_ima_cal_ext(fix_pat_ima_cal_pla{pla}, ...
+            %     sti_ons, dev, n_fra_blo);
+            % % cropping
+            % sta_row = 740;
+            % sta_col = 270;
+            % n_row = 400;
+            % n_col = 200;
+            % pic_row_col_fra = pif_row_col_fra...
+            %     (sta_row:sta_row + n_row - 1, sta_col:sta_col + n_col  - 1, :);
+            % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            % save(obj.fil_pat_rec, 'pic_row_col_fra', '-append')
+
+            % rec_fil = matfile(obj.fil_pat_rec);
+            % pic_row_col_fra = rec_fil.pic_row_col_fra;
+            % obj.per_bin_edg = 30;% esp247
+            % roiPositions_cro = ext_cel_row_col_cro(pic_row_col_fra, obj.per_bin_edg);
+            % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            % save(obj.fil_pat_rec, 'roiPositions_cro', '-append')
+
+            rec_fil = matfile(obj.fil_pat_rec);
+            roiPositions_cro = rec_fil.roiPositions_cro;
+            [log_row_col, log_roi_row_col] = roi_masks_from_positions(roiPositions_cro);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'log_row_col', 'log_roi_row_col', '-append')
+        end
+        
+        % for esp249
+        function app_249(obj)
+            % fix_pat_ima_cal_pla = obj.fil_pat_ima_cal_pla;
+            % load(obj.fil_pat_exp, 'sti_ons')
+            % sti_num = 1;
+            % sti_ons = sti_ons(sti_num);
+            % pla = 3;
+            % dev = 90;
+            % n_fra_blo = 5;
+            % [pif_row_col_fra, n_fra_ext, log_fra] = ext_ima_cal_ext(fix_pat_ima_cal_pla{pla}, ...
+            %     sti_ons, dev, n_fra_blo);
+            % % cropping
+            % sta_row = 630;
+            % sta_col = 310;
+            % n_row = 330;
+            % n_col = 160;
+            % pic_row_col_fra = pif_row_col_fra...
+            %     (sta_row:sta_row + n_row - 1, sta_col:sta_col + n_col  - 1, :);
+            % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            % save(obj.fil_pat_rec, 'pic_row_col_fra', '-append')
+
+            rec_fil = matfile(obj.fil_pat_rec);
+            pic_row_col_fra = rec_fil.pic_row_col_fra;
+            obj.per_bin_edg = 70;
+            roiPositions_cro = ext_cel_row_col_cro(pic_row_col_fra, obj.per_bin_edg);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'roiPositions_cro', '-append')
+
+            % rec_fil = matfile(obj.fil_pat_rec);
+            % pic_row_col_fra = rec_fil.pic_row_col_fra;
+            % %obj.per_bin_edg = 70;
+            % obj.per_bin_edg = 80;
+            % roiPositions_cro = cor_cel_row_col_cro(pic_row_col_fra, obj.per_bin_edg, ...
+            %     rec_fil.roiPositions_cro);
+            % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            % save(obj.fil_pat_rec, 'roiPositions_cro', '-append')
+
+            rec_fil = matfile(obj.fil_pat_rec);
+            roiPositions_cro = rec_fil.roiPositions_cro;
+            n_row = 330;
+            n_col = 160;
+            [log_row_col, log_roi_row_col] = roi_masks_from_positions(roiPositions_cro, n_row, n_col);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'log_row_col', 'log_roi_row_col', '-append')
+        end
+        
+        % for video
+        function app_ses_dat(obj)
+            fix_pat_ima_cal_pla = obj.fil_pat_ima_cal_pla;
+            pla = 3;
+            if obj.ani == "esp247"
+                sta_row = 740;
+                sta_col = 270;
+                n_row = 400;
+                n_col = 200;
+            elseif obj.ani == "esp249"
+                sta_row = 630;
+                sta_col = 310;
+                n_row = 330;
+                n_col = 160;
+            end
+            rec_fil = matfile(obj.fil_pat_rec);
+            log_roi_row_col = rec_fil.log_roi_row_col;
+            log_row_col = rec_fil.log_row_col;
+            [dff_fra_cel_cro, clu_cel_cro, dfm_row_col_fra] = gen_ses_dat...
+                (fix_pat_ima_cal_pla{pla}, log_roi_row_col, log_row_col, sta_row, sta_col, n_row, ...
+                n_col);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'dff_fra_cel_cro', 'clu_cel_cro', 'dfm_row_col_fra', '-append')
+        end
+        % in
+        function app_par_ses_dat(obj)
+            fix_pat_ima_cal_pla = obj.fil_pat_ima_cal_pla;
+            pla = 3;
+            if obj.ani == "esp247"
+                sta_row = 740;
+                sta_col = 270;
+                n_row = 400;
+                n_col = 200;
+            elseif obj.ani == "esp249"
+                sta_row = 630;
+                sta_col = 310;
+                n_row = 330;
+                n_col = 160;
+            end
+            rec_fil = matfile(obj.fil_pat_rec);
+            log_roi_row_col = rec_fil.log_roi_row_col;
+            log_row_col = rec_fil.log_row_col;
+            [~, ~, dfm_row_col_fra] = gen_ses_dat...
+                (fix_pat_ima_cal_pla{pla}, log_roi_row_col, log_row_col, sta_row, sta_col, n_row, ...
+                n_col);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'dfm_row_col_fra', '-append')
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gab
         function app_gab(obj, thr)
@@ -3631,7 +3606,7 @@ classdef rec
             mrp_off = rec_fil.mrp_off;
             [dff_fra_cel, ioi_kxx, ioi_shu_kxx, del_ioi_kxx, clu_cel, clu_fid, r_pai, pcc_blo, ...
                 clu_cel_k, log_fra.ong] = cal_spo(tim_fra, dff_pla_fra_cel, dis_pai, mrp_ons, mrp_off);
-            % clu_cel_k.ong - single per
+            % clu_cel_k.ong - single per, % err fid !!
             piv_pla_fra_cel = rec_fil.piv_pla_fra_cel;
             piv_fra_cel = [piv_pla_fra_cel{:}];
             mrp = rec_fil.mrp;
@@ -3643,14 +3618,246 @@ classdef rec
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_rec, 'dff_fra_cel', 'ioi_kxx', 'ioi_shu_kxx', 'del_ioi_kxx', ...
                 'clu_cel', 'clu_fid', 'r_pai', 'pcc_blo', 'clu_cel_k', 'log_fra', 'ofr_win', '-append')
-        end
-        % un
-        function app_par_spo(obj)
+
             rec_fil = matfile(obj.fil_pat_rec);
             clu_cel_k = rec_fil.clu_cel_k;
             n_cel_clu = cal_n_cel_clu(clu_cel_k.ong(:, 4));
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_rec, 'n_cel_clu', '-append')
+
+            rec_fil = matfile(obj.fil_pat_rec);
+            dff_fra_cel = rec_fil.dff_fra_cel;
+            mrp_ons = rec_fil.mrp_ons;
+            mrp_off = rec_fil.mrp_off;
+            [~, clu_fid] = cal_clu_cel_nox_loc(dff_fra_cel, mrp_ons, mrp_off);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'clu_fid', '-append')
+        end
+        % un
+        function app_par_spo(obj)
+            rec_fil = matfile(obj.fil_pat_rec);
+            dff_fra_cel = rec_fil.dff_fra_cel;
+            clu_fid_bin = cal_clu_fid_bin(dff_fra_cel);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'clu_fid_bin', '-append')
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gli
+        function app_log_pla_row_col_gli(obj)
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_pla = con_fil.n_pla;
+            rec_fil = matfile(obj.fil_pat_rec);
+            %log_pla_row_col = rec_fil.log_pla_row_col;
+
+            log_pla_row_col.tel = cell(n_pla.neu.raw, 1);
+            fun_pla = [1 3 4 5 6 7 8];
+            piv_pla_row_col = rec_fil.piv_pla_row_col;
+            for i = fun_pla% manual drawing
+                log_pla_row_col.tel{i} = ext_log_row_col(piv_pla_row_col{i}, rec_fil.high_in, ...
+                    rec_fil.low_in);
+            end
+            save(obj.fil_pat_rec, 'log_pla_row_col', '-append')
+        end
+        %
+        function app_gli(obj)
+            rec_fil = matfile(obj.fil_pat_rec);
+            log_pla_icx_row_col = rec_fil.log_pla_icx_row_col;
+            n_pix_pla = rec_fil.n_pix_pla;
+            n_pix = rec_fil.n_pix;
+            piv_pla_fra_pix = rec_fil.piv_pla_fra_pix;
+            x_pla_pix = rec_fil.x_pla_pix;
+            y_pla_pix = rec_fil.y_pla_pix;
+            z_pla_pix = rec_fil.z_pla_pix;
+            piv_pla_fra_bin = rec_fil.piv_pla_fra_bin;
+            x_bin = rec_fil.x_bin;
+            y_bin = rec_fil.y_bin;
+            z_bin = rec_fil.z_bin;
+            dis_bin_bin = rec_fil.dis_bin_bin;
+            coo_bin_dim = rec_fil.coo_bin_dim;
+            n_bin_pla = rec_fil.n_bin_pla;
+            n_bin = rec_fil.n_bin;
+            log_bin = rec_fil.log_bin;
+            dis_pai = rec_fil.dis_pai;
+
+            % inputs
+            piv_pla_row_col = rec_fil.piv_pla_row_col;
+            log_pla_row_col = rec_fil.log_pla_row_col;
+            low_in = rec_fil.low_in;
+            %
+            fie = 'tel';
+            [log_pla_icx_row_col.tel, n_pix_pla.tel, n_pix.tel, piv_pla_fra_pix.tel, x_pla_pix.tel,...
+                y_pla_pix.tel, z_pla_pix.tel, piv_pla_fra_bin.tel, x_bin.tel, y_bin.tel, z_bin.tel,...
+                dis_bin_bin.tel, coo_bin_dim.tel, n_bin_pla.tel, n_bin.tel, log_bin.tel, dis_pai.tel...
+                ] = cal_axo_pre(piv_pla_row_col, log_pla_row_col, low_in, obj, fie);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'log_pla_icx_row_col', 'n_pix_pla', 'n_pix', 'piv_pla_fra_pix', ...
+                'x_pla_pix', 'y_pla_pix', 'z_pla_pix', 'piv_pla_fra_bin', 'x_bin', 'y_bin', 'z_bin',...
+                'dis_bin_bin', 'coo_bin_dim', 'n_bin_pla', 'n_bin', 'log_bin', 'dis_pai', '-append')
+            
+            % % acb !!!!!!!!!!!!!!!
+            % con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            % rec_fil = matfile(obj.fil_pat_rec);
+            % win_len = con_fil.win_len;
+            % acb_ons_bou = rec_fil.acb_ons_bou;
+            % log_bin = rec_fil.log_bin;
+            % fra_rat = con_fil.fra_rat;
+            % isi = con_fil.isi;
+            % piv_pla_fra_bin = rec_fil.piv_pla_fra_bin;
+            % piv_fra_bin = [piv_pla_fra_bin.tel{:}];
+            % bas_win_len = win_len.dff.eig;
+            % res_win_len = win_len.dff.pha.drn.tai;% 10 s
+            % fra_rat = fra_rat.cal.eig;
+            % [~, ~, ~, ~, ~, ~, ~, ~, log_bin.tel.acb, ~, ~, ~] = ...
+            %     cal_rel_cha_uni_poi_tri(piv_fra_bin, bas_win_len, acb_ons_bou.non, fra_rat, ...
+            %     isi, res_win_len);
+            % 
+            % piv_fra.hab = rec_fil.piv_fra;
+            % piv_fra.tel.acb_exc_all = mean(piv_fra_bin(:, log_bin.tel.acb.srt.exc), 2);
+            % 
+            % dff_fra_bou.hab = rec_fil.dff_fra_bou;
+            % dff_bou_win.hab = rec_fil.dff_bou_win;
+            % [~, ~, dff_uni_fra_bou.all, ~, ~, ~, ~, dff_bou_win.tel.acb_exc_all] = ...
+            %     cal_rel_cha_uni_poi_tri(piv_fra.tel.acb_exc_all, bas_win_len, acb_ons_bou.non, ...
+            %     fra_rat, isi, res_win_len);
+            % dff_fra_bou.tel.acb_exc_all = dff_uni_fra_bou.all{1};
+            % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            % save(obj.fil_pat_rec, 'log_bin', 'piv_fra', 'dff_fra_bou', 'dff_bou_win', '-append')
+
+            % % pcb !!!!!!!!!!!!!!!
+            % con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            % rec_fil = matfile(obj.fil_pat_rec);
+            % win_len = con_fil.win_len;
+            % pcb_ons_bou = rec_fil.pcb_ons_bou;
+            % fra_rat = con_fil.fra_rat;
+            % isi = con_fil.isi;
+            % bas_win_len = win_len.dff.eig;
+            % res_win_len = win_len.dff.pha.drn.tai;
+            % fra_rat = fra_rat.cal.eig;
+            % piv_fra = rec_fil.piv_fra;
+            % dff_fra_bou = rec_fil.dff_fra_bou;
+            % [~, ~, dff_uni_fra_bou.all, ~, ~, ~, ~, ~] = ...
+            %     cal_rel_cha_uni_poi_tri(piv_fra.tel.acb_exc_all, bas_win_len, pcb_ons_bou.non, ...
+            %     fra_rat, isi, res_win_len);% tonic till end. only considering the bins excited by acb
+            % dff_fra_bou.tel.pcb_exc_all = dff_uni_fra_bou.all{1};
+            % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            % save(obj.fil_pat_rec, 'dff_fra_bou', '-append')
+            
+            % con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            % rec_fil = matfile(obj.fil_pat_rec);
+            % win_len = con_fil.win_len;
+            % fra_rat = con_fil.fra_rat;
+            % isi = con_fil.isi;
+            % piv_fra = rec_fil.piv_fra;
+            % dff_fra_tri.hab = rec_fil.dff_fra_tri;
+            % dff_tri_win.hab = rec_fil.dff_tri_win;
+            % fra_rat = fra_rat.cal.eig;
+            % bas_win_len = win_len.dff.eig;
+            % sti_ons_tri = con_fil.sti_ons_tri;
+            % [~, ~, dff_uni_fra_bou, ~, ~, ~, ~, dff_tri_win.tel.lig, ~, ~, ~, ~] = ...
+            %     cal_rel_cha_uni_poi_tri(piv_fra.tel.acb_exc_all, bas_win_len, sti_ons_tri.vrs.lig, ...
+            %     fra_rat, isi, win_len.dff.pha.drn.tai);
+            % dff_fra_tri.tel.lig = dff_uni_fra_bou{1};
+            % [~, ~, dff_uni_fra_bou, ~, ~, ~, ~, dff_tri_win.tel.tap, ~, ~, ~, ~] = ...
+            %     cal_rel_cha_uni_poi_tri(piv_fra.tel.acb_exc_all, bas_win_len, sti_ons_tri.vrs.tap...
+            %     (2:end), fra_rat, isi, win_len.dff.pha.drn.tai);
+            % dff_fra_tri.tel.tap = dff_uni_fra_bou{1};
+            % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            % save(obj.fil_pat_rec, 'dff_fra_tri', 'dff_tri_win', '-append')
+
+            % above: MAMELI
+
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            win_len = con_fil.win_len;
+            fra_rat = con_fil.fra_rat;
+            isi = con_fil.isi;
+            dff_bin_fra.hab = rec_fil.dff_bin_fra;
+            bou_ons_bou = rec_fil.bou_ons_bou;
+            res_bin.hab = rec_fil.res_bin;
+            r_pai.hab = rec_fil.r_pai;
+            r_blo.hab = rec_fil.r_blo;
+            piv_fra_bin = [piv_pla_fra_bin.tel{:}];
+            fra_rat = fra_rat.cal.eig;
+            sti_ons_tri = con_fil.sti_ons_tri;
+            [~, ~, ~, ~, ~, dff_bin_fra.tel.bou.non, ~, ~, log_bin.tel.non, ~, ~, res_bin.tel.non] = ...
+                cal_rel_cha_uni_poi_tri(piv_fra_bin, win_len.dff.eig, bou_ons_bou.non, fra_rat, ...
+                isi, win_len.dff.pha.drn.tai);% log_uni.srt.exc
+            [~, ~, ~, ~, ~, dff_bin_fra.tel.sho, ~, ~, log_bin.tel.sho, ~, ~, res_bin.tel.sho] = ...
+                cal_rel_cha_uni_poi_tri(piv_fra_bin, win_len.dff.eig, sti_ons_tri.vrs.sho, fra_rat, ...
+                isi, win_len.dff.pha.drn.tai);
+            [~, ~, ~, ~, ~, dff_bin_fra.tel.tap, ~, ~, log_bin.tel.tap, ~, ~, res_bin.tel.tap] = ...
+                cal_rel_cha_uni_poi_tri(piv_fra_bin, win_len.dff.eig, sti_ons_tri.vrs.tap, fra_rat, ...
+                isi, win_len.dff.pha.drn.tai);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            dis_blo = con_fil.dis_blo;
+            r_pai.tel.non = cal_r_pai.sep(dff_bin_fra.tel.bou.non', log_bin.tel);
+            r_pai.tel.sho = cal_r_pai.sep(dff_bin_fra.tel.sho', log_bin.tel);
+            r_pai.tel.tap = cal_r_pai.sep(dff_bin_fra.tel.tap', log_bin.tel);
+            r_blo.tel.non = cal_r_blo(dis_pai.tel, r_pai.tel.non, dis_blo.tel);
+            r_blo.tel.sho = cal_r_blo(dis_pai.tel, r_pai.tel.sho, dis_blo.tel);
+            r_blo.tel.tap = cal_r_blo(dis_pai.tel, r_pai.tel.tap, dis_blo.tel);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            ind_pla_bin.hab = ext_ind_pla_cel(n_bin_pla.hab(:, 1));% for tech reasons, rest all 0.
+            ind_pla_bin.tel = ext_ind_pla_cel(n_bin_pla.tel(:, 1));
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'dff_bin_fra', 'log_bin', 'res_bin', 'r_pai', 'r_blo', ...
+                'ind_pla_bin', '-append')
+
+            rec_fil = matfile(obj.fil_pat_rec);
+            x_bin = rec_fil.x_bin;
+            y_bin = rec_fil.y_bin;
+            z_bin = rec_fil.z_bin;
+            log_bin = rec_fil.log_bin;
+            x_bin = x_bin.tel;
+            y_bin = y_bin.tel;
+            z_bin = z_bin.tel;
+            log_bin = log_bin.tel;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            coo_bin_dim = con_fil.coo_bin_dim;
+            fie = 'uni';
+            coo_sid_bin_dim = con_fil.coo_sid_bin_dim;
+            fie_num = {'axo', 'bou', 'sho', 'srt'};
+            pro_den_bin.lig = cal_pro_den_bin(x_bin, y_bin, log_bin, fie_num, coo_bin_dim.(fie));
+            pro_den_sid_bin.lig = cal_pro_den_sid_bin(x_bin, z_bin, log_bin, fie_num, ...
+                coo_sid_bin_dim.(fie));
+            fie_num = {'axo', 'bou', 'tap', 'srt'};
+            pro_den_bin.tap = cal_pro_den_bin(x_bin, y_bin, log_bin, fie_num, coo_bin_dim.(fie));
+            pro_den_sid_bin.tap = cal_pro_den_sid_bin(x_bin, z_bin, log_bin, fie_num, ...
+                coo_sid_bin_dim.(fie));
+            fie_num = {'axo', 'bou', 'non', 'srt'};
+            pro_den_bin.non = cal_pro_den_bin(x_bin, y_bin, log_bin, fie_num, coo_bin_dim.(fie));
+            pro_den_sid_bin.non = cal_pro_den_sid_bin(x_bin, z_bin, log_bin, fie_num, ...
+                coo_sid_bin_dim.(fie));
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'pro_den_bin', 'pro_den_sid_bin', '-append')
+        end
+        % in
+        function app_par_gli(obj)
+            rec_fil = matfile(obj.fil_pat_rec);
+            x_bin = rec_fil.x_bin;
+            y_bin = rec_fil.y_bin;
+            z_bin = rec_fil.z_bin;
+            log_bin = rec_fil.log_bin;
+            x_bin = x_bin.tel;
+            y_bin = y_bin.tel;
+            z_bin = z_bin.tel;
+            log_bin = log_bin.tel;
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            coo_bin_dim = con_fil.coo_bin_dim;
+            fie = 'uni';
+            coo_sid_bin_dim = con_fil.coo_sid_bin_dim;
+            fie_num = {'axo', 'bou', 'sho', 'srt'};
+            pro_den_bin.lig = cal_pro_den_bin(x_bin, y_bin, log_bin, fie_num, coo_bin_dim.(fie));
+            pro_den_sid_bin.lig = cal_pro_den_sid_bin(x_bin, z_bin, log_bin, fie_num, ...
+                coo_sid_bin_dim.(fie));
+            fie_num = {'axo', 'bou', 'tap', 'srt'};
+            pro_den_bin.tap = cal_pro_den_bin(x_bin, y_bin, log_bin, fie_num, coo_bin_dim.(fie));
+            pro_den_sid_bin.tap = cal_pro_den_sid_bin(x_bin, z_bin, log_bin, fie_num, ...
+                coo_sid_bin_dim.(fie));
+            fie_num = {'axo', 'bou', 'non', 'srt'};
+            pro_den_bin.non = cal_pro_den_bin(x_bin, y_bin, log_bin, fie_num, coo_bin_dim.(fie));
+            pro_den_sid_bin.non = cal_pro_den_sid_bin(x_bin, z_bin, log_bin, fie_num, ...
+                coo_sid_bin_dim.(fie));
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'pro_den_bin', 'pro_den_sid_bin', '-append')
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% behavioral plots
         function plo_tai_ang_met(obj)
@@ -3707,7 +3914,8 @@ classdef rec
             sco_fra_com = mat_fil.sco_fra_com;
             h_fig = plo_tai_com(mat_fil.tai_ang_uni, mat_fil.fra_tim_uni, sco_fra_com.ven);
         end
-        function h_fig = plo_neu_axo_met(obj)
+        %
+        function h_fig = plo_neu_axo_met(obj)%res
             rec_fil = matfile(obj.fil_pat_rec);
             h_fig = plo_neu_axo(rec_fil.piv_pla_row_col, rec_fil.dff_pla_con_row_col, obj.tit, obj.exp);
         end
@@ -3748,6 +3956,7 @@ classdef rec
             log_pla_icx_row_col = mat_fil.log_pla_icx_row_col;
             h_fig = plo_roi(piv_pla_row_col.glu, log_pla_icx_row_col.glu, obj.per_bin_edg, obj.ani);
         end
+        %
         function h_fig = plo_cor_map_met(obj)
             mat_fil = matfile(obj.fil_pat_rec);
             log_pla_icx_row_col = mat_fil.log_pla_icx_row_col;
@@ -3792,21 +4001,7 @@ classdef rec
                 win_len.dff.eig);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo-onl
-        function h_fig = plo_axo_sin_met(obj)
-            rec_fil = matfile(obj.fil_pat_rec);
-            piv_pla_row_col = rec_fil.piv_pla_row_col;
-            dff_bin_fra = rec_fil.dff_bin_fra;
-            dff_fra_bin = dff_bin_fra.bou.all';
-            ind_pla_bin = rec_fil.ind_pla_bin;
-            log_pla_icx_row_col = rec_fil.log_pla_icx_row_col;
-
-            % axo
-            %piv_pla_row_col = piv_pla_row_col.glu;
-
-            h_fig = plo_axo_sin(piv_pla_row_col, dff_fra_bin, ind_pla_bin, ...
-                log_pla_icx_row_col.glu, obj.per_bin_edg);
-        end
-        function h_fig = plo_axo_sin_pix_met(obj)
+        function h_fig = plo_axo_sin_pix_met(obj)% pix dff
             rec_fil = matfile(obj.fil_pat_rec);
             piv_pla_row_col = rec_fil.piv_pla_row_col;
             dff_pix_fra = rec_fil.dff_pix_fra;
@@ -3992,18 +4187,24 @@ classdef rec
             piv_pla_row_col = piv_pla_row_col.ima;
             obj.per_bin_edg = 30;
             roiPositions = rec_fil.roiPositions;
-            h_fig = plo_roi_man(piv_pla_row_col, obj.per_bin_edg, obj.ani, roiPositions);
+            h_fig = plo_roi_man(piv_pla_row_col, obj.per_bin_edg, roiPositions);
         end
         function h_fig = plo_roi_con_sin_met(obj)
             rec_fil = matfile(obj.fil_pat_rec);
             piv_pla_row_col = rec_fil.piv_pla_row_col;
-            % dff_cel_fra = rec_fil.dff_ced_fra;
-            % ced_row_col = rec_fil.ced_row_col;
-            % h_fig = plo_roi_con_sin(piv_pla_row_col.glu, obj.ani, dff_cel_fra, ced_row_col);
             dff_cel_fra = rec_fil.dff_cem_fra;
             cel_row_col = rec_fil.cel_row_col;
             h_fig = plo_roi_con_sin(piv_pla_row_col.ima, obj.ani, dff_cel_fra, cel_row_col, ...
                 rec_fil.roiPositions);
+        end
+        function h_fig = plo_vis_reg_ses_met(obj)
+            rec_fil = matfile(obj.fil_pat_rec);
+            clu_cel_cro = rec_fil.clu_cel_cro;
+            dff_fra_cel_cro = rec_fil.dff_fra_cel_cro;
+            x_off_fra = rec_fil.x_off_fra;
+            y_off_fra = rec_fil.y_off_fra;
+            tai_ang_fra = rec_fil.tai_ang_uni;%194400, should already syn
+            h_fig = plo_vis_reg_ses(clu_cel_cro, dff_fra_cel_cro, x_off_fra, y_off_fra, tai_ang_fra);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gab
         function h_fig = plo_gab_met(obj)
@@ -4060,27 +4261,54 @@ classdef rec
             h_fig = plo_z_sco_cel(z_sco_cel, obj.ani);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gli
+        function h_fig = plo_gli_met(obj)
+            rec_fil = matfile(obj.fil_pat_rec);
+            piv_pla_row_col = rec_fil.piv_pla_row_col;
+            log_pla_icx_row_col = rec_fil.log_pla_icx_row_col;
+            h_fig = plo_roi(piv_pla_row_col, log_pla_icx_row_col.tel, obj.per_bin_edg, obj.ani);
+        end
+        function h_fig = plo_axo_sin_met(obj)
+            rec_fil = matfile(obj.fil_pat_rec);
+            piv_pla_row_col = rec_fil.piv_pla_row_col;
+            dff_bin_fra = rec_fil.dff_bin_fra;
+            ind_pla_bin = rec_fil.ind_pla_bin;
+            log_pla_icx_row_col = rec_fil.log_pla_icx_row_col;
+            
+            % dff_fra_bin = dff_bin_fra.hab.bou.all';
+            % ind_pla_bin = ind_pla_bin.hab;
+            % log_pla_icx_row_col = log_pla_icx_row_col.glu;
+            
+            dff_fra_bin = dff_bin_fra.tel.bou.non';
+            ind_pla_bin = ind_pla_bin.tel;
+            log_pla_icx_row_col = log_pla_icx_row_col.tel;
+            
+            h_fig = plo_axo_sin(piv_pla_row_col, dff_fra_bin, ind_pla_bin, ...
+                log_pla_icx_row_col, obj.per_bin_edg);
+        end
+        %
         function h_fig = plo_tai_dff_met(obj, fie)
             rec_fil = matfile(obj.fil_pat_rec);
             tai_ang_fra = rec_fil.tai_ang_fra;
             piv_fra = rec_fil.piv_fra;
-            %bou_ons_bou = rec_fil.bou_ons_bou;%editor
-            %h_fig = plo_tai_dff(tai_ang_fra.dow.raw, piv_fra.(fie), bou_ons_bou.all);
-            %h_fig = plo_tai_dff(tai_ang_fra.dow.raw, piv_fra.(fie), bou_ons_bou.non_hig);
             acb_ons_bou = rec_fil.acb_ons_bou;
-            %h_fig = plo_tai_dff(tai_ang_fra.dow.raw, piv_fra.(fie), acb_ons_bou.all);
             dur_acb_bou = rec_fil.dur_acb_bou;
             acb_off_bou = rec_fil.acb_off_bou;
-            h_fig = plo_tai_dff(tai_ang_fra.dow.raw, piv_fra.(fie), acb_ons_bou.all, dur_acb_bou.all...
-                , acb_off_bou.all);
+
+            % tailbeats extracted from the downsampled signal.
+            h_fig = plo_tai_dff(tai_ang_fra.dow.raw, piv_fra.tel.(fie), acb_ons_bou.all, ...
+                dur_acb_bou.all, acb_off_bou.all);
         end
         function h_fig = plo_bou_sig_met(obj, fie)
             rec_fil = matfile(obj.fil_pat_rec);
             dff_fra_bou = rec_fil.dff_fra_bou;
-            % dur_acb_bou = rec_fil.dur_acb_bou;
-            % h_fig = plo_bou_sig(dff_fra_bou.(fie), dur_acb_bou.non);
-            dur_acb_bou = rec_fil.dur_pcb_bou;
-            h_fig = plo_bou_sig(dff_fra_bou.(fie), dur_acb_bou.non);
+            %dur_acb_bou = rec_fil.dur_acb_bou;
+            %h_fig = plo_bou_sig(dff_fra_bou.hab.(fie), dur_acb_bou.non);
+            %h_fig = plo_bou_sig(dff_fra_bou.tel.(fie), dur_acb_bou.non);
+            
+            
+            dur_pcb_bou = rec_fil.dur_pcb_bou;
+            %h_fig = plo_bou_sig(dff_fra_bou.hab.(fie), dur_pcb_bou.non);
+            h_fig = plo_bou_sig(dff_fra_bou.tel.(fie), dur_pcb_bou.non);
         end
         function h_fig = plo_tri_sig_met(obj, fie)
             rec_fil = matfile(obj.fil_pat_rec);
@@ -4221,10 +4449,6 @@ classdef rec
             exp_fig(h_fig, [char(obj.pro_dir) '\cor_map_exc_inh_spo_bou_non.png'])
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo onl
-        function sav_fig_axo_sin(obj)
-            h_fig = plo_axo_sin_met(obj);
-            exp_fig(h_fig, [char(obj.pro_dir) '\axo_sin.png'])
-        end
         function sav_fig_axo_sin_pix(obj)
             h_fig = plo_axo_sin_pix_met(obj);
             exp_fig(h_fig, [char(obj.pro_dir) '\axo_sin_pix.png'])
@@ -4312,97 +4536,48 @@ classdef rec
             exp_fig(h_fig, [char(obj.pro_dir) '\z_sco_cel.png'])
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gli
+        function sav_fig_gli(obj)
+            h_fig = plo_gli_met(obj);
+            exp_fig(h_fig, [char(obj.pro_dir) '\gli.png'])
+        end
+        function sav_fig_axo_sin(obj)
+            h_fig = plo_axo_sin_met(obj);
+            %exp_fig(h_fig, [char(obj.pro_dir) '\axo_sin.png'])
+            exp_fig(h_fig, [char(obj.pro_dir) '\axo_sin_tel.png'])
+        end
         function sav_fig_tai_dff(obj)
-            % fie = 'all';
+            % fie = 'acb_exc_ven_exc';
             % h_fig = plo_tai_dff_met(obj, fie);
             % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % fie = 'dor';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % fie = 'ven_exc';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
+            % h_fig = plo_bou_sig_met(obj, fie);
+            % exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
 
-            % fie = 'nhe_all';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % fie = 'nhe_dor';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % fie = 'nhe_ven_exc';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-
-            % fie = 'acb_all_all';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % h_fig = plo_bou_sig_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
-            % fie = 'acb_all_dor';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % h_fig = plo_bou_sig_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
-            % fie = 'acb_all_ven_exc';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % h_fig = plo_bou_sig_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
-            % 
-            % fie = 'acb_exc_all';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % h_fig = plo_bou_sig_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
-            % fie = 'acb_exc_dor';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % h_fig = plo_bou_sig_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
-            fie = 'acb_exc_ven_exc';
+            fie = 'acb_exc_all';
             h_fig = plo_tai_dff_met(obj, fie);
-            exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
+            exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_tel_' fie '.png'])
             h_fig = plo_bou_sig_met(obj, fie);
-            exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
-
-            % fie = 'acb_inh_all';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % h_fig = plo_bou_sig_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
-            % fie = 'acb_inh_dor';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % h_fig = plo_bou_sig_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
-            % fie = 'acb_inh_ven_exc';
-            % h_fig = plo_tai_dff_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tai_dff_' fie '.png'])
-            % h_fig = plo_bou_sig_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
+            exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_tel_' fie '.png'])
         end
         function sav_fig_bou_sig(obj)
-            fie = 'pcb_exc_ven_exc';
+            % fie = 'pcb_exc_ven_exc';
+            % h_fig = plo_bou_sig_met(obj, fie);
+            % exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
+
+            fie = 'pcb_exc_all';
             h_fig = plo_bou_sig_met(obj, fie);
-            exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_' fie '.png'])
+            exp_fig(h_fig, [char(obj.pro_dir) '\bou_sig_tel_' fie '.png'])
         end
         function sav_fig_tri_sig(obj)
-            % fie = 'all';
+            % fie = 'lig';
             % h_fig = plo_tri_sig_met(obj, fie);
             % exp_fig(h_fig, [char(obj.pro_dir) '\tri_sig_' fie '.png'])
-            % fie = 'dor';
-            % h_fig = plo_tri_sig_met(obj, fie);
-            % exp_fig(h_fig, [char(obj.pro_dir) '\tri_sig_' fie '.png'])
-            % fie = 'ven_exc';
+            % fie = 'tap';
             % h_fig = plo_tri_sig_met(obj, fie);
             % exp_fig(h_fig, [char(obj.pro_dir) '\tri_sig_' fie '.png'])
 
-            fie = 'lig';
+            fie = 'tel';
             h_fig = plo_tri_sig_met(obj, fie);
-            exp_fig(h_fig, [char(obj.pro_dir) '\tri_sig_' fie '.png'])
-            fie = 'tap';
-            h_fig = plo_tri_sig_met(obj, fie);
-            exp_fig(h_fig, [char(obj.pro_dir) '\tri_sig_' fie '.png'])
+            exp_fig(h_fig, [char(obj.pro_dir) '\tri_sig_' fie '_lig_tap.png'])
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% spo
         function sav_fig_spo(obj)
@@ -4481,33 +4656,14 @@ classdef rec
             y_off_fra = rec_fil.y_off_fra;
             tim_syn_fra = rec_fil.tim_syn_fra;
             tai_ang_fra = rec_fil.tai_ang_uni;
-            
-            % lot_fra = rec_fil.lot_fra;
-            % lov_fra = rec_fil.lov_fra;
-            % tai_ang_fra = tai_ang_fra(lot_fra);
-            % piv_row_col_pcx_fra = gen_piv_row_col_pcx_fra(obj.fil_pat_ima_fis, ...
-            %     fix_pat_ima_cal_pla{pla}, sti_ons, dff_fra_cel, log_cel_pla, low_in_ani.rel, ...
-            %     high_in_ani.rel, x_off_fra(lov_fra), y_off_fra(lov_fra), tai_ang_fra, tim_syn_fra);
-
             piv_row_col_pcx_fra = gen_piv_row_col_pcx_fra(obj.fil_pat_ima_fis, ...
                 fix_pat_ima_cal_pla{pla}, sti_ons, dff_fra_cel, log_cel_pla, low_in_ani.rel, ...
                 high_in_ani.rel, x_off_fra, y_off_fra, tai_ang_fra, tim_syn_fra);
-            
             fil_pat_tif = strcat(obj.pro_dir, "\ani.tif");
-            % Suppose your array is called img_seq (HxWx3xN)
             save_rgb_sequence_as_tif(piv_row_col_pcx_fra, fil_pat_tif);
-
-            % con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-            % fra_rat = con_fil.fra_rat;
-            % fra_rat = fra_rat.cal.eig;
-            % fil_pat_via = strcat(obj.pro_dir, "\ani.mp4");
-            % v = VideoWriter(fil_pat_via, 'MPEG-4');
-            % %v.FrameRate = round(fra_rat*5);
-            % v.FrameRate = round(fra_rat);
-            % open(v);
-            % writeVideo(v, piv_row_col_pcx_fra);
-            % close(v);
         end
+        
+        % only for tai:
         function sav_vid_tai(obj, sti_num)
             load(obj.fil_pat_exp, 'sti_ons')
             sti_ons = sti_ons(sti_num);
@@ -4525,6 +4681,75 @@ classdef rec
             % Suppose your array is called img_seq (HxWx3xN)
             save_grayscale_sequence_as_tif(piv_row_col_fra, fil_pat_tif);
         end
+        
+        
+        % cel
+        function sav_vid_ani_cel(obj)
+            fix_pat_ima_cal_pla = obj.fil_pat_ima_cal_pla;
+            %mid_poi = 150; % 60 + 90
+            %mid_poi = 650;
+            mid_poi = 1050;
+            pla = 3;
+            rec_fil = matfile(obj.fil_pat_rec);
+            low_in_ani = rec_fil.low_in_ani;
+            high_in_ani = rec_fil.high_in_ani;
+            x_off_fra = rec_fil.x_off_fra;
+            y_off_fra = rec_fil.y_off_fra;
+            tim_syn_fra = rec_fil.tim_syn_fra;
+            tai_ang_fra = rec_fil.tai_ang_uni;
+            if obj.ani == "esp247"
+                sta_row = 740;
+                sta_col = 270;
+                n_row = 400;
+                n_col = 200;
+            elseif obj.ani == "esp249"
+                sta_row = 630;
+                sta_col = 310;
+                n_row = 330;
+                n_col = 160;
+            end
+            piv_row_col_pcx_fra = gen_piv_row_col_pcx_fra_cel(obj.fil_pat_ima_fis, ...
+                fix_pat_ima_cal_pla{pla}, mid_poi, low_in_ani.rel, ...
+                high_in_ani.rel, x_off_fra, y_off_fra, tai_ang_fra, tim_syn_fra, ...
+                rec_fil.log_roi_row_col, rec_fil.log_row_col, sta_row, sta_col, n_row, n_col);
+            %fil_pat_tif = strcat(obj.pro_dir, "\ani_cel_150.tif");
+            fil_pat_tif = strcat(obj.pro_dir, strcat("\ani_cel_", num2str(mid_poi), ".tif"));
+            save_rgb_sequence_as_tif(piv_row_col_pcx_fra, fil_pat_tif);
+        end
+
+
+
+        % sli
+        function sav_vid_ani_sli(obj, mid_poi, dev)
+            fix_pat_ima_cal_pla = obj.fil_pat_ima_cal_pla;
+            pla = 3;
+            rec_fil = matfile(obj.fil_pat_rec);
+            low_in_ani = rec_fil.low_in_ani;
+            high_in_ani = rec_fil.high_in_ani;
+            x_off_fra = rec_fil.x_off_fra;
+            y_off_fra = rec_fil.y_off_fra;
+            tim_syn_fra = rec_fil.tim_syn_fra;
+            tai_ang_fra = rec_fil.tai_ang_uni;
+            if obj.ani == "esp247"
+                sta_row = 740;
+                sta_col = 270;
+                n_row = 400;
+                n_col = 200;
+            elseif obj.ani == "esp249"
+                sta_row = 630;
+                sta_col = 310;
+                n_row = 330;
+                n_col = 160;
+            end
+            piv_row_col_pcx_fra = gen_piv_row_col_pcx_fra_sli(obj.fil_pat_ima_fis, ...
+                fix_pat_ima_cal_pla{pla}, mid_poi, low_in_ani.rel, high_in_ani.rel, x_off_fra, ...
+                y_off_fra, tai_ang_fra, tim_syn_fra, sta_row, sta_col, n_row, n_col, ...
+                rec_fil.dff_fra_cel_cro, rec_fil.clu_cel_cro, rec_fil.dfm_row_col_fra, dev);
+            fil_pat_tif = strcat(obj.pro_dir, strcat("\ani_sli_", num2str(mid_poi), ".tif"));
+            save_rgb_sequence_as_tif(piv_row_col_pcx_fra, fil_pat_tif);
+        end
+        
+        
         % analyses
         function [fra_tim_bro, tai_ang_bro] = ext_tai_dat_bro_met(obj)
             [fra_tim_bro, tai_ang_bro] = ext_tai_dat_bro(obj.fil_pat_tai, obj.fil_pat_rec, obj.fil_pat_ima_fis, obj.fil_pat_exp);
@@ -4591,41 +4816,6 @@ syn_ons(1) = fra_tim(ind_one);
 fra_num_sta_two = round(n_fra*(9/10));
 ave_int_fra_two = ave_int_fra(fra_num_sta_two:end);
 mid_ave_int_fra = mean([min(ave_int_fra_two) median(ave_int_fra_two)]);
-ind_two = find(ave_int_fra_two < mid_ave_int_fra, 1);
-syn_ons(2) = fra_tim(fra_num_sta_two + ind_two - 1);
-% determine the relationship between the "second"s
-rea_dur = end_tim;
-man_dur = diff(syn_ons);
-man_sec = rea_dur/man_dur;
-
-% determine the initial delay - 30 - ... sec
-ini_del = syn_rel_tim - syn_ons(1)*man_sec;
-end
-
-function [man_sec, ini_del] = ext_syn_par_axo(fil_pat_ima_fis, fil_pat_exp)% synch onsets !!!
-load(fil_pat_exp, 'syn_rel_tim', 'end_tim', 'fra_rat')
-[fra_tim, n_fra] = ext_tem_fra_dat(fil_pat_ima_fis);
-loa = load(fil_pat_ima_fis, 'data');
-fra = loa.data;
-clear loa
-%
-ave_int_fra = reshape(mean(mean(fra)), [n_fra 1]);
-syn_ons = nan(2, 1);
-% one
-dur_syn = 1;
-fra_num_sta_one = find(fra_tim > syn_rel_tim/2, 1);
-log_fra_one = fra_tim > syn_rel_tim/2 & fra_tim < syn_rel_tim + dur_syn;
-ave_int_fra_one = ave_int_fra(log_fra_one);
-log_fra_pre = fra_tim > 15 & fra_tim < 20;
-ave_int_fra_pre = ave_int_fra(log_fra_pre);
-mid_ave_int_fra = mean([min(ave_int_fra_one) max(ave_int_fra_pre)]);
-ind_one = find(ave_int_fra_one < mid_ave_int_fra, 1);
-syn_ons(1) = fra_tim(fra_num_sta_one + ind_one - 1);
-% two
-fra_num_sta_two = round(n_fra*(7/10));
-ave_int_fra_two = ave_int_fra(fra_num_sta_two:end);
-ave_int_fra_pos = ave_int_fra(fra_num_sta_two:fra_num_sta_two + fra_rat*5);
-mid_ave_int_fra = mean([min(ave_int_fra_two) max(ave_int_fra_pos)]);
 ind_two = find(ave_int_fra_two < mid_ave_int_fra, 1);
 syn_ons(2) = fra_tim(fra_num_sta_two + ind_two - 1);
 % determine the relationship between the "second"s
@@ -5840,12 +6030,18 @@ dff_cel_fra = dff_fra_cel';
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 n_kxx = con_fil.n_kxx;
 [n_cel, n_fra, ioi_kxx] = ext_clu(dff_cel_fra, n_kxx);
-r_mat = zeros(n_cel, n_fra);
-parfor i = 1:n_cel
-    dff_sli_fra = dff_cel_fra(i, :);
-    r_mat(i, :) = dff_sli_fra(randperm(n_fra));% per cell, frames are permuted.
+r_cel_fra = zeros(n_cel, n_fra);
+% parfor i = 1:n_cel
+%     dff_sli_fra = dff_cel_fra(i, :);
+%     r_mat(i, :) = dff_sli_fra(randperm(n_fra));% per cell, frames are permuted.
+% end
+
+parfor fra = 1:n_fra
+    dff_sli_cel = dff_cel_fra(:, fra);
+    r_cel_fra(:, fra) = dff_sli_cel(randperm(n_cel));% per frame, cells are permuted.
 end
-[~, ~, ioi_shu_kxx] = ext_clu(r_mat, n_kxx);
+
+[~, ~, ioi_shu_kxx] = ext_clu(r_cel_fra, n_kxx);
 del_ioi_kxx = ioi_shu_kxx - ioi_kxx;
 end
 
@@ -6643,6 +6839,10 @@ dis_fie_roi_cel.exc.lef = pdist2(coo_roi_dim(log_roi.lef.(fie_mod).exc, :), coo_
 dis_fie_roi_cel.exc.rig = pdist2(coo_roi_dim(log_roi.rig.(fie_mod).exc, :), coo_cel_dim(...
     log_cel_rig, :));
 dis_fie_pai.(fie_mod).exc = [dis_fie_roi_cel.exc.lef(:); dis_fie_roi_cel.exc.rig(:)];
+% exc axo | if fie_cel , combined with that
+
+
+
 %
 dis_fie_roi_cel.inh.lef = pdist2(coo_roi_dim(log_roi.lef.(fie_mod).inh, :), coo_cel_dim(...
     log_cel_lef, :));
@@ -6651,18 +6851,63 @@ dis_fie_roi_cel.inh.rig = pdist2(coo_roi_dim(log_roi.rig.(fie_mod).inh, :), coo_
 dis_fie_pai.(fie_mod).inh = [dis_fie_roi_cel.inh.lef(:); dis_fie_roi_cel.inh.rig(:)];
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo-onl
-function log_pla_icx_row_col = ext_log_pla_icx_row_col(piv_pla_row_col, log_pla_row_col, low_in, ...
-    per_bin_edg)
+function [log_pla_icx_row_col, n_pix_pla, n_pix, piv_pla_fra_pix, x_pla_pix, y_pla_pix, z_pla_pix, ...
+    piv_pla_fra_bin, x_bin, y_bin, z_bin, dis_bin_bin, coo_bin_dim, n_bin_pla, n_bin, log_bin, ...
+    dis_pai, ind_pla_pix] = cal_axo_pre(piv_pla_row_col, log_pla_row_col, low_in, obj, fie)
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 n_pla = con_fil.n_pla;
 fun_pla = con_fil.fun_pla;
-log_pla_icx_row_col.glu = cell(n_pla.neu.raw, 1);
-thr = 0.1;
-log_pla_row_col.exc = ext_log_pla_row_col(piv_pla_row_col, per_bin_edg, thr);
+log_pla_icx_row_col = ext_log_pla_icx_row_col(piv_pla_row_col, log_pla_row_col, low_in, ...
+    obj.per_bin_edg, fie);
+[n_pix_pla, n_pix] = ext_n_pix_pla(log_pla_icx_row_col);
+ind_pla_pix = ext_ind_pla_cel(n_pix_pla);
+piv_pla_fra_pix = cell(n_pla.neu.raw, 1);
 for pla_num = fun_pla.raw
-    log_pla_icx_row_col.glu{pla_num, 1} = (piv_pla_row_col{pla_num, 1}.*...
-        uint16(log_pla_row_col.axo{pla_num, 1}) > low_in.abs);
-    log_pla_icx_row_col.glu{pla_num, 1}(log_pla_row_col.exc{pla_num, 1}) = false;
+
+    % for axo
+    
+    % obj_ima_cal = matfile(obj.fil_pat_ima_cal_glu_pla{pla_num});
+
+    obj_ima_cal = matfile(obj.fil_pat_ima_cal_pla{pla_num});
+    piv_row_col_fra = obj_ima_cal.im;
+    piv_pla_fra_pix{pla_num} = ext_sig_roi(piv_row_col_fra, log_pla_icx_row_col...
+        {pla_num});% only for the identified pixels !
+end
+[x_pla_pix, y_pla_pix, z_pla_pix] = ext_xyz_pla_pix(log_pla_icx_row_col, ...
+    obj.factor_meter, obj.iniStruct);
+%%%%%%%%%%%% BIN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[piv_pla_fra_bin, x_bin, y_bin, z_bin, dis_bin_bin.all] = cal_piv_pla_fra_bin(...
+    piv_pla_fra_pix, log_pla_icx_row_col, x_pla_pix, y_pla_pix, z_pla_pix);
+coo_bin_dim = [x_bin y_bin z_bin];
+%
+n_bin_pla = cellfun(@(x) size(x, 2), piv_pla_fra_bin);
+n_bin.all = length(x_bin);
+log_bin.all.all = true(n_bin.all, 1);
+n_bin.dor = sum(n_bin_pla(fun_pla.dor));
+log_bin.dor = [false(n_bin_pla(1), 1); true(n_bin.dor, 1); false(n_bin.all - n_bin_pla(...
+    1) - n_bin.dor, 1)];
+log_bin.lef.all = y_bin > obj.y_mid;
+log_bin.rig.all = ~log_bin.lef.all;
+dis_bin_bin.lef = dis_bin_bin.all(log_bin.lef.all, log_bin.lef.all);
+dis_pai_lef = ext_upp(dis_bin_bin.lef);
+dis_bin_bin.rig = dis_bin_bin.all(log_bin.rig.all, log_bin.rig.all);
+dis_pai_rig = ext_upp(dis_bin_bin.rig);
+dis_pai = [dis_pai_lef; dis_pai_rig];
+end
+%
+function log_pla_icx_row_col = ext_log_pla_icx_row_col(piv_pla_row_col, log_pla_row_col, low_in, ...
+    per_bin_edg, fie)
+% fie = 'axo';
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_pla = con_fil.n_pla;
+fun_pla = con_fil.fun_pla;
+log_pla_icx_row_col = cell(n_pla.neu.raw, 1);
+thr = 0.1;
+log_pla_row_col.exc = ext_log_pla_row_col(piv_pla_row_col, per_bin_edg, thr);% to exclude
+for pla_num = fun_pla.raw
+    log_pla_icx_row_col{pla_num, 1} = (piv_pla_row_col{pla_num, 1}.*...
+        uint16(log_pla_row_col.(fie){pla_num, 1}) > low_in.abs);
+    log_pla_icx_row_col{pla_num, 1}(log_pla_row_col.exc{pla_num, 1}) = false;
 end
 end
 
@@ -6784,81 +7029,81 @@ end
 % clu_pla_k_row_col = ext_loa_pla_pcx_row_col(clu_pla_pix_k, log_pla_icx_row_col);
 % end
 
-% function [piv_pla_fra_bin, x_bin, y_bin, z_bin, dis_bin_bin, n_bin] = cal_piv_pla_fra_bin(...
-%     piv_pla_fra_pix, log_pla_row_col, x_pla_pix, y_pla_pix, z_pla_pix)
-% con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-% fun_pla = con_fil.fun_pla;
-% n_fra = con_fil.n_fra;
-% n_pla = con_fil.n_pla;
-% piv_pla_fra_bin = cell(n_pla.neu.raw);
-% 
-% x_bin = [];
-% y_bin = [];
-% z_bin = [];
-% for pla = fun_pla.raw
-%     disp(pla)
-%     piv_fra_pix = piv_pla_fra_pix{pla};
-%     piv_fra_pix = piv_fra_pix(1:n_fra.cal.ses.eig, :);
-%     [ind_bin_pix, n_bin] = cal_ind_bin_pix(log_pla_row_col{pla});
-%     piv_pla_fra_bin{pla} = nan(n_fra.cal.ses.eig, n_bin);
-% 
-%     x_pix = x_pla_pix{pla};
-%     x_bin_tem = nan(n_bin, 1);
-%     y_pix = y_pla_pix{pla};
-%     y_bin_tem = nan(n_bin, 1);
-%     z_pix = z_pla_pix{pla};
-%     z_bin_tem = nan(n_bin, 1);
-%     for bin_num = 1:n_bin
-%         ind_pix = ind_bin_pix{bin_num};
-%         piv_pla_fra_bin{pla}(:, bin_num) = mean(piv_fra_pix(:, ind_pix), 2);
-% 
-%         x_bin_tem(bin_num) = mean(x_pix(ind_pix));
-%         y_bin_tem(bin_num) = mean(y_pix(ind_pix));
-%         z_bin_tem(bin_num) = mean(z_pix(ind_pix));
-%     end
-%     x_bin = [x_bin; x_bin_tem];
-%     y_bin = [y_bin; y_bin_tem];
-%     z_bin = [z_bin; z_bin_tem];
-% end
-% dis_bin_bin = squareform(pdist([x_bin y_bin z_bin]));
-% n_bin = length(x_bin);
-% end%ed
+function [piv_pla_fra_bin, x_bin, y_bin, z_bin, dis_bin_bin, n_bin] = cal_piv_pla_fra_bin(...
+    piv_pla_fra_pix, log_pla_row_col, x_pla_pix, y_pla_pix, z_pla_pix)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+fun_pla = con_fil.fun_pla;
+n_fra = con_fil.n_fra;
+n_pla = con_fil.n_pla;
+piv_pla_fra_bin = cell(n_pla.neu.raw);
 
-% function [ind_bin_pix, n_bin] = cal_ind_bin_pix(log_row_col)
-% bin_siz = 10;
-% n_row.cal = 1536;
-% n_col.cal = 850;
-% % Calculate the new size after binning
-% newRows = floor(n_row.cal / bin_siz);
-% newCols = floor(n_col.cal / bin_siz);
-% % Initialize cell array to store linear indices for each bin
-% binLinearIndices = cell(newRows, newCols);
-% % Perform image binning and store linear indices
-% for i = 1:newRows
-%     for j = 1:newCols
-%         % Define the indices of the current bin
-%         rowIndices = (i-1)*bin_siz+1:i*bin_siz;
-%         colIndices = (j-1)*bin_siz+1:j*bin_siz;
-%         % Extract linear indices for the current bin
-%         [colMesh, rowMesh] = meshgrid(colIndices, rowIndices);
-%         binLinearIndices{i, j} = sub2ind([n_row.cal, n_col.cal], rowMesh(:), colMesh(:));
-%     end
-% end
-% % Find the bins with at least one linear index from 'ind_pix'
-% lin_ind_pix = find(log_row_col);% going through columns
-% ind_bin_pix = cell(newRows, newCols);
-% for i = 1:newRows
-%     for j = 1:newCols
-%         % Check if the current bin has any linear indices from 'ind_pix'
-%         if any(ismember(binLinearIndices{i, j}, lin_ind_pix))
-%             [~, ind_bin_pix{i, j}] = intersect(lin_ind_pix, binLinearIndices{i, j});
-%         end
-%     end
-% end
-% % Remove empty cells from the cell array
-% ind_bin_pix = ind_bin_pix(~cellfun('isempty', ind_bin_pix));
-% n_bin = length(ind_bin_pix);
-% end%ed
+x_bin = [];
+y_bin = [];
+z_bin = [];
+for pla = fun_pla.raw
+    disp(pla)
+    piv_fra_pix = piv_pla_fra_pix{pla};
+    piv_fra_pix = piv_fra_pix(1:n_fra.cal.ses.eig.sti, :);
+    [ind_bin_pix, n_bin] = cal_ind_bin_pix(log_pla_row_col{pla});
+    piv_pla_fra_bin{pla} = nan(n_fra.cal.ses.eig.sti, n_bin);
+
+    x_pix = x_pla_pix{pla};
+    x_bin_tem = nan(n_bin, 1);
+    y_pix = y_pla_pix{pla};
+    y_bin_tem = nan(n_bin, 1);
+    z_pix = z_pla_pix{pla};
+    z_bin_tem = nan(n_bin, 1);
+    for bin_num = 1:n_bin
+        ind_pix = ind_bin_pix{bin_num};
+        piv_pla_fra_bin{pla}(:, bin_num) = mean(piv_fra_pix(:, ind_pix), 2);
+
+        x_bin_tem(bin_num) = mean(x_pix(ind_pix));
+        y_bin_tem(bin_num) = mean(y_pix(ind_pix));
+        z_bin_tem(bin_num) = mean(z_pix(ind_pix));
+    end
+    x_bin = [x_bin; x_bin_tem];
+    y_bin = [y_bin; y_bin_tem];
+    z_bin = [z_bin; z_bin_tem];
+end
+dis_bin_bin = squareform(pdist([x_bin y_bin z_bin]));
+n_bin = length(x_bin);
+end%ed
+
+function [ind_bin_pix, n_bin] = cal_ind_bin_pix(log_row_col)
+bin_siz = 10;
+n_row.cal = 1536;
+n_col.cal = 850;
+% Calculate the new size after binning
+newRows = floor(n_row.cal / bin_siz);
+newCols = floor(n_col.cal / bin_siz);
+% Initialize cell array to store linear indices for each bin
+binLinearIndices = cell(newRows, newCols);
+% Perform image binning and store linear indices
+for i = 1:newRows
+    for j = 1:newCols
+        % Define the indices of the current bin
+        rowIndices = (i-1)*bin_siz+1:i*bin_siz;
+        colIndices = (j-1)*bin_siz+1:j*bin_siz;
+        % Extract linear indices for the current bin
+        [colMesh, rowMesh] = meshgrid(colIndices, rowIndices);
+        binLinearIndices{i, j} = sub2ind([n_row.cal, n_col.cal], rowMesh(:), colMesh(:));
+    end
+end
+% Find the bins with at least one linear index from 'ind_pix'
+lin_ind_pix = find(log_row_col);% going through columns
+ind_bin_pix = cell(newRows, newCols);
+for i = 1:newRows
+    for j = 1:newCols
+        % Check if the current bin has any linear indices from 'ind_pix'
+        if any(ismember(binLinearIndices{i, j}, lin_ind_pix))
+            [~, ind_bin_pix{i, j}] = intersect(lin_ind_pix, binLinearIndices{i, j});
+        end
+    end
+end
+% Remove empty cells from the cell array
+ind_bin_pix = ind_bin_pix(~cellfun('isempty', ind_bin_pix));
+n_bin = length(ind_bin_pix);
+end%ed
 
 function h_fig = plo_clu_map_ani_spl(x_pix, y_pix, z_pix, piv_col_pcx, clu_pix, mar_siz, ...
     vie_ang_dir)
@@ -7000,7 +7245,7 @@ dff_fra_cel = smoothdata(dff_fra_cel, met, n_fra.dff.eig.smo);
 log_fra = tim_fra > spo_per_ons & tim_fra < spo_per_off;
 [clu_cel_k.ong, ~] = com_clu_cel_k(dff_fra_cel(log_fra, :));% single per
 [ioi_kxx, ioi_shu_kxx, del_ioi_kxx] = ext_clu_ana(dff_fra_cel(log_fra, :));
-[clu_cel, clu_fid] = cal_clu_cel(dff_fra_cel);% ongoing activity is selected, 2 periods
+[clu_cel, clu_fid] = cal_clu_cel(dff_fra_cel);% ongoing activity is selected from con_fil!, 2 periods
 % clu_cel.one, clu_cel.two
 r_pai.ong = cal_r_pai.tog(dff_fra_cel(log_fra, :));
 dis_blo = con_fil.dis_blo;
@@ -7015,15 +7260,6 @@ r_pai.one.shu = shu_var_row.ent(r_pai.one.dat);
 log_fra_two = tim_fra > mid_poi & tim_fra < spo_per_off;
 r_pai.two.dat = cal_r_pai.tog(dff_fra_cel(log_fra_two, :));
 r_pai.two.shu = shu_var_row.ent(r_pai.two.dat);
-end
-
-function [r_pai, r_blo] = cal_r_pai_r_blo(dff_cel_fra, dis_pai)
-r_pai = cal_r_pai.tog(dff_cel_fra');
-con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-dis_blo = con_fil.dis_blo;
-dis_blo = dis_blo.rap.thr;
-r_blo.dat = cal_pcc_blo(dis_pai, r_pai, dis_blo);
-r_blo.shu = cal_r_blo_shu(dis_pai, r_pai, dis_blo);
 end
 
 % 2 periods
@@ -7044,6 +7280,15 @@ end
 clu_cel.two = kmeans(dff_cel_fra, k, 'Distance', 'correlation', 'Options', options, 'start', ...
     startpoint);
 [clu_fid.dat, clu_fid.shu] = cal_clu_fid(clu_cel.one, clu_cel.two);
+end
+
+function [r_pai, r_blo] = cal_r_pai_r_blo(dff_cel_fra, dis_pai)
+r_pai = cal_r_pai.tog(dff_cel_fra');
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+dis_blo = con_fil.dis_blo;
+dis_blo = dis_blo.rap.thr;
+r_blo.dat = cal_pcc_blo(dis_pai, r_pai, dis_blo);
+r_blo.shu = cal_r_blo_shu(dis_pai, r_pai, dis_blo);
 end
 
 function [res, s_res] = cal_clu_fid(IDX_b, IDX_d)
@@ -7142,6 +7387,136 @@ end
 % Extract ROI positions before closing the figure
 roiPositions = cellfun(@(h) h.Position, roiList(isvalid([roiList{:}])), 'UniformOutput', false);
 end
+
+
+
+
+function roiPositions = ext_cel_row_col_cro(pic_row_col_fra, per_bin_edg)
+[~, fig_wid, fig_hei] = fig;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+piv_row_col = im2uint16(mean(im2double(pic_row_col_fra), 3));% uint16, max eg 2214
+
+
+[high_in, low_in] = ext_hig_low.pea(piv_row_col, per_bin_edg);
+
+piv_row_col = imadjust(piv_row_col, [low_in.rel high_in.rel]);% contrast limits, 
+% output % uint16, max 65535 - grayscale
+%sho_ima.gra(hax, piv_row_col)
+
+imshow(piv_row_col, [])
+
+% Step 1: Let user draw ROIs
+roiList = {};
+keepDrawing = true;
+while keepDrawing
+    answer = input('Add another ROI? Type yes to confirm: ','s');
+    if ~strcmpi(answer,'yes')
+        disp('breaking');
+        break;
+    end
+
+    h = drawfreehand('Color','r');
+    if isempty(h) || isempty(h.Position)
+        % If ROI is empty (e.g. Esc was pressed), skip
+        delete(h);
+        continue;
+    end
+    roiList{end+1} = h; %#ok<AGROW>
+end
+
+% Step 3: Remove invalid ROIs and build cel_row_col
+roiList = roiList(isvalid([roiList{:}]));  % keep only valid handles
+
+% Extract ROI positions before closing the figure
+roiPositions = cellfun(@(h) h.Position, roiList(isvalid([roiList{:}])), 'UniformOutput', false);
+end
+
+function roiPositions = cor_cel_row_col_cro(pic_row_col_fra, per_bin_edg, roiPositions)
+[~, fig_wid, fig_hei] = fig;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+piv_row_col = im2uint16(mean(im2double(pic_row_col_fra), 3));% uint16, max eg 2214
+
+[high_in, low_in] = ext_hig_low.pea(piv_row_col, per_bin_edg);
+
+piv_row_col = imadjust(piv_row_col, [low_in.rel high_in.rel]); % contrast limits
+% output: uint16, max 65535 - grayscale
+
+imshow(piv_row_col, [])
+
+hold on;
+roiList = gobjects(numel(roiPositions),1);
+for k = 1:numel(roiPositions)
+    roiList(k) = drawfreehand('Position', roiPositions{k}, 'Color', 'r');
+end
+
+% Step 1: Let user draw ROIs interactively
+while true
+    answer = input('Add another ROI? Type yes to confirm: ','s');
+    if ~strcmpi(answer,'yes')
+        disp('breaking');
+        break;
+    end
+
+    h = drawfreehand('Color','r');
+    if isempty(h) || isempty(h.Position)
+        % If ROI is empty (e.g. Esc was pressed), skip
+        delete(h);
+        continue;
+    end
+    roiList(end+1) = h; % <-- now works (gobjects array)
+end
+
+% Step 2: Remove invalid ROIs and build cel_row_col
+roiList = roiList(isvalid(roiList)); % keep only valid handles
+
+% Step 3: Extract ROI positions before closing the figure
+roiPositions = arrayfun(@(h) h.Position, roiList(isvalid(roiList)), 'UniformOutput', false);
+end
+
+function [log_row_col, log_roi_row_col] = roi_masks_from_positions(roiPositions, n_row, n_col)
+% roi_masks_from_positions
+%
+% INPUTS
+%   imSize        : [nRows nCols] of the image
+%   roiPositions  : cell array, each cell is Nx2 [x y] ROI coordinates
+%
+% OUTPUTS
+%   log_row_col       : logical matrix, true outside ROIs, false inside ROIs
+%   log_roi_row_col   : cell array of logical masks, one per ROI
+
+imSize = [n_row n_col];
+
+nRows = imSize(1);
+nCols = imSize(2);
+
+% Initialize
+log_row_col = true(nRows, nCols);
+log_roi_row_col = cell(numel(roiPositions), 1);
+
+for iRoi = 1:numel(roiPositions)
+
+    pos = roiPositions{iRoi};
+
+    if isempty(pos) || size(pos,1) < 3
+        log_roi_row_col{iRoi} = false(nRows, nCols);
+        continue
+    end
+
+    % poly2mask expects x = columns, y = rows
+    roiMask = poly2mask(pos(:,1), pos(:,2), nRows, nCols);
+
+    % Store individual ROI mask
+    log_roi_row_col{iRoi} = roiMask;
+
+    % Remove ROI pixels from global mask
+    log_row_col(roiMask) = false;
+end
+
+end
+
+
+
+
 
 function [cel_row_col, roiPositions] = cor_cel_row_col(piv_pla_row_col, per_bin_edg, roiPositions)
 [~, fig_wid, fig_hei] = fig;
@@ -7330,6 +7705,65 @@ options = statset('UseParallel', 1);
 k = 4;
 [clu_cel, ~, ~, ~] = kmeans(dff_pix_fra, k, 'Distance', 'correlation', 'Replicates', 100, ...
     'Options', options);
+end
+
+function [clu_cel, clu_fid] = cal_clu_cel_nox_loc(dff_fra_cel, spo_per_ons, spo_per_off)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+tim_fra = con_fil.tim_fra;
+tim_fra = tim_fra.cal.eig.ses.spo;
+
+mid_poi = mean([spo_per_ons spo_per_off]);
+log_fra_one = tim_fra > spo_per_ons & tim_fra < mid_poi;
+log_fra_two = tim_fra > mid_poi & tim_fra < spo_per_off;
+
+k = 4;
+options = statset('UseParallel', 1);
+clu_cel.one = kmeans(dff_fra_cel(log_fra_one, :)', k, 'Distance', 'correlation', ...
+    'Replicates', 100, 'Options', options);
+
+startpoint = [];
+dff_cel_fra = dff_fra_cel(log_fra_two, :)';
+for i = 1:k
+startpoint = cat(1, startpoint, mean(dff_cel_fra(clu_cel.one == i, :), 1));
+end
+
+clu_cel.two = kmeans(dff_cel_fra, k, 'Distance', 'correlation', 'Options', options, 'start', ...
+    startpoint);
+[clu_fid.dat, clu_fid.shu] = cal_clu_fid(clu_cel.one, clu_cel.two);
+end
+
+function clu_fid_bin = cal_clu_fid_bin(dff_fra_cel)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+log_fra_per = con_fil.log_fra_per;
+
+n_fra = size(dff_fra_cel, 1);
+if n_fra == 4047
+    log_fra_per = con_fil.log_sho_fra_per;
+end
+
+log_fra_one = log_fra_per(:, 1);
+k = 4;
+options = statset('UseParallel', 1);
+clu_cel.one = kmeans(dff_fra_cel(log_fra_one, :)', k, 'Distance', 'correlation', ...
+    'Replicates', 100, 'Options', options);
+n_bin = con_fil.n_bin;
+n_bin = n_bin.spo;
+clu_fid_bin.dat = nan(n_bin, 1);
+clu_fid_bin.shu = nan(n_bin, 1);
+for bin = 1:n_bin
+    per = bin + 1;
+    if per <= size(log_fra_per)
+        log_fra_two = log_fra_per(:, per);
+        startpoint = [];
+        dff_cel_fra = dff_fra_cel(log_fra_two, :)';
+        for i = 1:k
+        startpoint = cat(1, startpoint, mean(dff_cel_fra(clu_cel.one == i, :), 1));
+        end
+        clu_cel.two = kmeans(dff_cel_fra, k, 'Distance', 'correlation', 'Options', options, ...
+            'start', startpoint);
+        [clu_fid_bin.dat(bin), clu_fid_bin.shu(bin)] = cal_clu_fid(clu_cel.one, clu_cel.two);
+    end
+end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo cel
 function h_fig = plo_neu_axo(piv_pla_row_col, dff_pla_con_row_col, tit, exp)% pixel-based
@@ -7744,7 +8178,7 @@ showMaskContoursAsOverlay(hax, 0.2, cel_row_col, [1 0 1], piv_row_col)
 title(hax, ani)
 end
 
-function h_fig = plo_roi_man(piv_pla_row_col, per_bin_edg, ani, roiPositions)
+function h_fig = plo_roi_man(piv_pla_row_col, per_bin_edg, roiPositions)
 [h_fig, fig_wid, fig_hei] = fig;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 pla_num = 3;
@@ -7770,10 +8204,13 @@ for k = 1:numel(roiPositions)
     roiList(k).FaceAlpha = 0;
     roiList(k).InteractionsAllowed = 'none';
 end
-%title(ani)
 
-h_fig = crop_imshow_with_rois(h_fig, sta_row, sta_col, n_row, n_col);
+[h_fig, log_row_col, log_roi_row_col] = crop_imshow_with_rois(h_fig, sta_row, sta_col, n_row, n_col);
 
+
+% fil_pat_con = '\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat';
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% save(fil_pat_con, 'log_row_col', '-append')
 end
 
 function h_fig = plo_roi_con(piv_pla_row_col, per_bin_edg, ani, workingDir, dff_cel_fra, n_cel_pla,...
@@ -8246,75 +8683,6 @@ log_row_col_pcx.zer = repmat(log_row_col.zer, 1, 1, 3);
 piv_row_col_pcx.abs(log_row_col_pcx.zer) = 1;
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% axo onl
-function h_fig = plo_axo_sin(piv_pla_row_col, dff_fra_bin, ind_pla_bin, log_pla_row_col, ...
-    per_bin_edg)
-[h_fig, fig_wid, fig_hei] = fig;
-n_row = 2;
-con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
-n_pla = con_fil.n_pla;
-fun_pla = con_fil.fun_pla;
-n_col = n_pla.neu.fun;
-gap_ver_row = 0.010*ones(n_row, 1);
-gap_hor_row_col = 0.001*ones(n_row, n_col);
-mar_bot = 0.001;
-mar_top = 0.050;
-mar_lef = 0.001;
-mar_rig = 0.070;
-asp_rat = con_fil.asp_rat;
-asp_rat_axe = asp_rat.cal.ori*ones(n_row*n_col);
-wid = true;
-sca_axe = 1;
-n_pix_ext = 50;
-[hax_sub, ~, ~, ~, ~, ~] = tight_subplot_gen(n_row, n_col, ...
-    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
-    fig_hei, wid, sca_axe, n_pix_ext);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-bin_siz = con_fil.bin_siz;
-bin_siz = bin_siz.ima;
-tim_fra = con_fil.tim_fra;
-win_len = con_fil.win_len;
-dff_bin_win = com_ave_amp_uni_win(tim_fra.cal.eig.tri.dff, dff_fra_bin, win_len.dff.pha.drn.tai);
-dff_bin.all = dff_bin_win(:, 2);
-col_lim = con_fil.col_lim;
-col_lim = col_lim.sin;
-map = con_fil.map;
-map = map.asy;
-red = 0.01;
-for row = 1:n_row
-    ind = 0;
-    for pla = fun_pla.plo
-        ind = ind + 1;
-        hax = hax_sub((row - 1)*n_col + ind);
-        if row == 1
-            piv_row_col = piv_pla_row_col{pla};% uint16, max eg 2214
-            piv_row_col = adj_con(piv_row_col, per_bin_edg);
-            %piv_row_col = bin_ima(piv_row_col, bin_siz);
-            sho_ima.gra(hax, piv_row_col)
-        else
-            log_row_col = log_pla_row_col{pla};
-            piv_row_col = bin_ima(log_row_col, bin_siz);
-            log_row_col = piv_row_col > 0;
-
-            dff_bin.pla = dff_bin.all(ind_pla_bin{pla});
-
-            dff_row_col = double(log_row_col);
-            dff_row_col(log_row_col) = dff_bin.pla;
-
-            sho_ima.gra_ran(hax, dff_row_col, col_lim)
-            colormap(hax, map);
-            if ind == n_col
-                col_bar = colorbar(hax);
-                pos_i_j = hax.Position;
-                col_bar.Position = [pos_i_j(1) + pos_i_j(3) + 0.005 pos_i_j(2) + red ...
-                    0.01 pos_i_j(4) - 2*red];
-                col_bar.Label.String = '\DeltaF/F (%)';
-            end
-        end
-    end
-end
-hax.FontSize = 30;
-end
-
 function h_fig = plo_axo_sin_pix(piv_pla_row_col, dff_fra_pix, ind_pla_pix, log_pla_row_col, ...
     per_bin_edg)
 [h_fig, fig_wid, fig_hei] = fig;
@@ -9422,12 +9790,81 @@ for i = 1:n_cel
 end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% gli
+function h_fig = plo_axo_sin(piv_pla_row_col, dff_fra_bin, ind_pla_bin, log_pla_row_col, ...
+    per_bin_edg)
+[h_fig, fig_wid, fig_hei] = fig;
+n_row = 2;
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+n_pla = con_fil.n_pla;
+fun_pla = con_fil.fun_pla;
+n_col = n_pla.neu.fun;
+gap_ver_row = 0.010*ones(n_row, 1);
+gap_hor_row_col = 0.001*ones(n_row, n_col);
+mar_bot = 0.001;
+mar_top = 0.050;
+mar_lef = 0.001;
+mar_rig = 0.070;
+asp_rat = con_fil.asp_rat;
+asp_rat_axe = asp_rat.cal.ori*ones(n_row*n_col);
+wid = true;
+sca_axe = 1;
+n_pix_ext = 50;
+[hax_sub, pos_axe, hei_axe, dis_asp_rat, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
+    gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
+    fig_hei, wid, sca_axe, n_pix_ext);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+bin_siz = con_fil.bin_siz;
+bin_siz = bin_siz.ima;
+tim_fra = con_fil.tim_fra;
+win_len = con_fil.win_len;
+dff_bin_win = com_ave_amp_uni_win(tim_fra.cal.eig.tri.dff, dff_fra_bin, win_len.dff.pha.drn.tai);
+dff_bin.all = dff_bin_win(:, 2);
+col_lim = con_fil.col_lim;
+col_lim = col_lim.sin;
+map = con_fil.map;
+map = map.asy;
+red = 0.01;
+for row = 1:n_row
+    ind = 0;
+    for pla = fun_pla.plo
+        ind = ind + 1;
+        hax = hax_sub((row - 1)*n_col + ind);
+        if row == 1
+            piv_row_col = piv_pla_row_col{pla};% uint16, max eg 2214
+            piv_row_col = adj_con(piv_row_col, per_bin_edg);
+            %piv_row_col = bin_ima(piv_row_col, bin_siz);
+            sho_ima.gra(hax, piv_row_col)
+        else
+            log_row_col = log_pla_row_col{pla};
+            piv_row_col = bin_ima(log_row_col, bin_siz);
+            log_row_col = piv_row_col > 0;
+
+            dff_bin.pla = dff_bin.all(ind_pla_bin{pla});
+
+            dff_row_col = double(log_row_col);
+            dff_row_col(log_row_col) = dff_bin.pla;
+
+            ima = sho_ima.gra_ran(hax, dff_row_col, col_lim);
+            colormap(hax, map);
+            if ind == n_col
+                col_bar = colorbar(hax);
+                pos_i_j = hax.Position;
+                col_bar.Position = [pos_i_j(1) + pos_i_j(3) + 0.005 pos_i_j(2) + red ...
+                    0.01 pos_i_j(4) - 2*red];
+                col_bar.Label.String = '\DeltaF/F (%)';
+            end
+        end
+    end
+end
+hax.FontSize = 30;
+end
+
 function h_fig = plo_tri_sig(dff_fra_tri)
 [h_fig, fig_wid, fig_hei] = fig;
 n_row = 2;
-n_col = 1;
+n_col = 2;
 gap_ver_row = 0.005*ones(n_row, 1);
-gap_hor_row_col = 0.005*ones(n_row, n_col);
+gap_hor_row_col = 0.015*ones(n_row, n_col);
 
 % mar_bot = 0.040;
 % mar_top = 0.040;
@@ -9451,7 +9888,6 @@ n_pix_ext = 200;
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 tim_fra = con_fil.tim_fra;
 tim_fra = tim_fra.cal.eig.tri.dff;
-col_han_pos = [0.31 0.380 0.005 0.150];
 hax = hax_sub(1);
 lim = 5;
 col_lim = [-lim lim];
@@ -9460,50 +9896,61 @@ map = map.sym;
 
 log_fra = tim_fra < 10;
 tim_fra = tim_fra(log_fra);
-dff_fra_tri = dff_fra_tri(log_fra, :);
 n_fra = con_fil.n_fra;
-dff_fra_tri_hea = smo_sam_poi_var(dff_fra_tri, n_fra.dff.eig.bas, n_fra.dff.eig.smo);
+dff_fra_tri_hea = smo_sam_poi_uni(dff_fra_tri.lig(log_fra, :), n_fra.dff.eig.bas, n_fra.dff.eig.smo);
 ima(hax, tim_fra, dff_fra_tri_hea')
 hax.XAxis.Visible = 'off';
 lin_wid = con_fil.lin_wid;
 xline(hax, 0, '--k', 'LineWidth', lin_wid.two)
 ylabel(hax, 'Trial')
-%caxis(hax, col_lim)
+caxis(hax, col_lim)
 hax.Colormap = map;
-col_han = colorbar('Ticks', col_lim);
-col_han.Position = col_han_pos;
-col_cod = '\DeltaF/F (%)';
-col_han.Label.String = col_cod;
-col_han.Label.Units = 'normalized';
-col_han.Label.Position(1) = 1.5;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% bar
-col = colorbar(hax);
-col.Units = "pixels";
-%col.Position(1) = 600;
-col.Position(1) = 100;
-y_lab = con_fil.y_lab;
-col.Label.String = y_lab.dff;
-
 fon_siz = con_fil.fon_siz;
 mar_siz = con_fil.mar_siz;
 mar_siz = mar_siz.pub;
 log_lin_wid = true;
+title(hax, 'Light')
 adj_hax(hax, fon_siz.pub, mar_siz, log_lin_wid)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
+
 hax = hax_sub(2);
-[~, ~] = plo_sha.smo_tri(hax, tim_fra, dff_fra_tri, [0 1 0], n_fra.dff.eig.bas, ...
-    n_fra.dff.eig.smo);
-%h = yline(hax_sig, 0, 'LineWidth', lin_wid.two);
+dff_fra_tri_hea = smo_sam_poi_uni(dff_fra_tri.tap(log_fra, :), n_fra.dff.eig.bas, n_fra.dff.eig.smo);
+ima(hax, tim_fra, dff_fra_tri_hea')
+hax.XAxis.Visible = 'off';
 xline(hax, 0, '--k', 'LineWidth', lin_wid.two)
-
-% hax.XAxis.Visible = 'off';
-% scalebarLength = 5;  % scalebar will be 10 micrometer long
-% h_bar = scalebar(hax, 'x', scalebarLength, ' s', 'Location', 'southwestoutside');
-% hax.YAxis.Visible = 'off';
-% scalebarLength = 5;  % scalebar will be 10 micrometer long
-% h_bar = scalebar(hax, 'y', scalebarLength, '%', 'Location', 'southwestoutside');
-
+caxis(hax, col_lim)
+hax.Colormap = map;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% bar
+col = colorbar(hax);
+col.Units = "pixels";
+%col.Position(1) = 100;
+col.Position(1) = 190;
+y_lab = con_fil.y_lab;
+col.Label.String = y_lab.dff;
+title(hax, 'Vibration')
 adj_hax(hax, fon_siz.pub, mar_siz, log_lin_wid)
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sig
+hax = hax_sub(3);
+[~, ~] = plo_sha.smo_tri(hax, tim_fra, dff_fra_tri.lig(log_fra, :), [0 1 0], n_fra.dff.eig.bas, ...
+    n_fra.dff.eig.smo);
+xline(hax, 0, '--k', 'LineWidth', lin_wid.two)
+adj_hax(hax, fon_siz.pub, mar_siz, log_lin_wid)
+
+hax = hax_sub(4);
+[~, ~] = plo_sha.smo_tri(hax, tim_fra, dff_fra_tri.tap(log_fra, :), [0 1 0], n_fra.dff.eig.bas, ...
+    n_fra.dff.eig.smo);
+xline(hax, 0, '--k', 'LineWidth', lin_wid.two)
+adj_hax(hax, fon_siz.pub, mar_siz, log_lin_wid)
+
+linkaxes(hax_sub(3:4))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 set(h_fig.Children, 'Units', 'pixels')
 h_fig.Position(3) = las_pix;
@@ -9732,8 +10179,6 @@ end
 function [piv_row_col_pcx_fra, dff_fra_cel, clu_cel, log_fra, lot_fra] = gen_piv_row_col_fra...
     (fil_pat_ima_fis, fil_pat_ima_cal, tim, dff_fra_cel, log_cel_pla, low_in_ani, high_in_ani, ...
     tim_syn_fra)
-%dev = 30;
-%dev = 60;
 dev = 90;
 n_fra_blo = 5;
 [pif_row_col_fra, n_fra_ext, log_fra] = ext_ima_cal_ext(fil_pat_ima_cal, tim, dev, n_fra_blo);
@@ -9768,13 +10213,14 @@ for fra = 1:n_fra_cal
 end
 %%%%%%%%%%%% blur !
 sta_dev = 1.5;
-pim_row_col_fra = imgaussfilt3(pim_row_col_fra, sta_dev);
+pib_row_col_fra = imgaussfilt3(pim_row_col_fra, sta_dev);
 %
-pix_row_col = max(pim_row_col_fra, [], 3);
+pix_row_col = max(pib_row_col_fra, [], 3);
 %min_piv_vis = 10;
 min_piv_vis = 15;
 %min_piv_vis = 20;
 
+% finding pixels where max is less than vis min ... 
 log_row_col = pix_row_col < min_piv_vis;
 lop_row_col = ~log_row_col;
 n_pix_thr = 50;
@@ -9785,7 +10231,7 @@ log_row_col_fra = repmat(log_row_col, 1, 1, n_fra_cal);
 %
 pim_row_col_pcx_fra = convertToRGB(pim_row_col_fra);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% dff image
-dff_row_col_fra = compute_dff(pic_row_col_fra);
+dff_row_col_fra = compute_dff(pic_row_col_fra);% on raw image
 
 % averaging over 5 frames!
 dfm_row_col_fra = dff_row_col_fra;
@@ -9838,22 +10284,7 @@ elseif dif < 0
     pia_row_col_fra = cat(3, pia_row_col_fra, repmat(pia_row_col_fra(:, :, end), 1, 1, abs(dif)));
 end
 %
-
-% piv_row_col = pia_row_col_fra(:, :, 1);
-% pix_row_col = imadjust(piv_row_col, [], [], 0.5);
-% fig; imshow(pix_row_col)
-% 
-% pix_row_col = imadjust(piv_row_col, [low_in_ani high_in_ani]);
-% fig; imshow(pix_row_col)
-% 
-% pix_row_col = imadjust(piv_row_col, [low_in_ani high_in_ani], [0 1], 0.7);
-% fig; imshow(pix_row_col)
-
-%
 for fra = 1:n_fra_ani
-    % pia_row_col_fra(:, :, fra) = imadjust(pia_row_col_fra(:, :, fra), [low_in_ani high_in_ani], ...
-    %     [0 1], 0.7);
-
     piv_row_col = pia_row_col_fra(:, :, fra);
     piv_row_col = imadjust(piv_row_col, [low_in_ani high_in_ani], ...
         [0 1], 0.7);
@@ -9876,7 +10307,7 @@ function piv_row_col_fra = tai_piv_row_col_fra(fil_pat_ima_fis, tim, low_in_ani,
 dev = 60;
 n_row = 400;
 n_col = 200;
-%
+% ca image
 n_fra_blo = 5;
 [pif_row_col_fra, n_fra_ext, ~] = ext_ima_cal_ext(fil_pat_ima_cal, tim, dev, n_fra_blo);
 pif_row_col_fra(:, :, 1:n_fra_ext) = [];
@@ -9970,17 +10401,183 @@ function piv_row_col_pcx_fra = convertToRGB(piv_row_col_fra)
     end
 end
 
+
+
+
+function piv_row_col_pcx_fra = gen_piv_row_col_pcx_fra_cel(fil_pat_ima_fis, fil_pat_ima_cal, tim, ...
+    low_in_ani, high_in_ani, x_off_fra, y_off_fra, tai_ang_fra, tim_syn_fra, log_roi_row_col, ...
+    log_row_col, sta_row, sta_col, n_row, n_col)
+% f, dff videos
+[piv_row_col_pcx_fra, dff_fra_cel, clu_cel, lov_fra, lot_fra] = gen_piv_row_col_fra_cel...
+    (fil_pat_ima_fis, fil_pat_ima_cal, tim, log_roi_row_col, low_in_ani, high_in_ani, ...
+    tim_syn_fra, log_row_col, sta_row, sta_col, n_row, n_col);
+% matlab figure
+[n_row, ~, ~, ~] = size(piv_row_col_pcx_fra);% 400 x 400 x 140---
+tai_ang_fra = tai_ang_fra(lot_fra);
+x_off_fra = x_off_fra(lov_fra);
+y_off_fra = y_off_fra(lov_fra);
+pif_row_col_pcx_fra = ext_fig_piv_row_col_pcx(clu_cel, dff_fra_cel, x_off_fra, y_off_fra, tai_ang_fra);
+pif_row_col_pcx_fra = resizeImageStack(pif_row_col_pcx_fra, n_row);
+%
+dim = 2;
+piv_row_col_pcx_fra = cat(dim, piv_row_col_pcx_fra, pif_row_col_pcx_fra);
+end
+
+function [piv_row_col_pcx_fra, dff_fra_cel, clu_cel, log_fra, lot_fra] = gen_piv_row_col_fra_cel...
+    (fil_pat_ima_fis, fil_pat_ima_cal, tim, log_roi_row_col, low_in_ani, high_in_ani, ...
+    tim_syn_fra, log_row_col, sta_row, sta_col, n_row, n_col)
+dev = 90;
+n_fra_blo = 5;
+[pif_row_col_fra, n_fra_ext, log_fra] = ext_ima_cal_ext(fil_pat_ima_cal, tim, dev, n_fra_blo);
+
+% cropping
+pic_row_col_fra = pif_row_col_fra(sta_row:sta_row + n_row - 1, sta_col:sta_col + n_col  - 1, :);
+
+%fig; hax = axes;ima = sho_ima.gra(hax, mean(pic_row_col_fra, 3));
+[n_row, n_col, n_fra_cal_raw] = size(pic_row_col_fra);
+pim_row_col_fra = pic_row_col_fra;
+
+% averaging over 5 frames!
+for fra = n_fra_ext + 1:n_fra_cal_raw - n_fra_ext
+    pim_row_col_fra(:, :, fra) = mean(pic_row_col_fra(:, :, fra - n_fra_ext:fra + n_fra_ext), 3);
+end
+% no contrast adjustment, i think.
+pim_row_col_fra(:, :, 1:n_fra_ext) = [];
+pim_row_col_fra(:, :, end - n_fra_ext + 1:end) = [];
+log_fra = trimTrueEdges(log_fra, n_fra_ext);
+%
+[~, ~, n_fra_cal] = size(pim_row_col_fra);
+pim_row_col_fra = im2uint8(pim_row_col_fra);
+low_piv_lim = cal_low_piv_lim(pim_row_col_fra(:, :, 1));
+low_in = low_piv_lim/255;
+high_in = 0.3;
+for fra = 1:n_fra_cal
+    pim_row_col_fra(:, :, fra) = imadjust(pim_row_col_fra(:, :, fra), [low_in high_in]);
+end
+%%%%%%%%%%%% blur !
+sta_dev = 1.5;
+%
+pim_row_col_pcx_fra = convertToRGB(pim_row_col_fra);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% dff image
+dff_row_col_fra = compute_dff(pic_row_col_fra);% on cropped raw image
+
+% averaging over 5 frames!
+dfm_row_col_fra = dff_row_col_fra;
+for fra = n_fra_ext + 1:n_fra_cal_raw - n_fra_ext
+    dfm_row_col_fra(:, :, fra) = mean(dff_row_col_fra(:, :, fra - n_fra_ext:fra + n_fra_ext), 3);
+end
+dfm_row_col_fra(:, :, 1:n_fra_ext) = [];
+dfm_row_col_fra(:, :, end - n_fra_ext + 1:end) = [];
+dfm_row_col_fra = imgaussfilt3(dfm_row_col_fra, sta_dev);
+% setting to 0 !!!!
+log_row_col_fra = repmat(log_row_col, 1, 1, n_fra_cal);
+dfm_row_col_fra(log_row_col_fra) = 0;
+pff_row_col_pcx_fra = cal_pff_row_col_pcx_fra(dfm_row_col_fra);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% animal image
+[pia_row_col_fra, lot_fra] = ext_ima_int(fil_pat_ima_fis, tim, dev, tim_syn_fra);
+pia_row_col_fra = imrotate(pia_row_col_fra, 270);
+pia_row_col_fra = imresize(pia_row_col_fra, [n_row n_col]);
+[~, ~, n_fra_ani] = size(pia_row_col_fra);
+fac = round(n_fra_ani/n_fra_cal);
+pia_row_col_fra = pia_row_col_fra(:, :, round(fac/2):fac:end);% DOWNSAMPLING
+[~, ~, n_fra_ani] = size(pia_row_col_fra);
+dif = n_fra_ani - n_fra_cal;
+if dif > 0
+    arm = round(dif/2);
+    pia_row_col_fra = pia_row_col_fra(:, :, arm + 1:n_fra_ani - arm);
+elseif dif < 0
+    pia_row_col_fra = cat(3, pia_row_col_fra, repmat(pia_row_col_fra(:, :, end), 1, 1, dif));
+    % not sure
+end
+%
+[~, ~, n_fra_ani] = size(pia_row_col_fra);
+dif = n_fra_ani - n_fra_cal;
+if dif > 0
+    pia_row_col_fra = pia_row_col_fra(:, :, 1:n_fra_cal);
+elseif dif < 0
+    pia_row_col_fra = cat(3, pia_row_col_fra, repmat(pia_row_col_fra(:, :, end), 1, 1, abs(dif)));
+end
+%
+for fra = 1:n_fra_ani
+    piv_row_col = pia_row_col_fra(:, :, fra);
+    piv_row_col = imadjust(piv_row_col, [low_in_ani high_in_ani], ...
+        [0 1], 0.7);
+    n_lev = 50;
+    piv_row_col = adj_bri(piv_row_col, n_lev);
+    pia_row_col_fra(:, :, fra) = piv_row_col;
+end
+pia_row_col_pcx_fra = convertToRGB(pia_row_col_fra);
+%
+piv_row_col_pcx_fra = [pim_row_col_pcx_fra pff_row_col_pcx_fra pia_row_col_pcx_fra];
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+dff_fra_cel = ext_avg_roi_signal(dfm_row_col_fra, log_roi_row_col);
+[clu_cel_k, ~] = com_clu_cel_k(dff_fra_cel);
+clu_cel = clu_cel_k(:, 4);
+end
+
+
+
+
+function dff_fra_cel = ext_avg_roi_signal(dfm_row_col_fra, log_roi_row_col)
+% ext_avg_roi_signal
+%
+% INPUTS
+%   dfm_row_col_fra : 3D array [nRows x nCols x nFrames]
+%                     multiframe image data
+%   log_roi_row_col : cell array of logical masks [nRows x nCols],
+%                     one per ROI (true inside ROI)
+%
+% OUTPUT
+%   dff_fra_cel     : [nFrames x nROIs] matrix
+%                     average signal per ROI per frame
+
+[nRows, nCols, nFrames] = size(dfm_row_col_fra);
+nRois = numel(log_roi_row_col);
+
+dff_fra_cel = nan(nFrames, nRois);
+
+% Reshape image data for efficient indexing
+dfm_2d = reshape(dfm_row_col_fra, nRows*nCols, nFrames);
+
+for iRoi = 1:nRois
+
+    roiMask = log_roi_row_col{iRoi};
+
+    if isempty(roiMask) || ~any(roiMask(:))
+        % Leave NaNs if ROI is empty
+        continue
+    end
+
+    roiIdx = roiMask(:);
+
+    % Average across pixels within ROI, for each frame
+    dff_fra_cel(:, iRoi) = mean(dfm_2d(roiIdx, :), 1).';
+
+end
+
+end
+
 function piv_row_col_pcx_fra = ext_fig_piv_row_col_pcx(clu_cel, dff_fra_cel, x_off_fra, y_off_fra, ...
     tai_ang_fra)
 con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
 ifi = con_fil.ifi;
 n_fra = size(dff_fra_cel, 1);
 tim_fra = (ifi.cal.eig:ifi.cal.eig:n_fra*ifi.cal.eig)';
-piv_row_col_pcx_fra = uint8(zeros(1080, 1924, 3, n_fra));
+%piv_row_col_pcx_fra = uint8(zeros(1080, 1924, 3, n_fra));
+
+%n_row.ima = 1007;% max?
+n_row.ima = 1080;
+n_col.ima = 1920;
+piv_row_col_pcx_fra = uint8(zeros(n_row.ima, n_col.ima, 3, n_fra));
 for fra = 1:n_fra
     h_fig = plo_vis_reg(clu_cel, dff_fra_cel, x_off_fra, y_off_fra, tai_ang_fra, tim_fra(fra));
     fig_dat = getframe(h_fig);
-    piv_row_col_pcx_fra(:, :, :, fra) = fig_dat.cdata;
+    fig_row_col_pcx = fig_dat.cdata;
+    n_row.fig = size(fig_row_col_pcx, 1);
+    if n_row.fig < n_row.ima
+        fig_row_col_pcx = [fig_row_col_pcx; ones(n_row.ima - n_row.fig, n_col.ima, 3)];
+    end
+    piv_row_col_pcx_fra(:, :, :, fra) = fig_row_col_pcx;
     close(h_fig)
 end
 end
@@ -9992,14 +10589,12 @@ n_clu = max(clu_cel);
 n_plo = 3;
 n_row = n_clu + n_plo;
 n_col = 1;
-
-gap_ver_row = [0.020*ones(n_clu, 1); 0.060*ones(n_plo, 1)];
+gap_ver_row = [0.020*ones(n_clu, 1); 0.090*ones(n_plo, 1)];
 gap_hor_row_col = 0.000*ones(n_row, n_col);
-mar_bot = 0.030;
-mar_top = 0.001;
-mar_lef = 0.070;
+mar_bot = 0.010;
+mar_top = 0.010;
+mar_lef = 0.055;
 mar_rig = 0.050;
-
 asp_rat_axe = nan(n_row*n_col, 1);
 n_fra = con_fil.n_fra;
 n_cel_clu = cal_n_cel_clu(clu_cel);
@@ -10012,7 +10607,6 @@ for row = 1:n_row
 end
 wid = true;
 sca_axe = 1;
-%n_pix_ext = 200;
 n_pix_ext = 100;
 [hax_sub, ~, ~, ~, las_pix, rat_wid] = tight_subplot_gen(n_row, n_col, ...
     gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
@@ -10037,10 +10631,6 @@ for row = 1:n_clu
     hax.YAxis.Visible = 'off';
     xline(hax, tim, 'g')
 end
-% shi = 0.002;
-% col = adj_col_han(hax, shi);
-% col.Position(3) = 0.002;
-% col.Label.String = y_lab.dff;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 hax = hax_sub(n_clu + 1);
 lin_wid_sig = 2;
@@ -10057,8 +10647,6 @@ hax.Box = 'off';
 hax.XAxis.Visible = 'off';
 ylabel(hax, 'y correction (\mum)')
 xline(hax, tim, 'g')
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 hax = hax_sub(n_clu + 3);
 n_fra = size(tai_ang_fra, 1);
@@ -10068,28 +10656,23 @@ hax.Box = 'off';
 ylabel(hax, 'Tail angle (rad)')
 xlabel(hax, x_lab.tim)
 xline(hax, tim, 'g')
-linkaxes(hax_sub, 'x')
-
+linkaxes(hax_sub, 'x')% axes linked !!!!!
 align_Ylabels(h_fig, n_row)
-
 hax = hax_sub(n_clu);
-
-%hax.XLim(2) = 65;
 hax.XLim(2) = ceil(tim_fra(end));
-
 shi = 0.002;
 col = adj_col_han(hax, shi);
-col.Position(1) = 0.95;
+col.Position(1) = 0.96;
 col.Position(3) = 0.002;
 col.Position(4) = 0.13;
 col.Label.String = y_lab.dff;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-set(h_fig.Children, 'Units', 'pixels')
-h_fig.Position(3) = las_pix;
-h_fig.Renderer = 'painters';
-h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
-h_fig.PaperUnits = 'normalized';
-h_fig.PaperPosition = [0 0 1 1];
+% set(h_fig.Children, 'Units', 'pixels')
+% h_fig.Position(3) = las_pix;
+% h_fig.Renderer = 'painters';
+% h_fig.PaperSize(1) = rat_wid*h_fig.PaperSize(1);
+% h_fig.PaperUnits = 'normalized';
+% h_fig.PaperPosition = [0 0 1 1];
 end
 
 function [piv_row_col_fra, n_fra_ext, log_fra] = ext_ima_cal_ext(fil_pat_ima, tim, dev, n_fra_blo)
@@ -10102,9 +10685,6 @@ n_fra = length(tim_fra);
 [~, fra_num_max] = fin_clo_val(tim_fra, tim + dev);
 
 n_fra_ext = (n_fra_blo - 1)/2;
-% fra_num_min = fra_num_min - n_fra_ext;
-% fra_num_max = fra_num_max + n_fra_ext;
-
 piv_row_col_fra = ima_fil.im(:, :, fra_num_min - n_fra_ext:fra_num_max + n_fra_ext);
 log_fra = false(n_fra, 1);
 log_fra(fra_num_min - n_fra_ext:fra_num_max + n_fra_ext) = true;
@@ -10129,7 +10709,7 @@ function dff_row_col_fra = compute_dff(piv_row_col_fra)
     % Convert to double to avoid integer overflow or truncation
     piv_row_col_fra = double(piv_row_col_fra);
 
-    % Compute baseline F0: mean over time at each pixel
+    % Compute baseline F0: mean over time *at each pixel*
     F0 = mean(piv_row_col_fra, 3);
 
     % Avoid division by zero: add a small constant where F0 == 0
@@ -10588,7 +11168,7 @@ mar_rig = 0.015;
 
 asp_rat_axe = 2*ones(n_row*n_col, 1);
 wid = false;
-sca_axe = 1;
+sca_axe = [1; 1];
 n_pix_ext = 50;
 [hax_sub, ~, ~, ~, ~, rat_wid] = tight_subplot_gen(n_row, n_col, ...
     gap_ver_row, gap_hor_row_col, mar_bot, mar_top, mar_lef, mar_rig, asp_rat_axe, fig_wid, ...
@@ -11361,3 +11941,218 @@ end
 % nam_fie = fieldnames(str);
 % n_fie = length(nam_fie);
 % end
+
+
+
+function [dff_fra_cel, clu_cel, dfm_row_col_fra] = gen_ses_dat(fil_pat_ima_cal, log_roi_row_col, ...
+    log_row_col, sta_row, sta_col, n_row, n_col)
+ima_fil = matfile(fil_pat_ima_cal);
+pif_row_col_fra = ima_fil.im;
+% cropping
+pic_row_col_fra = pif_row_col_fra(sta_row:sta_row + n_row - 1, sta_col:sta_col + n_col  - 1, :);
+[~, ~, n_fra_cal] = size(pic_row_col_fra);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% dff image
+MovingWdw = 80;% s
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+fra_rat = con_fil.fra_rat;
+fra_rat = fra_rat.cal.eig;
+wdw = round(fra_rat*MovingWdw);
+win_fra = wdw + mod(wdw + 1, 2);
+dff_row_col_fra = compute_dff_sliding(pic_row_col_fra, win_fra);
+% averaging over 5 frames!
+n_fra_blo = 5;
+n_fra_ext = (n_fra_blo - 1)/2;
+dfm_row_col_fra = dff_row_col_fra;
+for fra = n_fra_ext + 1:n_fra_cal - n_fra_ext
+    dfm_row_col_fra(:, :, fra) = mean(dff_row_col_fra(:, :, fra - n_fra_ext:fra + n_fra_ext), 3);
+end
+%%%%%%%%%%%% blur !
+sta_dev = 1.5;
+dfm_row_col_fra = imgaussfilt3(dfm_row_col_fra, sta_dev);
+% setting to 0 !!!!
+log_row_col_fra = repmat(log_row_col, 1, 1, n_fra_cal);
+dfm_row_col_fra(log_row_col_fra) = 0;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+dff_fra_cel = ext_avg_roi_signal(dfm_row_col_fra, log_roi_row_col);
+[clu_cel_k, ~] = com_clu_cel_k(dff_fra_cel);
+clu_cel = clu_cel_k(:, 4);
+end
+
+function dff_row_col_fra = compute_dff_sliding(piv_row_col_fra, win_fra)
+% compute_dff_sliding Computes dF/F using a sliding-window baseline
+%
+%   dff_row_col_fra = compute_dff_sliding(piv_row_col_fra, win_fra)
+%
+%   INPUT:
+%       piv_row_col_fra : [rows x cols x frames] raw calcium image sequence
+%       win_fra         : scalar, window size in frames (must be odd)
+%
+%   OUTPUT:
+%       dff_row_col_fra : [rows x cols x frames] dF/F image sequence
+
+    % Validate input
+    if ndims(piv_row_col_fra) ~= 3
+        error('Input must be a 3D array [rows x cols x frames].');
+    end
+
+    if mod(win_fra, 2) ~= 1
+        error('win_fra must be an odd number.');
+    end
+
+    % Convert to double
+    piv_row_col_fra = double(piv_row_col_fra);
+
+    [rows, cols, frames] = size(piv_row_col_fra);
+
+    % Preallocate
+    dff_row_col_fra = zeros(rows, cols, frames);
+
+    half_win = floor(win_fra / 2);
+    epsilon = 1e-6;
+
+    % Sliding-window baseline
+    for t = 1:frames
+        t_start = max(1, t - half_win);
+        t_end   = min(frames, t + half_win);
+
+        % Baseline F0: mean over window
+        F0 = mean(piv_row_col_fra(:,:,t_start:t_end), 3);
+
+        % Avoid division by zero
+        F0(F0 == 0) = epsilon;
+
+        % dF/F
+        dff_row_col_fra(:,:,t) = ...
+            (piv_row_col_fra(:,:,t) - F0) ./ F0;
+    end
+
+    dff_row_col_fra = 100*dff_row_col_fra;
+end
+
+function dfm_row_col_fra = cal_dfm_row_col_fra(dfm_row_col_fra)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+col_lim = con_fil.col_lim;
+map = con_fil.map;
+map = map.sym;
+[n_row, n_col, n_fra] = size(dfm_row_col_fra);
+pff_row_col_pcx_fra = nan(n_row, n_col, 3, n_fra);
+for fra = 1:n_fra
+    tem_row_col_pcx = ext_piv_row_col_pcx(squeeze(dfm_row_col_fra(:, :, fra)), col_lim.clu, map);
+    pff_row_col_pcx_fra(:, :, :, fra) = tem_row_col_pcx.abs;
+end
+% Expand log_row_col to match dimensions
+log_row_col = ~find(squeeze(dfm_row_col_fra(:, :, 1)));
+mask = repmat(log_row_col, [1 1 size(pff_row_col_pcx_fra, 3) size(pff_row_col_pcx_fra, 4)]);
+pff_row_col_pcx_fra(mask) = 0;
+pff_row_col_pcx_fra = im2uint8(pff_row_col_pcx_fra);
+end
+
+function pff_row_col_pcx_fra = cal_pff_row_col_pcx_fra(dfm_row_col_fra)
+con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+col_lim = con_fil.col_lim;
+map = con_fil.map;
+map = map.sym;
+[n_row, n_col, n_fra] = size(dfm_row_col_fra);
+pff_row_col_pcx_fra = nan(n_row, n_col, 3, n_fra);
+for fra = 1:n_fra
+    tem_row_col_pcx = ext_piv_row_col_pcx(squeeze(dfm_row_col_fra(:, :, fra)), col_lim.clu, map);
+    pff_row_col_pcx_fra(:, :, :, fra) = tem_row_col_pcx.abs;
+end
+% Expand log_row_col to match dimensions
+log_row_col = ~find(squeeze(dfm_row_col_fra(:, :, 1)));
+mask = repmat(log_row_col, [1 1 size(pff_row_col_pcx_fra, 3) size(pff_row_col_pcx_fra, 4)]);
+pff_row_col_pcx_fra(mask) = 0;
+pff_row_col_pcx_fra = im2uint8(pff_row_col_pcx_fra);
+end
+
+
+
+
+
+function piv_row_col_pcx_fra = gen_piv_row_col_pcx_fra_sli(fil_pat_ima_fis, fil_pat_ima_cal, tim, ...
+    low_in_ani, high_in_ani, x_off_fra, y_off_fra, tai_ang_fra, tim_syn_fra, sta_row, sta_col, ...
+    n_row, n_col, dff_fra_cel, clu_cel, dfm_row_col_fra, dev)
+% f, dff videos
+[piv_row_col_pcx_fra, lov_fra, lot_fra] = gen_piv_row_col_fra_sli(fil_pat_ima_fis, ...
+    fil_pat_ima_cal, tim, low_in_ani, high_in_ani, tim_syn_fra, sta_row, sta_col, n_row, n_col, ...
+    dfm_row_col_fra, dev);
+% matlab figure
+[n_row, ~, ~, ~] = size(piv_row_col_pcx_fra);% 400 x 400 x 140---
+tai_ang_fra = tai_ang_fra(lot_fra);
+dff_fra_cel = dff_fra_cel(lov_fra, :);
+x_off_fra = x_off_fra(lov_fra);
+y_off_fra = y_off_fra(lov_fra);
+pif_row_col_pcx_fra = ext_fig_piv_row_col_pcx(clu_cel, dff_fra_cel, x_off_fra, y_off_fra, tai_ang_fra);
+pif_row_col_pcx_fra = resizeImageStack(pif_row_col_pcx_fra, n_row);
+%
+dim = 2;
+piv_row_col_pcx_fra = cat(dim, piv_row_col_pcx_fra, pif_row_col_pcx_fra);
+end
+
+function [piv_row_col_pcx_fra, lov_fra, lot_fra] = gen_piv_row_col_fra_sli(fil_pat_ima_fis, ...
+    fil_pat_ima_cal, tim, low_in_ani, high_in_ani, tim_syn_fra, sta_row, sta_col, n_row, n_col, ...
+    dfm_row_col_fra, dev)
+n_fra_blo = 5;
+[pif_row_col_fra, n_fra_ext, lov_fra] = ext_ima_cal_ext(fil_pat_ima_cal, tim, dev, n_fra_blo);
+% cropping
+pic_row_col_fra = pif_row_col_fra(sta_row:sta_row + n_row - 1, sta_col:sta_col + n_col  - 1, :);
+
+%fig; hax = axes;ima = sho_ima.gra(hax, mean(pic_row_col_fra, 3));
+[n_row, n_col, n_fra_cal_raw] = size(pic_row_col_fra);
+pim_row_col_fra = pic_row_col_fra;
+
+% averaging over 5 frames!
+for fra = n_fra_ext + 1:n_fra_cal_raw - n_fra_ext
+    pim_row_col_fra(:, :, fra) = mean(pic_row_col_fra(:, :, fra - n_fra_ext:fra + n_fra_ext), 3);
+end
+% no contrast adjustment, i think.
+pim_row_col_fra(:, :, 1:n_fra_ext) = [];
+pim_row_col_fra(:, :, end - n_fra_ext + 1:end) = [];
+lov_fra = trimTrueEdges(lov_fra, n_fra_ext);
+%
+[~, ~, n_fra_cal] = size(pim_row_col_fra);
+pim_row_col_fra = im2uint8(pim_row_col_fra);
+low_piv_lim = cal_low_piv_lim(pim_row_col_fra(:, :, 1));
+low_in = low_piv_lim/255;
+high_in = 0.3;
+for fra = 1:n_fra_cal
+    pim_row_col_fra(:, :, fra) = imadjust(pim_row_col_fra(:, :, fra), [low_in high_in]);
+end
+pim_row_col_pcx_fra = convertToRGB(pim_row_col_fra);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% dff image
+pff_row_col_pcx_fra = cal_pff_row_col_pcx_fra(dfm_row_col_fra(:, :, lov_fra));
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% animal image
+[pia_row_col_fra, lot_fra] = ext_ima_int(fil_pat_ima_fis, tim, dev, tim_syn_fra);
+pia_row_col_fra = imrotate(pia_row_col_fra, 270);
+pia_row_col_fra = imresize(pia_row_col_fra, [n_row n_col]);
+[~, ~, n_fra_ani] = size(pia_row_col_fra);
+fac = round(n_fra_ani/n_fra_cal);
+pia_row_col_fra = pia_row_col_fra(:, :, round(fac/2):fac:end);% DOWNSAMPLING
+[~, ~, n_fra_ani] = size(pia_row_col_fra);
+dif = n_fra_ani - n_fra_cal;
+if dif > 0
+    arm = round(dif/2);
+    pia_row_col_fra = pia_row_col_fra(:, :, arm + 1:n_fra_ani - arm);
+elseif dif < 0
+    pia_row_col_fra = cat(3, pia_row_col_fra, repmat(pia_row_col_fra(:, :, end), 1, 1, dif));
+    % not sure
+end
+[~, ~, n_fra_ani] = size(pia_row_col_fra);
+dif = n_fra_ani - n_fra_cal;
+if dif > 0
+    pia_row_col_fra = pia_row_col_fra(:, :, 1:n_fra_cal);
+elseif dif < 0
+    pia_row_col_fra = cat(3, pia_row_col_fra, repmat(pia_row_col_fra(:, :, end), 1, 1, abs(dif)));
+end
+%
+for fra = 1:n_fra_ani
+    piv_row_col = pia_row_col_fra(:, :, fra);
+    piv_row_col = imadjust(piv_row_col, [low_in_ani high_in_ani], ...
+        [0 1], 0.7);
+    n_lev = 50;
+    piv_row_col = adj_bri(piv_row_col, n_lev);
+    pia_row_col_fra(:, :, fra) = piv_row_col;
+end
+pia_row_col_pcx_fra = convertToRGB(pia_row_col_fra);
+piv_row_col_pcx_fra = [pim_row_col_pcx_fra pff_row_col_pcx_fra pia_row_col_pcx_fra];
+end

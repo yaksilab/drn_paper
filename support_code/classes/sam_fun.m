@@ -1,12 +1,70 @@
 classdef sam_fun
     methods(Static)
+        function dua = dua_fun
+            dua = sam;
+            dua.sam_idx = "dua";
+            dua.n_pla_str = 'eig';
+            dua.ani = ["gfa010"; "gfa013"];
+            dua.tit = 'dua';
+            dua = spe(dua);
+        end
+
+        function exp = exp_fun
+            exp = sam;
+            exp.sam_idx = "exp";
+            exp.n_pla_str = 'eig';
+            exp.ani = ["esp283"; "esp284"; "esp285"];
+            exp.tit = 'exp';
+            exp = spe(exp);
+        end
+
+        function spo = spo_fun
+            spo = sam;
+            spo.sam_idx = "spo";
+            spo.n_pla_str = 'eig';
+            spo.ani = ["esp279"; "esp280"; "esp281"; "esp282"; "esp287"; "esp288"; "esp289"; "esp291"];
+            spo.tit = 'spo';
+            spo = spe(spo);
+        end
+
+        function nuc_axo = nuc_axo_fun
+            nuc_axo = sam;
+            nuc_axo.sam_idx = "nuc_axo";
+            nuc_axo.n_pla_str = 'eig';
+            nuc_axo.ani = ["esp269"; "esp270"; "esp271"; "esp272"; "esp273"; "esp275"; "esp276"; ...
+                "esp277"; "esp278"];
+            nuc_axo.tit = 'nuc_axo';
+            nuc_axo.col_sig = 'k';
+            nuc_axo.col_dru = 'b';
+            nuc_axo.col_sti = 'm';
+            nuc_axo.bas_dur_beh = 20.5;
+            nuc_axo.res_dur_beh = 20.5;
+            nuc_axo.col_rat_ave = 'b';
+            nuc_axo.col_sti_ave = 'r';
+            nuc_axo.win_siz = 120;
+            nuc_axo.win_col = 'myccc';
+            nuc_axo.y_lab = {'Tail rate (Hz)', 'Heart rate (Hz)', 'Operculum rate (Hz)', ...
+                'Mouth rate (Hz)', 'Eye rate (Hz)'};
+            nuc_axo.mar = '.';
+            nuc_axo.n_par = 5;
+            nuc_axo = spe(nuc_axo);
+        end
+
+        function gfa = gfa_fun
+            gfa = sam;
+            gfa.sam_idx = "gfa";
+            gfa.n_pla_str = 'eig';
+            gfa.ani = ["gfa001"; "gfa002"; "gfa003"; "gfa004"; "gfa005"; "gfa006"; "gfa007"];
+            gfa.tit = 'gfa';
+            gfa = spe(gfa);
+        end
+
         function g2r = g2r_fun
             g2r = sam;
             g2r.sam_idx = "g2r";
             g2r.n_pla_str = 'one';
             g2r.ani = ["esp264_1"; "esp264_2"; "esp264_3"; "esp264_4"];
             g2r.tit = 'g2r';
-            g2r.con = ["Low"; "Moderate"; "High"];
             g2r.col_sig = 'k';
             g2r.col_dru = 'b';
             g2r.col_sti = 'm';
@@ -34,7 +92,6 @@ classdef sam_fun
             %gab.ani = ["esp257"; "esp258"; "esp259"; "esp260"; "esp261"; "esp262"];
 
             gab.tit = 'gab';
-            gab.con = ["Low"; "Moderate"; "High"];
             gab.col_sig = 'k';
             gab.col_dru = 'b';
             gab.col_sti = 'm';
@@ -82,7 +139,6 @@ classdef sam_fun
             cel_onl.ani = ["esp244"; "esp246"; "esp247"; "esp248"; "esp249"; "esp250"; "esp251"; ...
                 "esp252"; "esp253"; "esp254"; "esp255"; "esp256"];
             cel_onl.tit = 'cel_onl';
-            cel_onl.con = ["Low"; "Moderate"; "High"];
             cel_onl.col_sig = 'k';
             cel_onl.col_dru = 'b';
             cel_onl.col_sti = 'm';
@@ -105,7 +161,6 @@ classdef sam_fun
             axo_onl.ani = ["esp228"; "esp229"; "esp230"; "esp231"; "esp233"; "esp234"; ...
                 "esp235"; "esp237"; "esp238"; "esp239"; "esp240"; "esp241"; "esp242"; "esp243"];
             axo_onl.tit = 'axo_onl';
-            axo_onl.con = ["Low"; "Moderate"; "High"];
             axo_onl.col_sig = 'k';
             axo_onl.col_dru = 'b';
             axo_onl.col_sti = 'm';
@@ -129,7 +184,6 @@ classdef sam_fun
             %axo.ani = ["esp213"; "esp220"; "esp221"; "esp226"; "esp227"];
             axo.ani = ["esp214"; "esp215"; "esp216"; "esp217"; "esp220"; "esp221"; "esp226"; "esp227"];
             axo.tit = 'axo';
-            axo.con = ["Low"; "Moderate"; "High"];
             axo.col_sig = 'k';
             axo.col_dru = 'b';
             axo.col_sti = 'm';
@@ -230,34 +284,49 @@ classdef sam_fun
             jrg_tph.n_par = 5;
             jrg_tph = spe(jrg_tph);
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function tph_nuc_sha = tph_nuc_sha_fun
-            tph_nuc_sha = sam;
-            tph_nuc_sha.sam_idx = "tph_nuc_sha";
-            tph_nuc_sha.ani = ["esp182"];
-            tph_nuc_sha.tit = 'tph2 nuclear sham';
-            tph_nuc_sha.tit_con = ["tph2 nuclear animals sham - low"; ...
-                "tph2 nuclear animals sham - moderate"; ...
-                "tph2 nuclear animals sham - high"];
-            tph_nuc_sha.con = ["Low"; "Moderate"; "High"];
-            tph_nuc_sha.col_sig = 'k';
-            tph_nuc_sha.col_dru = 'b';
-            tph_nuc_sha.col_sti = 'm';
-            tph_nuc_sha.bas_dur_beh = 20.5;
-            tph_nuc_sha.res_dur_beh = 20.5;
-            tph_nuc_sha.col_rat_ave = 'b';
-            tph_nuc_sha.col_sti_ave = 'r';
-            tph_nuc_sha.win_siz = 120;
-            tph_nuc_sha.win_col = 'myccc';
-            tph_nuc_sha.y_lab = {'Tail rate (Hz)', 'Heart rate (Hz)', 'Operculum rate (Hz)', ...
-                'Mouth rate (Hz)', 'Eye rate (Hz)'};
-            tph_nuc_sha.mar = '.';
-            tph_nuc_sha.mar_siz = 20;
-            tph_nuc_sha.n_par = 5;
-            tph_nuc_sha.fil_pat_mul_sam = "X:\kadiram\Data\Pooled\rap_nuc\rap_nuc.mat";
-            tph_nuc_sha = spe(tph_nuc_sha);
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% tph2
+        function con_tai = con_tai_fun
+            con_tai = sam;
+            con_tai.sam_idx = "con_tai";
+            con_tai.ani = ["esp097"; "esp098"; "esp099"; "esp101"; "esp102"; "esp103"; "esp112"; ...
+                "esp113"; "esp114"; "esp116"; "esp117"; "esp118"; "esp120"; "esp121"; "esp122"; ...
+                "esp124"; "esp125"; "esp126"];
+            con_tai.tit = 'HuC MTZ';
+            con_tai = spe(con_tai);
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function tph_sha_bri = tph_sha_bri_fun
+            tph_sha_bri = sam;
+            tph_sha_bri.sam_idx = "tph_sha_bri";
+            tph_sha_bri.ani = ["esp161"; "esp164"; "esp165"; "esp169"; "esp185"];
+            tph_sha_bri.tit = 'tph2 sham';
+            tph_sha_bri = spe(tph_sha_bri);
+        end
+
+        function tph_sha_hig = tph_sha_hig_fun
+            tph_sha_hig = sam;
+            tph_sha_hig.sam_idx = "tph_sha_hig";
+            tph_sha_hig.ani = ["esp164"; "esp165"; "esp169"; "esp185"];
+            tph_sha_hig.tit = 'tph2 sham';
+            tph_sha_hig = spe(tph_sha_hig);
+        end
+
+        function con_low = con_low_fun
+            con_low = sam;
+            con_low.sam_idx = "con_low";
+            con_low.ani = ["esp099"; "esp113"];
+            con_low.tit = 'HuC MTZ';
+            con_low = spe(con_low);
+        end
+
+        function tph_hig = tph_hig_fun
+            tph_hig = sam;
+            tph_hig.sam_idx = "tph_hig";
+            tph_hig.ani = ["esp109"; "esp157"; "esp158"; "esp162"; "esp163"];
+            tph_hig.tit = 'tph2 MTZ';
+            tph_hig = spe(tph_hig);
+        end
+
         function tph_sha_abl = tph_sha_abl_fun
             tph_sha_abl = sam;
             tph_sha_abl.sam_idx = "tph_sha_abl";
@@ -278,7 +347,6 @@ classdef sam_fun
             tph_sha.tit = 'tph2 sham';
             tph_sha.tit_con = ["tph2 animals sham - low"; "tph2 animals sham - moderate"; ...
                 "tph2 animals sham - high"];
-            tph_sha.con = ["Low"; "Moderate"; "High"];
             tph_sha.col_sig = 'k';
             tph_sha.col_dru = 'b';
             tph_sha.col_sti = 'm';
@@ -299,12 +367,10 @@ classdef sam_fun
         function con_for_tph = con_for_tph_fun
             con_for_tph = sam;
             con_for_tph.sam_idx = "con_for_tph";
-            con_for_tph.ani = ["esp097"; "esp098"; "esp099"; "esp101"; "esp102"; ...
-                "esp103"; "esp112"; "esp113"; "esp114"; "esp116"; "esp117"; "esp118"; ...
-                "esp120"; "esp121"; "esp122"; "esp124"; "esp125"; "esp126"];
+            con_for_tph.ani = ["esp097"; "esp098"; "esp099"; "esp101"; "esp113"];
             con_for_tph.tit = 'HuC MTZ';
-            con_for_tph.tit_con = ["Control animals for tph2 - low"; "Control animals for tph2 - moderate"; "Control animals for tph2 - high"];
-            con_for_tph.con = ["Low"; "Moderate"; "High"];
+            con_for_tph.tit_con = ["Control animals for tph2 - low"; ...
+                "Control animals for tph2 - moderate"; "Control animals for tph2 - high"];
             con_for_tph.col_sig = 'k';
             con_for_tph.col_dru = 'b';
             con_for_tph.col_sti = 'm';
@@ -314,9 +380,9 @@ classdef sam_fun
             con_for_tph.col_sti_ave = 'r';
             con_for_tph.win_siz = 120;
             con_for_tph.win_col = 'myccc';
-            con_for_tph.y_lab = {'Tail rate (Hz)', 'Heart rate (Hz)', 'Operculum rate (Hz)', 'Mouth rate (Hz)', 'Eye rate (Hz)'};
+            con_for_tph.y_lab = {'Tail rate (Hz)', 'Heart rate (Hz)', 'Operculum rate (Hz)', ...
+                'Mouth rate (Hz)', 'Eye rate (Hz)'};
             con_for_tph.mar = '.';
-            con_for_tph.mar_siz = 20;
             con_for_tph.n_par = 5;
             con_for_tph.fil_pat_mul_sam = "X:\kadiram\Data\Pooled\rap\rap.mat";
             con_for_tph = spe(con_for_tph);
@@ -331,7 +397,6 @@ classdef sam_fun
             tph.tit = 'tph2 MTZ';
             tph.tit_con = ["tph2 animals tap 3V"; "tph2 animals tap 6V"; ...
                 "tph2 animals tap 12V"];
-            tph.con = ["Low"; "Moderate"; "High"];
             tph.col_sig = 'k';
             tph.col_dru = 'b';
             tph.col_sti = 'm';
@@ -348,7 +413,7 @@ classdef sam_fun
             tph.fil_pat_mul_sam = "X:\kadiram\Data\Pooled\rap\rap.mat";
             tph = spe(tph);
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% drugs
         function sha = sha_fun
             sha = sam;
             sha.sam_idx = "sha";
@@ -367,7 +432,6 @@ classdef sam_fun
             sha.y_lab = {'Tail rate (Hz)', 'Heart rate (Hz)', 'Operculum rate (Hz)', ...
                 'Mouth rate (Hz)', 'Eye rate (Hz)'};
             sha.mar = '.';
-            sha.mar_siz = 20;
             sha.n_par = 5;
             sha = spe(sha);
         end

@@ -1,5 +1,684 @@
 classdef rec_fun
     methods(Static)
+        function tap = gfa013
+            tap = rec;
+            tap.ani = "gfa013";
+            tap.exp = "dua";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 70;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe_gfa(tap);
+        end
+
+        function tap = gfa010
+            tap = rec;
+            tap.ani = "gfa010";
+            tap.exp = "dua";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 70;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe_gfa(tap);
+        end
+
+        function tap = esp291
+            tap = rec;
+            tap.ani = "esp291";
+            tap.exp = "spo";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;% update this
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % spo
+
+        function tap = esp290
+            tap = rec;
+            tap.ani = "esp290";
+            tap.exp = "spo";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;% update this
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % spo
+
+        function tap = esp289
+            tap = rec;
+            tap.ani = "esp289";
+            tap.exp = "spo";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;% update this
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % spo
+
+        function tap = esp288
+            tap = rec;
+            tap.ani = "esp288";
+            tap.exp = "spo";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;% update this
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % spo
+
+        function tap = esp287
+            tap = rec;
+            tap.ani = "esp287";
+            tap.exp = "spo";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 15;% t=323s
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % spo
+
+        function tap = esp286
+            tap = rec;
+            tap.ani = "esp286";
+            tap.exp = "spo";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;% update this
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % spo
+
+        function tap = esp285
+            tap = rec;
+            tap.ani = "esp285";
+            tap.exp = "exp";
+            %
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % exp
+
+        function tap = esp284
+            tap = rec;
+            tap.ani = "esp284";
+            tap.exp = "exp";
+            %
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % exp
+
+        function tap = esp283
+            tap = rec;
+            tap.ani = "esp283";
+            tap.exp = "exp";
+            %
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % exp - explant
+
+        function tap = esp282
+            tap = rec;
+            tap.ani = "esp282";
+            tap.exp = "spo";
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;% update this
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % spo
+
+        function tap = esp281
+            tap = rec;
+            tap.ani = "esp281";
+            tap.exp = "spo";
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 15;% t=343s
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.fis_spe_pro = true;% CHANGE THIS WHEN COPY PASTE !!!!
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % spo
+
+        function tap = esp280
+            tap = rec;
+            tap.ani = "esp280";
+            tap.exp = "spo";
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 148;% t=3187
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.fis_spe_pro = true;% CHANGE THIS WHEN COPY PASTE !!!!
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % spo
+
+        function tap = esp279
+            tap = rec;
+            tap.ani = "esp279";
+            tap.exp = "spo";
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;% update this
+            %
+            tap.per_bin_edg = 30;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe(tap);
+        end % spo
+
+        function tap = esp278
+            tap = rec;
+            tap.ani = "esp278";
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = true;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 25;
+            tap = spe_axo(tap);
+        end % nuc_axo
+
+        function tap = esp277
+            tap = rec;
+            tap.ani = "esp277";
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = true;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 25;
+            tap = spe_axo(tap);
+        end % nuc_axo
+
+        function tap = esp276
+            tap = rec;
+            tap.ani = "esp276";
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = true;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 25;
+            tap = spe_axo(tap);
+        end % nuc_axo
+
+        function tap = esp275
+            tap = rec;
+            tap.ani = "esp275";
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = true;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 10;
+            tap = spe_axo(tap);
+        end % nuc_axo
+
+        function tap = esp274
+            tap = rec;
+            tap.ani = "esp274";
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = true;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 15;
+            tap = spe_axo(tap);
+        end % nuc_axo
+
+        function tap = esp273
+            tap = rec;
+            tap.ani = "esp273";
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = true;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 25;
+            tap = spe_axo(tap);
+            tap.vir_spe_new = true;
+            tap.vir_spe_thr = 0.6;
+        end % nuc_axo
+
+        function tap = esp272
+            tap = rec;
+            tap.ani = "esp272";
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = true;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 15;
+            tap = spe_axo(tap);
+        end % nuc_axo
+
+        function tap = esp271
+            tap = rec;
+            tap.ani = "esp271";
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = true;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 15;
+            tap = spe_axo(tap);
+        end % nuc_axo
+
+        function tap = esp270
+            tap = rec;
+            tap.ani = "esp270";
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = true;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 25;
+            tap = spe_axo(tap);
+        end % nuc_axo
+
+        function tap = esp269
+            tap = rec;
+            tap.ani = "esp269";
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = true;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 15;
+            tap = spe_axo(tap);
+            tap.vir_spe_thr = 1.2;
+        end % nuc_axo
+
+        function tap = gfa007
+            tap = rec;
+            tap.tem = false;
+            tap.ani = "gfa007";
+            tap.exp = "gfa";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 70;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe_gfa(tap);
+        end
+
+        function tap = gfa006
+            tap = rec;
+            tap.tem = false;
+            tap.ani = "gfa006";
+            tap.exp = "gfa";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 70;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe_gfa(tap);
+        end
+
+        function tap = gfa005
+            tap = rec;
+            tap.tem = false;
+            tap.ani = "gfa005";
+            tap.exp = "gfa";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 70;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe_gfa(tap);
+        end
+
+        function tap = gfa004
+            tap = rec;
+            tap.tem = false;
+            tap.ani = "gfa004";
+            tap.exp = "gfa";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 70;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe_gfa(tap);
+        end
+
+        function tap = gfa003
+            tap = rec;
+            tap.tem = false;
+            tap.ani = "gfa003";
+            tap.exp = "gfa";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 70;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe_gfa(tap);
+        end
+
+        function tap = gfa002
+            tap = rec;
+            tap.tem = false;
+            tap.ani = "gfa002";
+            tap.exp = "gfa";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 70;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe_gfa(tap);
+        end
+
+        function tap = gfa001
+            tap = rec;
+            tap.tem = false;
+            tap.ani = "gfa001";
+            tap.exp = "gfa";
+            tap.yak = true;
+
+            tap.ali_cax = true;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 41;
+            %
+            tap.per_bin_edg = 70;
+            %
+            tap.tai = true;
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            tap.thr_gab = 0.5;
+            tap = spe_gfa(tap);
+        end
+
         function tap = esp267
             tap = rec;
             tap.tem = false;
@@ -310,6 +989,10 @@ classdef rec_fun
             tap.mph_tai = 0.069;
             tap.fra_mph_mpp = 0.5;
             tap = spe_axo(tap);
+
+            tap.targetP(end) = [];
+            tap.targetP = [tap.targetP 'old\'];
+            tap.fil_pat_ima_cal_pla{3} = [tap.targetP 'plane2\pla_3.mat'];
         end % cel-onl
 
         function tap = esp255
@@ -331,6 +1014,10 @@ classdef rec_fun
             tap.mph_tai = 0.069;
             tap.fra_mph_mpp = 0.5;
             tap = spe_axo(tap);
+
+            tap.targetP(end) = [];
+            tap.targetP = [tap.targetP 'old\'];
+            tap.fil_pat_ima_cal_pla{3} = [tap.targetP 'plane2\pla_3.mat'];
         end % cel-onl
 
         function tap = esp254
@@ -456,6 +1143,8 @@ classdef rec_fun
             tap.tai = true;
             tap.mph_tai = 0.069;
             tap.fra_mph_mpp = 0.5;
+            %
+            tap.sui_fil = "X:\kadiram\Data\Raw\esp249\2023_06_01\20230601_14_17_11_BS_2023-06-01_Exp6\suite2p_milo\results.mat";
             tap = spe_axo(tap);
         end % cel-onl
 
@@ -498,6 +1187,8 @@ classdef rec_fun
             tap.tai = true;
             tap.mph_tai = 0.069;
             tap.fra_mph_mpp = 0.5;
+            %
+            tap.sui_fil = "X:\kadiram\Data\Raw\esp247\2023_03_17\20230317_16_25_53_BS_2023-03-17_Exp4\suite2p_milo\results.mat";
             tap = spe_axo(tap);
         end % cel-onl
 
@@ -569,13 +1260,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -589,13 +1281,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -609,13 +1302,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -629,13 +1323,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -649,13 +1344,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -669,13 +1365,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -689,13 +1386,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -709,13 +1407,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -729,13 +1428,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -749,13 +1449,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -769,13 +1470,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = false;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -789,13 +1491,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -809,13 +1512,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -829,13 +1533,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -849,13 +1554,14 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.sta = true;
             tap.sta_con = [true; true; true];
+            tap.bri = true;
             %
             tap.cel_det = false;
             tap.mov_blo = [];
             tap.detectionTimepoint = 41;
             %
             tap.per_bin_edg = 30;
-            tap.exp = 'axo_onl';
+            tap.exp = "axo_onl";
             %
             tap.tai = true;
             tap.mph_tai = 0.069;
@@ -897,7 +1603,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             tap.ope_per_pro = 10;
             tap.mou_per_pro = 10;
@@ -965,7 +1671,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe_axo(tap);
         end % tph2 // nuc
@@ -990,7 +1696,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             tap.ope_per_pro = 10;
             tap.mou_per_pro = 10;
@@ -1058,7 +1764,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe_axo(tap);
         end % tph2 // nuc
@@ -1082,7 +1788,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             tap.ope_per_pro = 10;
             tap.mou_per_pro = 10;
@@ -1150,7 +1856,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe_axo(tap);
         end % tph2 // nuc
@@ -1256,7 +1962,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -1328,7 +2034,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
             tap.n_fra_tot = 42404; %!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1354,7 +2060,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -1426,7 +2132,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % huc:jRGECO1b 5 dpf
@@ -1447,7 +2153,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -1519,11 +2225,78 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % huc:gcamp6s 5 dpf
         
+        function tap = esp207
+            tap = rec;
+            tap.ani = "esp207";
+            tap.exp = "spo";%%%!!!!!!!!!!!!!!!!!!!!!
+            tap.yak = true;
+            %
+            tap.ali_cax = false;
+            tap.sta = true;
+            tap.sta_con = [true; true; true];
+            %
+            tap.cel_det = false;
+            tap.mov_blo = [];
+            tap.detectionTimepoint = 324;
+            tap.bri = true;
+            %
+            tap.log_int = [false; false];
+            tap.spo = false;
+            %
+            tap.sti = "tap";
+            tap.ope_per_pro = 10;
+            tap.mou_per_pro = 10;
+            tap.hea_per_pro = 5;
+            % alignment
+            tap.blockLength = 50;
+            tap.referenceSize = 5;
+            %
+            tap.mph_tai = 0.069;
+            tap.fra_mph_mpp = 0.5;
+            %
+            tap.pri_com_hea = 2;
+            tap.pri_com_ope = 1;
+            tap.pri_com_mou = 1;
+            tap.pri_com_eye = 1;
+            %
+            tap.col_tai = 'c';
+            tap.col_hea = 'r';
+            tap.col_ope = [0.5843 0.8157 0.9882];
+            tap.col_mou = 'g';
+            tap.col_eye = 'k';
+            tap.col_rob = 'b';
+            tap.col_tai_sig = 'k';
+            tap.col_hea_sig = 'b';
+            tap.col_ope_sig = 'r';
+            tap.col_mou_sig = 'k';
+            tap.col_eye_sig = 'g';
+            tap.col_dru = 'b';
+            tap.col_sti = 'm';
+            tap.col_spo_bou_ons = 'g';
+            tap.fon_siz_num = 20;
+            tap.col_rat_ave = 'b';
+            tap.col_sti_ave = 'r';
+            tap.bas_dur_beh = 20.5;
+            tap.neu_ref_dur = 30;
+            tap.bas_dur_neu = 4;
+            tap.res_dur_neu = 4;
+            tap.ali = true;
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% cell detection
+            tap.windowSize = 3;
+            tap.windowStep = 1;
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            tap.man_ver = 1;
+            tap.fon_siz_bou = 10;
+            tap.nor_y_bou = 1.01;
+            %
+            tap = spe(tap);
+        end % jrgeco tph2 21 dpf
+
         function tap = esp206_ven
             tap = rec;
             tap.ani = "esp206_ven";
@@ -1540,7 +2313,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -1612,7 +2385,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % jrgeco tph2 21 dpf
@@ -1633,7 +2406,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -1705,7 +2478,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % jrgeco tph2 21 dpf
@@ -1726,7 +2499,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -1798,7 +2571,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % jrgeco tph2
@@ -1819,7 +2592,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -1891,7 +2664,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % jrgeco tph2
@@ -1912,7 +2685,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -1984,7 +2757,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % jrgeco tph2
@@ -2005,7 +2778,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -2077,7 +2850,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % jrgeco tph2
@@ -2098,7 +2871,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -2170,7 +2943,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % jrgeco tph2
@@ -2191,7 +2964,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -2263,7 +3036,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % jrgeco tph2
@@ -2271,6 +3044,7 @@ classdef rec_fun
         function tap = esp203
             tap = rec;
             tap.ani = "esp203";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -2285,9 +3059,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
             %
-            
             tap.ope_per_pro = 10;
             tap.mou_per_pro = 10;
             tap.hea_per_pro = 5;
@@ -2319,8 +3091,6 @@ classdef rec_fun
             tap.max_ebf = 1;
             tap.min_thr = 1000;
             %
-            
-            
             tap.col_tai = 'c';
             tap.col_hea = 'r';
             tap.col_ope = [0.5843 0.8157 0.9882];
@@ -2339,11 +3109,9 @@ classdef rec_fun
             tap.col_rat_ave = 'b';
             tap.col_sti_ave = 'r';
             tap.bas_dur_beh = 20.5;
-            
             tap.neu_ref_dur = 30;
             tap.bas_dur_neu = 4;
             tap.res_dur_neu = 4;
-            
             tap.ali = true;
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% cell detection
             tap.windowSize = 3;
@@ -2352,12 +3120,11 @@ classdef rec_fun
             tap.man_ver = 1;
             tap.fon_siz_bou = 10;
             tap.nor_y_bou = 1.01;
-            
             %
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -2365,6 +3132,7 @@ classdef rec_fun
         function tap = esp202
             tap = rec;
             tap.ani = "esp202";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -2379,7 +3147,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -2451,7 +3219,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -2473,7 +3241,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -2545,7 +3313,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -2553,6 +3321,7 @@ classdef rec_fun
         function tap = esp200
             tap = rec;
             tap.ani = "esp200";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -2567,7 +3336,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -2639,7 +3408,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -2647,6 +3416,7 @@ classdef rec_fun
         function tap = esp199
             tap = rec;
             tap.ani = "esp199";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -2661,7 +3431,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -2733,7 +3503,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -2741,6 +3511,7 @@ classdef rec_fun
         function tap = esp198
             tap = rec;
             tap.ani = "esp198";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -2755,7 +3526,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -2827,7 +3598,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -2849,7 +3620,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -2921,7 +3692,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -2929,6 +3700,7 @@ classdef rec_fun
         function tap = esp196
             tap = rec;
             tap.ani = "esp196";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -2943,7 +3715,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -3015,7 +3787,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -3023,6 +3795,7 @@ classdef rec_fun
         function tap = esp195
             tap = rec;
             tap.ani = "esp195";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -3037,7 +3810,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -3109,7 +3882,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -3117,6 +3890,7 @@ classdef rec_fun
         function tap = esp194
             tap = rec;
             tap.ani = "esp194";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -3131,7 +3905,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -3203,7 +3977,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -3211,6 +3985,7 @@ classdef rec_fun
         function tap = esp193
             tap = rec;
             tap.ani = "esp193";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -3225,9 +4000,8 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
-            %
             
+            %
             tap.ope_per_pro = 10;
             tap.mou_per_pro = 10;
             tap.hea_per_pro = 5;
@@ -3259,8 +4033,6 @@ classdef rec_fun
             tap.max_ebf = 1;
             tap.min_thr = 1000;
             %
-            
-            
             tap.col_tai = 'c';
             tap.col_hea = 'r';
             tap.col_ope = [0.5843 0.8157 0.9882];
@@ -3292,12 +4064,11 @@ classdef rec_fun
             tap.man_ver = 1;
             tap.fon_siz_bou = 10;
             tap.nor_y_bou = 1.01;
-            
             %
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -3305,6 +4076,7 @@ classdef rec_fun
         function tap = esp192
             tap = rec;
             tap.ani = "esp192";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -3319,7 +4091,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -3391,7 +4163,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -3399,6 +4171,7 @@ classdef rec_fun
         function tap = esp191
             tap = rec;
             tap.ani = "esp191";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -3413,7 +4186,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -3485,7 +4258,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -3493,6 +4266,7 @@ classdef rec_fun
         function tap = esp190
             tap = rec;
             tap.ani = "esp190";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -3507,7 +4281,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -3579,7 +4353,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -3587,6 +4361,7 @@ classdef rec_fun
         function tap = esp189
             tap = rec;
             tap.ani = "esp189";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -3603,7 +4378,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -3675,7 +4450,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -3683,6 +4458,7 @@ classdef rec_fun
         function tap = esp188
             tap = rec;
             tap.ani = "esp188";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -3697,7 +4473,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -3769,7 +4545,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -3777,6 +4553,7 @@ classdef rec_fun
         function tap = esp187
             tap = rec;
             tap.ani = "esp187";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -3791,7 +4568,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -3863,7 +4640,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -3871,6 +4648,7 @@ classdef rec_fun
         function tap = esp186
             tap = rec;
             tap.ani = "esp186";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -3885,7 +4663,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -3957,7 +4735,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -3965,6 +4743,7 @@ classdef rec_fun
         function tap = esp185
             tap = rec;
             tap.ani = "esp185";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -3979,7 +4758,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -4051,7 +4830,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -4073,7 +4852,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -4145,7 +4924,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -4166,7 +4945,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -4238,7 +5017,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % jrgeco tph2
@@ -4260,7 +5039,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -4332,7 +5111,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph nuc sha
@@ -4340,6 +5119,7 @@ classdef rec_fun
         function tap = esp181
             tap = rec;
             tap.ani = "esp181";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -4354,7 +5134,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -4426,7 +5206,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -4448,7 +5228,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -4520,7 +5300,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -4542,7 +5322,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -4614,7 +5394,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -4622,6 +5402,7 @@ classdef rec_fun
         function tap = esp177
             tap = rec;
             tap.ani = "esp177";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -4636,7 +5417,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -4708,7 +5489,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -4730,7 +5511,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -4802,7 +5583,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -4824,7 +5605,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -4896,7 +5677,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -4904,6 +5685,7 @@ classdef rec_fun
         function tap = esp174
             tap = rec;
             tap.ani = "esp174";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -4918,7 +5700,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -4990,7 +5772,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -5012,7 +5794,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -5084,7 +5866,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -5106,7 +5888,7 @@ classdef rec_fun
             tap.bri = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -5178,7 +5960,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -5200,7 +5982,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -5272,7 +6054,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -5280,6 +6062,7 @@ classdef rec_fun
         function tap = esp170
             tap = rec;
             tap.ani = "esp170";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -5294,7 +6077,7 @@ classdef rec_fun
             tap.bri = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -5366,7 +6149,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -5374,6 +6157,7 @@ classdef rec_fun
         function tap = esp169
             tap = rec;
             tap.ani = "esp169";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -5388,7 +6172,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -5460,7 +6244,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -5481,7 +6265,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -5553,7 +6337,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % jrgeco tph2
@@ -5574,7 +6358,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -5646,7 +6430,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -5668,7 +6452,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -5740,7 +6524,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -5748,6 +6532,7 @@ classdef rec_fun
         function tap = esp165
             tap = rec;
             tap.ani = "esp165";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -5762,7 +6547,7 @@ classdef rec_fun
             tap.bri = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -5834,7 +6619,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -5842,6 +6627,7 @@ classdef rec_fun
         function tap = esp164
             tap = rec;
             tap.ani = "esp164";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -5856,7 +6642,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -5928,7 +6714,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -5936,6 +6722,7 @@ classdef rec_fun
         function tap = esp163
             tap = rec;
             tap.ani = "esp163";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -5950,7 +6737,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -6022,7 +6809,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -6030,6 +6817,7 @@ classdef rec_fun
         function tap = esp162
             tap = rec;
             tap.ani = "esp162";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -6044,7 +6832,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -6116,7 +6904,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -6124,6 +6912,7 @@ classdef rec_fun
         function tap = esp161
             tap = rec;
             tap.ani = "esp161";
+            tap.exp = "tph_sha";
             tap.tai = true;
             tap.ali_cax = true;
             tap.sta = true;
@@ -6138,7 +6927,7 @@ classdef rec_fun
             tap.bri = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -6210,7 +6999,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -6232,7 +7021,7 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -6304,7 +7093,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -6325,7 +7114,7 @@ classdef rec_fun
             tap.bri = false;% saturation
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -6397,7 +7186,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -6405,6 +7194,7 @@ classdef rec_fun
         function tap = esp158
             tap = rec;
             tap.ani = "esp158";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.cel_det = true;
@@ -6418,7 +7208,7 @@ classdef rec_fun
             tap.bri = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -6490,7 +7280,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -6498,6 +7288,7 @@ classdef rec_fun
         function tap = esp157
             tap = rec;
             tap.ani = "esp157";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.cel_det = true;
@@ -6511,7 +7302,7 @@ classdef rec_fun
             tap.bri = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             tap.ope_per_pro = 10;
             tap.mou_per_pro = 10;
@@ -6580,7 +7371,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -6600,7 +7391,7 @@ classdef rec_fun
             tap.log_int = [false; false];
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -6672,7 +7463,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -6692,7 +7483,7 @@ classdef rec_fun
             tap.log_int = [false; false];
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -6764,7 +7555,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -6784,7 +7575,7 @@ classdef rec_fun
             tap.log_int = [false; false];
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -6856,7 +7647,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -6876,7 +7667,7 @@ classdef rec_fun
             tap.log_int = [false; false];
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -6948,7 +7739,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -6968,7 +7759,7 @@ classdef rec_fun
             tap.log_int = [false; false];
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -7040,7 +7831,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -7060,7 +7851,7 @@ classdef rec_fun
             tap.log_int = [false; false];
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -7132,7 +7923,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 sham
@@ -7153,7 +7944,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -7225,7 +8016,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -7245,7 +8036,7 @@ classdef rec_fun
             tap.log_int = [false; false];
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -7317,7 +8108,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -7338,7 +8129,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -7410,7 +8201,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 mtz
@@ -7431,7 +8222,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -7503,7 +8294,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -7524,7 +8315,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -7596,7 +8387,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -7616,7 +8407,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -7688,7 +8479,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -7708,7 +8499,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -7780,7 +8571,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 ablated
@@ -7801,7 +8592,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -7873,7 +8664,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph2 ablated
@@ -7894,7 +8685,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -7966,7 +8757,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -7987,7 +8778,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -8059,7 +8850,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -8080,7 +8871,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -8152,7 +8943,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -8173,7 +8964,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -8245,7 +9036,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -8266,7 +9057,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -8338,7 +9129,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -8359,7 +9150,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -8431,7 +9222,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -8454,7 +9245,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -8526,7 +9317,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -8549,7 +9340,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -8621,7 +9412,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -8644,7 +9435,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -8716,7 +9507,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -8736,7 +9527,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -8808,7 +9599,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -8827,7 +9618,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -8899,7 +9690,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -8923,7 +9714,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -8995,7 +9786,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -9015,7 +9806,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -9087,7 +9878,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph sham
@@ -9107,7 +9898,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -9179,7 +9970,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -9199,7 +9990,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -9271,7 +10062,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -9291,7 +10082,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -9363,7 +10154,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -9383,7 +10174,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -9455,7 +10246,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -9475,7 +10266,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -9547,7 +10338,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -9567,7 +10358,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -9639,7 +10430,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -9658,7 +10449,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -9730,7 +10521,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -9750,7 +10541,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -9822,7 +10613,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -9842,7 +10633,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -9914,7 +10705,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -9934,7 +10725,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -10006,7 +10797,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -10027,7 +10818,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -10099,7 +10890,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % tph
@@ -10119,7 +10910,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -10191,7 +10982,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -10214,7 +11005,6 @@ classdef rec_fun
             tap.spo = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
             %
             
             tap.ope_per_pro = 10;
@@ -10286,9 +11076,10 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
+            tap.boo_tri_con(16, 3) = false;
         end
         
         function tap = esp112
@@ -10306,7 +11097,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -10378,7 +11169,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -10394,7 +11185,7 @@ classdef rec_fun
             tap.sta_con = [true; false; false];
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -10466,7 +11257,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -10482,7 +11273,7 @@ classdef rec_fun
             tap.sta_con = [true; false; false];
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -10554,7 +11345,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -10562,6 +11353,7 @@ classdef rec_fun
         function tap = esp109
             tap = rec;
             tap.ani = "esp109";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.cel_det = true;
@@ -10575,7 +11367,7 @@ classdef rec_fun
             tap.bri = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -10647,7 +11439,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -10668,7 +11460,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -10740,7 +11532,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -10761,7 +11553,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -10833,7 +11625,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -10854,7 +11646,7 @@ classdef rec_fun
             tap.bri = false;% movement artifacts
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -10926,7 +11718,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -10934,6 +11726,7 @@ classdef rec_fun
         function tap = esp105
             tap = rec;
             tap.ani = "esp105";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.cel_det = true;
@@ -10947,7 +11740,7 @@ classdef rec_fun
             tap.bri = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -11019,7 +11812,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -11035,7 +11828,7 @@ classdef rec_fun
             tap.sta_con = [true; false; false];
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -11107,7 +11900,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -11130,7 +11923,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -11202,7 +11995,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end % con4tph
@@ -11224,7 +12017,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -11296,7 +12089,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -11319,7 +12112,7 @@ classdef rec_fun
             tap.sta = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -11391,7 +12184,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -11412,7 +12205,7 @@ classdef rec_fun
             tap.sta = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -11484,7 +12277,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -11496,6 +12289,7 @@ classdef rec_fun
             tap.ali_cax = true;
             tap.cel_det = true;
             tap.bas = true;
+            tap.bri = true;
             %
             tap.spo = false;
             tap.mov_blo = [235; 414];
@@ -11504,10 +12298,10 @@ classdef rec_fun
             tap.sta_con = [true; true; true];
             tap.int_cro = [false; false; false];
             tap.chu_num_cro = [nan; nan; nan];
-            tap.sta = false;
+            %tap.sta = false;
+            tap.sta = true;%!!!!!!!!!!!!!!!!!!!!!!!!!!!
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
             %
             
             tap.ope_per_pro = 10;
@@ -11541,8 +12335,6 @@ classdef rec_fun
             tap.max_ebf = 1;
             tap.min_thr = 1000;
             %
-            
-            
             tap.col_tai = 'c';
             tap.col_hea = 'r';
             tap.col_ope = [0.5843 0.8157 0.9882];
@@ -11579,7 +12371,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -11602,7 +12394,7 @@ classdef rec_fun
             tap.sta = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -11674,7 +12466,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -11697,7 +12489,7 @@ classdef rec_fun
             tap.sta = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -11769,7 +12561,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -11792,7 +12584,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -11864,7 +12656,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -11887,7 +12679,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -11959,7 +12751,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -11982,7 +12774,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -12054,7 +12846,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -12062,6 +12854,7 @@ classdef rec_fun
         function tap = esp092
             tap = rec;
             tap.ani = "esp092";
+            tap.exp = "tph";
             tap.tai = true;
             tap.ali_cax = true;
             tap.cel_det = true;
@@ -12077,7 +12870,7 @@ classdef rec_fun
             tap.bri = true;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -12149,7 +12942,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -12172,7 +12965,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -12244,7 +13037,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -12267,7 +13060,7 @@ classdef rec_fun
             tap.bri = false;
             %
             tap.sti = "tap";
-            tap.con = ["Low"; "Moderate"; "High"];
+            
             %
             
             tap.ope_per_pro = 10;
@@ -12338,7 +13131,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -12425,7 +13218,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -12510,7 +13303,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -12597,7 +13390,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -12684,7 +13477,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -12771,7 +13564,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -12858,7 +13651,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -12943,7 +13736,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end% ?
@@ -13031,7 +13824,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -13118,7 +13911,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -13206,7 +13999,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -13294,7 +14087,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -13382,7 +14175,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -13468,7 +14261,7 @@ classdef rec_fun
             
             tap.ali = true;
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -13554,7 +14347,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -13639,7 +14432,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -13725,7 +14518,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
@@ -13811,7 +14604,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
             end
@@ -13896,7 +14689,7 @@ classdef rec_fun
             tap.y_lab_ang = 'Angle (rad)';
             tap.y_lab_spe = 'Virtual speed (a. u.)';
             %
-            tap.lat_thr = 0.300;
+            
             %
             tap = spe(tap);
         end
