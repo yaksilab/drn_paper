@@ -327,8 +327,23 @@ classdef sam
                 'tac_tri_win', ...
                 'bou_dur_ani', 'ang_bou', 'bou_dur', ...
                 'dur_bou', 'dur_acb_bou', 'dur_pcb_bou', '-append')
+
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_con = con_fil.n_con;
+            n_tri_con = con_fil.n_tri_con;
+            n_tri_con = n_tri_con.vrs;
+            sam_fil = matfile(obj.fil_pat_sam);
+            bea_lat_ani_tri = sam_fil.bea_lat_ani_tri;
+            log_ani_tri = ~isnan(bea_lat_ani_tri);
+            per_pro_tri = sum(log_ani_tri)/obj.n_ani;
+            per_pro_tri_con = nan(n_tri_con, n_con);
+            for con = 1:n_con
+                per_pro_tri_con(:, con) = per_pro_tri((con - 1)*n_tri_con + 1:con*n_tri_con)';
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'per_pro_tri_con', '-append')
         end
-        % un
+        % in
         function app_par_tai(obj)
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             n_con = con_fil.n_con;
@@ -1303,8 +1318,31 @@ classdef sam
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_sam, 'dis_ani', '-append')
+
+            ani_pai.bou_non_exc.exc = [];
+            ani_pai.bou_non_exc.inh = [];
+            ani_pai.bou_non_inh.exc = [];
+            ani_pai.bou_non_inh.inh = [];
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                
+                dis_pai = rec_fil.dis_fie_pai;
+                ani_pai.bou_non_exc.exc = [ani_pai.bou_non_exc.exc; ...
+                    ani_num*ones(length(dis_pai.bou_non_exc.exc), 1)];
+                ani_pai.bou_non_exc.inh = [ani_pai.bou_non_exc.inh; ...
+                    ani_num*ones(length(dis_pai.bou_non_exc.inh), 1)];
+                ani_pai.bou_non_inh.exc = [ani_pai.bou_non_inh.exc; ...
+                    ani_num*ones(length(dis_pai.bou_non_inh.exc), 1)];
+                ani_pai.bou_non_inh.inh = [ani_pai.bou_non_inh.inh; ...
+                    ani_num*ones(length(dis_pai.bou_non_inh.inh), 1)];
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'ani_pai', '-append')
         end
-        % un
+        % in
         function app_par_roi_r(obj)
             ani_pai.bou_non_exc.exc = [];
             ani_pai.bou_non_exc.inh = [];
@@ -2421,8 +2459,25 @@ classdef sam
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_sam, 'ofr_ani_win', '-append')
+
+            con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
+            n_bin = con_fil.n_bin;
+            n_bin = n_bin.spo;
+            clu_fid_bin_ani.dat = nan(n_bin, obj.n_ani);
+            clu_fid_bin_ani.shu = nan(n_bin, obj.n_ani);
+            for ani_num = 1:obj.n_ani
+                disp(ani_num)
+                rec_fun_i = str2func(['rec_fun.' convertStringsToChars(obj.ani(ani_num))]);
+                sti = rec_fun_i();
+                rec_fil = matfile(sti.fil_pat_rec);
+                clu_fid_bin = rec_fil.clu_fid_bin;
+                clu_fid_bin_ani.dat(:, ani_num) = clu_fid_bin.dat;
+                clu_fid_bin_ani.shu(:, ani_num) = clu_fid_bin.shu;
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_sam, 'clu_fid_bin_ani', '-append')
         end
-        % un
+        % in
         function app_par_spo(obj)
             con_fil = matfile('\\home.ansatt.ntnu.no\kadiram\Documents\MATLAB\con_esp.mat');
             n_bin = con_fil.n_bin;

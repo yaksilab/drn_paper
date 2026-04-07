@@ -1,24 +1,9 @@
-%constant - One line description of what the script performs (H1 line)
-%   Optional file header info (to give more details about the function than in the H1 line)
-%   Optional file header info (to give more details about the function than in the H1 line)
-%   Optional file header info (to give more details about the function than in the H1 line)
-%
-%   Description:
-%       STARTUP description
-%
-%   Output:
-%       STARTUP output
-%
-%   Other m-files required: none
-%   MAT-files required: none
-%
-%   See also: OTHER_SCRIPT_NAME,  OTHER_FUNCTION_NAME
+%constant - saves the variables set to a constant to a .mat file
 
 %   Author: Kadir Mutlu
 %   Address: Olav Kyrres gate 9, 7030 Trondheim, Norway
 %   email: kadir.a.mutlu@ntnu.no
 %   Website: https://www.ntnu.edu/kavli
-%   Date: 09-Oct-2019; Last revision: 09-Oct-2019
 %
 %   Copyright (c) 2019, Kadir Mutlu
 clear

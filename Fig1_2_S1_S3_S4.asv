@@ -21,6 +21,8 @@ sav_rec_all(cel_onl)
 sav_ima_cal_all(cel_onl)
 %%% Save sample-level data
 sav_dat_sam(cel_onl)
+%
+app_tai_dat(obj)
 %%% Append synch parameters and tail-related metrics
 sta_ani = 1;
 app_syn_axo_all(cel_onl, sta_ani)
@@ -34,9 +36,7 @@ det_per_bin_edg_all(cel_onl, sta_ani)
 app_log_pla_icx_row_col_all(cel_onl, sta_ani)
 %
 app_som_log_pla_row_col_cel_all(cel_onl, sta_ani)
-%%% Append tail data and processed data
-app_tai_dat(cel_onl)
-%
+%%% Append processed data
 app_som(cel_onl)
 %%% Append clustering data
 app_gab_clu_cel_k_all(cel_onl)

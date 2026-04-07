@@ -1,70 +1,52 @@
-%gab - One line description of what the script performs (H1 line)
-%   Optional file header info (to give more details about the function than in the H1 line)
-%   Optional file header info (to give more details about the function than in the H1 line)
-%   Optional file header info (to give more details about the function than in the H1 line)
+%Fig3_S5 - Main batch analysis and panels for Fig. 3 and Fig. S5
+%   Runs the full analysis pipeline and generates the
+%   population-level panels used in Figure 3 and Supplementary Figure S5.
 %
-%   Description:
-%       esp031 description
-%
-%   Output:
-%       esp031 output
-%
-%   Other m-files required: none
-%   MAT-files required: none
-%
-%   See also: OTHER_SCRIPT_NAME,  OTHER_FUNCTION_NAME
+%   Outputs:
+%       - A large set of analysis results saved to disk (MAT-file).
+%       - A comprehensive collection of figures saved to disk.
 
 %   Author: Kadir Mutlu
 %   Address: Olav Kyrres gate 9, 7030 Trondheim, Norway
 %   email: kadir.a.mutlu@ntnu.no
 %   Website: https://www.ntnu.edu/kavli
-%   Date: 23-Jul-2019; Last revision: 23-Jul-2019
 %
 %   Copyright (c) 2019, Kadir Mutlu
+
+%%% Generate the object used throughout the analysis pipeline.
 gab = sam_fun.gab_fun();
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-sav_rec_all(gab)
-%
-sta_ani = 1;
-app_syn_all(gab, sta_ani)
-%
-sav_dat_sam(gab)
-%
-app_bou_all(gab)
-%
-app_par_tai(gab)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2023 50
+%%% Save animal-level data
 beg_ani = 1;
 sav_rec_all(gab, beg_ani)
 %
+sta_ani = 1;
+app_syn_all(gab, sta_ani)
+app_tai_all(gab, sta_ani)
+%%% Save sample-level data
+sav_dat_sam(gab)
+%
+app_tai_dat(gab)
+%%% Preprocess calcium imaging data
+beg_ani = 1;
 sav_ima_gab_all(gab, beg_ani)
 %
 sav_roi_all(gab, beg_ani)
 %
-app_syn_all(gab, beg_ani)
-%
-sta_ani = 1;
-app_tai_all(gab, sta_ani)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2024 02
 app_par_roi_all(gab, beg_ani);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2024 14
+%%% Append processed data
 thr = 0.4;
 app_gab_omn(gab, thr)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2024 16
-app_par_gab_all(gab)
-%
-app_par_gab(gab)
-%
+%%% Save figures
 sav_fig_gab_clu(gab)
 %
 sav_fig_inh_exc_sig_sid(gab)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2024 36
+%
 sav_fig_clu_sel(gab)
 %
 sav_fig_pai_cor(gab)
 %
 sav_fig_inh_exc(gab)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2024 w42
+%
 sav_fig_pie_gab(gab)
 %
 sav_fig_num_gab(gab)
@@ -72,11 +54,11 @@ sav_fig_num_gab(gab)
 sav_fig_clu_sel_pai_cor(gab)
 %
 sav_fig_gab_clu(gab)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w32
+%
 sav_fig_z_sco_cel_all(gab)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w34
+%
 sav_fig_z_sco_cel(gab)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w42
+%
 sav_fig_gab_mod(gab)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w46
+%
 sav_fig_gab_clu_onl(gab)

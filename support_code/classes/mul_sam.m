@@ -718,9 +718,7 @@ classdef mul_sam
                 'pro_win_sam_row_col', 'foc_win_cox_sam_ani', 'p_foc_win_cox_xsa', ...% foc
                 'p_spx_win_cox_xsa', 'spx_win_cox_sam_ani', 'spx_win_cox_sam_ani_tri', ...% spe
                 'spe_win_cox_sam_ani', 'p_spe_win_cox_xsa', '-append')% spe
-        end
-        % un
-        function app_par_two_dat(obj)
+
             % ~same but limit for early 660 s at sav_con!
             two_fil = matfile("X:\kadiram\Data\Pooled\two\Tph2_NTT_VibrAdapt_2022_data.mat");
             all_fish = two_fil.all_fish;
@@ -738,120 +736,24 @@ classdef mul_sam
             save(obj.fil_pat_mul_sam, 'y_pos_win_cox_sam_ani', 'p_y_pos_win_cox_xsa', ...
                 'foc_win_cox_sam_ani', 'p_foc_win_cox_xsa', 'pro_win_sam_row_col', '-append')
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ika
-        function app_ika_dat(obj)
-            ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
-            % data file from ik
-            all_fish = ika_fil.all_fish;
-            x_values = ika_fil.x_values;
-            change_yposition_1 = ika_fil.change_yposition_1;
-            change_yposition_2 = ika_fil.change_yposition_2;
-            change_yposition_3 = ika_fil.change_yposition_3;
-            [p_ypc_xsa, ypc_sam_ani, ypc_sam_ani_tri, ypc_sam_fra_tri] = ext_ika_dat(all_fish, ...
-                x_values, change_yposition_1, change_yposition_2, change_yposition_3);% 2s?,yes-ika
+        % in
+        function app_par_two_dat(obj)
+            % ~same but limit for early 660 s at sav_con!
+            two_fil = matfile("X:\kadiram\Data\Pooled\two\Tph2_NTT_VibrAdapt_2022_data.mat");
+            all_fish = two_fil.all_fish;
+            [~, ~, y_pos_win_cox_sam_ani, p_y_pos_win_cox_xsa, ...
+                ~, ~, ~, ...
+                ~, ~, ~, ~, ~, ...
+                ~, foc_win_cox_sam_ani, p_foc_win_cox_xsa, ~, ...
+                ~, ~, pro_win_sam_row_col] = ext_two_dat(...
+                all_fish, two_fil.x_values, two_fil.change_yposition_1, ...
+                two_fil.change_yposition_2, two_fil.change_yposition_3, two_fil.yposition_1, ...
+                two_fil.yposition_2, two_fil.yposition_3, ...
+                two_fil.x_values_velo, two_fil.change_velo_1, two_fil.change_velo_2, ...
+                two_fil.change_velo_3, two_fil.group1, two_fil.group2, two_fil.group3);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_mul_sam, 'p_ypc_xsa', 'ypc_sam_ani', 'ypc_sam_ani_tri', ...
-                'ypc_sam_fra_tri', '-append')
-
-            ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
-            x_values = ika_fil.x_values;
-            all_fish = ika_fil.all_fish;
-            %win_lim = [35 60];% only sha diff | no diff
-            %win_lim = [40 50];% no diff | no diff
-            %win_lim = [45 50];% only mtz diff | only mtz diff
-            %win_lim = [35 50];% only sha diff | only sha diff
-            %win_lim = [35 45];% only sha diff | only sha diff
-            %win_lim = [35 55];% only sha diff | no diff
-            %win_lim = [40 55];% only mtz diff | only mtz diff
-            %win_lim = [40 60];% no diff | no diff
-            win_lim = [45 60];% no diff | only mtz diff
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            [ypc_sam_ani, p_ypc_xsa] = cal_ypc_sam_ani(win_lim, x_values, mat_fil.ypc_sam_fra_ani, ...
-                all_fish);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_mul_sam, 'p_ypc_xsa', 'ypc_sam_ani', '-append')
-
-            win_len_bas = 5;
-            [~, ~, ypc_sam_fra_tri] = cal_ypc_sam_fra_ani(win_len_bas);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_mul_sam, 'ypc_sam_fra_tri', '-append')
-
-            win_len_bas = 2;
-            win_lim = [30 35];
-            ypc_sam_ani_tri.two.ini = cal_ypc_sam_ani_tri(win_len_bas, win_lim);
-            win_lim = [35 60];
-            ypc_sam_ani_tri.two.rec = cal_ypc_sam_ani_tri(win_len_bas, win_lim);
-
-            win_len_bas = 5;
-            win_lim = [30 35];
-            ypc_sam_ani_tri.fiv.ini = cal_ypc_sam_ani_tri(win_len_bas, win_lim);
-            win_lim = [35 60];
-            ypc_sam_ani_tri.fiv.rec = cal_ypc_sam_ani_tri(win_len_bas, win_lim);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_mul_sam, 'ypc_sam_ani_tri', '-append')
-
-            win_len_bas = 2;
-            [ypc_sam_fra_ani, ypc_sam_fra_ani_tri] = cal_ypc_sam_fra_ani(win_len_bas);
-            ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
-            all_fish = ika_fil.all_fish;
-            x_values = ika_fil.x_values;
-            ypc_sam_ani_epo = cal_ypc_sam_ani_epo(x_values, all_fish, ypc_sam_fra_ani_tri);
-            %
-            win_len_bas = 5;
-            [~, ~, ~, ypo_sam_fra_ani_tri] = cal_ypc_sam_fra_ani(win_len_bas);
-            %
-            hei = 115;
-            dis_sam_fra_ani_tri = cellfun(@(x) hei + x, ypo_sam_fra_ani_tri, 'UniformOutput', false);
-            %
-            [nor_ypc_sam_fra_ani, nor_ypc_sam_ani] = cal_nor_ypc_sam_fra_ani(ypc_sam_fra_ani_tri, ...
-                dis_sam_fra_ani_tri, all_fish);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_mul_sam, 'ypc_sam_fra_ani', 'ypc_sam_fra_ani_tri', ...
-                'ypc_sam_ani_epo', 'ypo_sam_fra_ani_tri', 'dis_sam_fra_ani_tri', ...
-                'nor_ypc_sam_fra_ani', 'nor_ypc_sam_ani', '-append')
-
-            [pro_sam_row_col, foc_sam_ani] = cal_pro_sam_row_col;
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_mul_sam, 'pro_sam_row_col', 'foc_sam_ani', '-append')
-
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            nor_ypc_sam_fra_ani = mat_fil.nor_ypc_sam_fra_ani;
-            win_ons_win = (5:20)';
-            n_win = length(win_ons_win);
-            n_cro = 3;
-            p_win_cro = nan(n_win, n_cro);
-            for win = 1:n_win
-                p_cro = cal_p_cro(nor_ypc_sam_fra_ani, win_ons_win(win));
-                p_win_cro(win, :) = p_cro.lme';
-            end
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_mul_sam, 'p_win_cro', '-append')
-
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            nor_ypc_sam_fra_ani = mat_fil.nor_ypc_sam_fra_ani;
-            win_ons_win = (0:25)';
-            n_win = length(win_ons_win);
-            n_cro = 3;
-            p_win_cro = nan(n_win, n_cro);
-            for win = 1:n_win
-                p_cro = cal_p_cro(nor_ypc_sam_fra_ani, win_ons_win(win));
-                p_win_cro(win, :) = p_cro.lme';
-            end
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_mul_sam, 'p_win_cro', '-append')
-        end
-        % un
-        function app_par_ika_dat(obj)
-            mat_fil = matfile(obj.fil_pat_mul_sam);
-            ypc_sam_fra_ani_tri = mat_fil.ypc_sam_fra_ani_tri;
-            dis_sam_fra_ani_tri = mat_fil.dis_sam_fra_ani_tri;
-            ika_fil = matfile("X:\kadiram\Data\Pooled\ika\tph2_collection_2023_data.mat");
-            all_fish = ika_fil.all_fish;
-            n_tri = 2;
-            [nor_ypc_sam_fra_ani, nor_ypc_sam_ani] = cal_nor_ypc_sam_fra_ani(ypc_sam_fra_ani_tri, ...
-                dis_sam_fra_ani_tri, all_fish, n_tri);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            save(obj.fil_pat_mul_sam, 'nor_ypc_sam_fra_ani', 'nor_ypc_sam_ani', '-append')
+            save(obj.fil_pat_mul_sam, 'y_pos_win_cox_sam_ani', 'p_y_pos_win_cox_xsa', ...
+                'foc_win_cox_sam_ani', 'p_foc_win_cox_xsa', 'pro_win_sam_row_col', '-append')
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% behavioral
         function app_tai_dat_omn(obj)

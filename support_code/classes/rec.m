@@ -3632,8 +3632,14 @@ classdef rec
             [~, clu_fid] = cal_clu_cel_nox_loc(dff_fra_cel, mrp_ons, mrp_off);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             save(obj.fil_pat_rec, 'clu_fid', '-append')
+
+            rec_fil = matfile(obj.fil_pat_rec);
+            dff_fra_cel = rec_fil.dff_fra_cel;
+            clu_fid_bin = cal_clu_fid_bin(dff_fra_cel);
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            save(obj.fil_pat_rec, 'clu_fid_bin', '-append')
         end
-        % un
+        % in
         function app_par_spo(obj)
             rec_fil = matfile(obj.fil_pat_rec);
             dff_fra_cel = rec_fil.dff_fra_cel;

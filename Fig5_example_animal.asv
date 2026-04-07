@@ -11,10 +11,24 @@
 %   email: kadir.a.mutlu@ntnu.no
 %   Website: https://www.ntnu.edu/kavli
 %   Copyright (c) 2019, Kadir Mutlu
-
-%%% Generate the object used throughout the analysis pipeline.
 tap = rec_fun.esp216();
-%%% Save figure
-sav_fig_cor_map_ove(tap)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+sav_rec(tap)
 %
+sav_ima_cal(tap)
+%
+app_pix_dat_axo(tap)
+%
+app_piv_pla_row_col(tap)
+%
+det_per_bin_edg(tap)
+%
+app_log_pla_row_col(tap)
+%
+app_log_pla_row_col_for(tap)
+%
+app_axo(tap)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2024 w14
+sav_fig_cor_map_ove(tap)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2024 w22
 sav_fig_axo_cel_sin(tap)

@@ -24,31 +24,35 @@ app_syn_all(spo, beg_ani)
 app_tai_all(spo, beg_ani)
 % calcium imaging
 sav_ima_spo_all(spo, beg_ani)
-%
-sav_roi_all(spo, beg_ani)
-app_spo_all(spo, beg_ani)
+
 %%% Save sample-level data
 sav_dat_sam(spo)
+
 %
-app_spo(spo)
-%
-app_par_som(spo)
-%%% Save figures
 sav_fig_spo_all(spo)
 %
 sav_fig_pcc_dis_cel(spo, 'ong')
 %
-sav_fig_tai_qui_all(spo)
+app_par_tai_all(spo)
 %
+sav_fig_tai_qui_all(spo)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w32
 sav_fig_cor_cor_den(spo)
 r = ext_var_met(spo, 'r')
 %
+app_spo(spo)
 sav_fig_ofr(spo)
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w44
 sav_fig_pcc_dis(spo)
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2025 w48
 sav_fig_ccd_spl(spo)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2026 w02
+app_par_som(spo)
 %
 sav_fig_clu_fid(spo)
+%
+app_par_spo_all(spo)
+%
+app_par_spo(spo)
 %
 sav_fig_clu_fid_bin(spo)
