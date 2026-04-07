@@ -1,8 +1,8 @@
-# Code and Data for "Topographically organized dorsal raphe activity modulates forebrain sensory-motor computations and defensive behaviors"
+# Code and Data for "Topographically organized dorsal raphe activity modulates forebrain sensory-motor representations and contributes to defensive behaviors"
  
 This repository contains the MATLAB code and information about the processed data used to generate the figures and results in:
 
-Mutlu et al., Topographically organized dorsal raphe activity modulates forebrain sensory-motor computations and defensive behaviors, *bioRxiv*, 2026.
+Mutlu et al., Topographically organized dorsal raphe activity modulates forebrain sensory-motor representations and contributes to defensive behaviors, *in revision*, 2026.
 
 ## 1. Repository structure
 
